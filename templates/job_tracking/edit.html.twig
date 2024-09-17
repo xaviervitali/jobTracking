@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block title %}
+  {{ job.recruiter }}
+  -
+  {{ job.title }}
+{% endblock %}
+{% block body %}
+  {% if job.notes | length  > 0 %}
+
+    <div class="d-flex gap-2 flex-wrap my-3">
+      {% for note in job.notes %}
+        {% include "_postit.html.twig" with {
+        createdAt :note.createdAt,
+        content: note.content ,
+        noteId: note.id 
+        } %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="accordion" id="accordionJob">
+
+    {# Actions #}
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#action" aria-expanded="true" aria-controls="action">
+          Action
+        </button>
+      </h2>
+      <div id="action" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+          {% include "job_tracking/_actions.html.twig" %}
+
+        </div>
+      </div>
+
+    </div>
+
+    {# Job #}
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#job" aria-expanded="true" aria-controls="job">
+          Offre
+        </button>
+      </h2>
+      <div id="job" class="accordion-collapse collapse">
+        {% include "job_tracking/_job.html.twig" %}
+      </div>
+
+      {# JobTracking #}
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tracking" aria-expanded="false" aria-controls="tracking">
+            Historique
+          </button>
+        </h2>
+        <div id="tracking" class="accordion-collapse collapse ">
+          <div class="accordion-body">
+            {% include "job_tracking/_job_tracking.html.twig" %}
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal fade" id="handleDeleteModal" tabindex="-1" aria-labelledby="handleDeleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="handleDeleteModalLabel">
+              Supprimer la candidature
+            </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Vous êtes sur le point de supprimer votre candidature chez
+            <strong>
+              {{ form.vars.value.recruiter }}
+            </strong>
+            du
+            <strong>
+              {{ form.vars.value.createdAt | date('d/m/Y') }}
+            </strong>
+            . Voulez-vous continuer ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Annuler
+            </button>
+            <button type="button" class="btn btn-danger" onClick='deleteJob("{{ form.vars.value.id }}}}")'>
+              Valider
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %}
+
+  {% block javascripts %}
+    <script src="{{ asset('js/jobEdit.js') }}"></script>
+  {% endblock %}
+  

@@ -1,0 +1,13 @@
+<div class="post-it">
+    <div class="sticky taped">
+        <p class="d-flex justify-content-between">
+            <strong>
+                {{ createdAt | date('d/m/Y') }}
+            </strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" data-note-id ="{{ noteId}}"></button>
+        </p>
+        <p>
+            {{ content }}
+        </p>
+    </div>
+</div>

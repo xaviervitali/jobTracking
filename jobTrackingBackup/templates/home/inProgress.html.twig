@@ -1,0 +1,60 @@
+<table	class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				Employeur
+			</th>
+			<th>
+				Titre de l'annonce
+			</th>
+			<th>
+				Candidature initiale le
+			</th>
+			<th>
+				Derniere Action
+			</th>
+			<th>Délai total</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		 {% set now = date() %}
+		 {% for jobInProgress in jobsInProgress %}
+		 {% set job = jobInProgress  %}
+
+			  <tr>
+				
+				<td>
+					{{ job.recruiter }}
+				</td>
+				<td>
+					{{ job.title }}
+				</td>
+				<td>
+					{% set oldDate = date(job.job_created_at | date('Y-m-d')) %}
+					 {% set interval = now.diff(oldDate) %}
+						{{ oldDate | date('d/m/Y') }}
+				</td>
+				<td>
+					{{ job.name}}
+					{% set oldDate = date(job.job_tracking_created_at | date('Y-m-d')) %}
+					{% set intervalJobTracking = now.diff(oldDate) %}
+					({{ intervalJobTracking.days }}j) 
+
+
+				</td>
+				<td>
+
+						{{ interval.days }}j
+				
+					
+				</td>
+				<td>
+					<a	type="button"	href="{{ path('candidature', {'id': job.id}) }}"	class="btn btn-primary btn-sm">
+						Visualiser
+					</a>
+				</td>
+			 </tr> 
+		 {% endfor %} 
+	</tbody>
+</tbody></table>

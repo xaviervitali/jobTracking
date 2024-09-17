@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Votre suivi
+{% endblock %}
+
+{% block body %}
+	{% if jobsInProgress | length > 0 %}
+
+		{% include "home/inProgress.html.twig" %}
+		{% else %}
+		<p>
+			Pas de candidature en cours <a href="">Ajouter une candidature</a>
+		</p>
+	{% endif %}
+
+{% endblock %}

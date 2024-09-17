@@ -1,0 +1,24 @@
+<form method="post" accept-charset="UTF-8">
+    {{ csrfInput() }}
+    <input type="hidden" name="action" value="users/login">
+
+    <h3><label for="loginName">Username or email</label></h3>
+    <input id="loginName" type="text" name="loginName"
+        value="{{ craft.app.user.rememberedUsername }}">
+
+    <h3><label for="password">Password</label></h3>
+    <input id="password" type="password" name="password">
+
+    <label>
+        <input type="checkbox" name="rememberMe" value="1">
+        Remember me
+    </label>
+
+    <input type="submit" value="Login">
+
+    {% if errorMessage is defined %}
+        <p>{{ errorMessage }}</p>
+    {% endif %}
+</form>
+
+<p><a href="{{ url("forgotpassword") }}">Forgot your password?</a></p>

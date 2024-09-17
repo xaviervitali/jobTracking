@@ -1,0 +1,13 @@
+<ul class="list-group">
+{% if (job.getJobTracking | length) < 1 %}
+  Aucun
+{% endif %}
+
+{% for jobTracking in job.getJobTracking %}
+  <li class="list-group-item">
+    {{ jobTracking.action.name }}
+    le
+    {{ jobTracking.createdAt | date('d/m/Y') }}
+  </li>
+{% endfor %}
+</ul>
