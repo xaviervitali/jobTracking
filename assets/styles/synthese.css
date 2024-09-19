@@ -1,0 +1,4 @@
+.in-progress {
+    max-height: calc(80vh - 400px);
+    overflow: auto;
+}

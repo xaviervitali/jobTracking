@@ -22,7 +22,6 @@ class AppFixtures extends AbstractFixture
     {
         $plaintextPassword = 'abcd';
         $actions = ActionStatus::getActions();
-        dump($actions);
         $this->createMany(User::class, 10, function ($user) use ($plaintextPassword) {
 
             $user
@@ -37,7 +36,7 @@ class AppFixtures extends AbstractFixture
             $user->setPassword($hashedPassword);
         });
 
-        $this->createMany(Job::class, 100, function ($job) {
+        $this->createMany(Job::class, 500, function ($job) {
             $createdAt =  $this->faker->dateTimeBetween('-1 year', '-3 days');
             $jobCreatedAt = DateTimeImmutable::createFromMutable($createdAt);
 
@@ -55,12 +54,12 @@ class AppFixtures extends AbstractFixture
         });
 
         $i = 0;
-        foreach (array_keys($actions) as   $action ) {
-            dump($action);
+        foreach ($actions as   $action => $value) {
             $newAction = new Action();
             $newAction
                 ->setName($action)
-                ->setSetClosed(ActionStatus::isFinalAction($action));
+                ->setSetClosed($value);
+                
             $manager->persist($newAction);
             $this->addReference(Action::class . '_' . $i, $newAction);
             $i++;
@@ -89,13 +88,12 @@ class AppFixtures extends AbstractFixture
 
         $this->createMany(Note::class, 50, function ($note) {
             $job = $this->getRandomreference(Job::class);
-
-
+            
             $user =  $job->getUser();
-
             $jobCreatedAt = DateTime::createFromImmutable($job->getCreatedAt());
             $createdAt =  DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween($jobCreatedAt));
-            $color =$this->faker->randomElement(PostitColors::getColors())->value;
+            $color =$this->faker->randomElement(PostitColors::getColors());
+
             $note
                 ->setCreatedAt($createdAt)
                 ->setContent($this->faker->paragraphs(rand(1, 2), true))

@@ -4,14 +4,36 @@
 	Votre suivi
 {% endblock %}
 
-{% block body %}
-	{% if jobsInProgress | length > 0 %}
+{% block stylesheets %}
 
+<link	rel="stylesheet"	href="{{ asset('styles/synthese.css') }}">
+
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+	<script src="{{asset('js/synthese.js')}}"></script>
+{% endblock %}
+{% block body %}
+
+	<div	class="js-chart-data"	data-chart-jobs-data="{{ jobsData |serialize(format = 'json') }}"	data-chart-responses-data="{{ responsesData |serialize(format = 'json') }}" data-chart-categories="{{ categories |serialize(format = 'json') }}"></div>
+	<h4>Candidatures en cours <span class="badge text-bg-secondary">{{ jobsInProgress | length}}</span></h4>
+	{% if jobsInProgress | length > 0 %}
+	<div class="in-progress mb-3">
 		{% include "home/inProgress.html.twig" %}
-		{% else %}
+	{% else %}
 		<p>
-			Pas de candidature en cours <a href="">Ajouter une candidature</a>
+			Pas de candidature en cours
+			<a	href="">
+				Ajouter une candidature
+			</a>
 		</p>
 	{% endif %}
+</div>
 
+<h4>Candidatures de l'année <span class="badge text-bg-secondary">{{ jobsData |reduce((carry, v) => carry + v ) }}</h4>
+	<div class="bg-white">
+<div id="chart"></div>
+</div>
 {% endblock %}

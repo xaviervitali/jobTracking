@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Job;
+use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,13 +21,15 @@ class JobRepository extends ServiceEntityRepository
 
     
 
-//    public function findOneBySomeField($value): ?Job
-//    {
-//        return $this->createQueryBuilder('j')
-//            ->andWhere('j.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findByUserAndMoreThanDate(User $user, DateTimeImmutable $date): ?array
+   {
+       return $this->createQueryBuilder('j')
+           ->andWhere('j.user = :user')
+           ->setParameter('user', $user)
+           ->andWhere('j.createdAt > :date')
+           ->setParameter('date', $date)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 }

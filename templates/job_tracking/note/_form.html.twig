@@ -1,5 +1,5 @@
 {% set action =   '/note/new'  %}
-{{ form_start(formNote,  {attr: {'novalidate': 'novalidate', 'action': action}}) }}
+{{ form_start(formNote,  {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"false" }}) }}
     {{ form_widget(formNote.content) }}
 
     <h4>Couleur</h4>

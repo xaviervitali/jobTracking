@@ -1,7 +1,7 @@
 
 {% set action =   '/new_job_tracking/' ~ job.id  %}
 
-{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action}}) }}
+{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"false" }}) }}
 {# {{ form_widget(formAction) }} #}
 {% for child in formAction.name %}
   <div class="form-check">

@@ -13,7 +13,6 @@
 			<th>
 				Derniere Action
 			</th>
-			<th>Délai total</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -31,24 +30,25 @@
 					{{ job.title }}
 				</td>
 				<td>
-					{% set oldDate = date(job.job_created_at | date('Y-m-d')) %}
+					{% set oldDate = date(job.createdAt | date('Y-m-d')) %}
 					 {% set interval = now.diff(oldDate) %}
 						{{ oldDate | date('d/m/Y') }}
 				</td>
 				<td>
-					{{ job.name}}
-					{% set oldDate = date(job.job_tracking_created_at | date('Y-m-d')) %}
+					{% set lastJobTracking = job.jobtracking | last %}
+					{% if lastJobTracking | length > 0 %}
+					
+					{{ lastJobTracking.action.name }}
+					{% set oldDate = date(lastJobTracking.createdAt | date('Y-m-d')) %}
 					{% set intervalJobTracking = now.diff(oldDate) %}
 					({{ intervalJobTracking.days }}j) 
 
+					{% else %}
+						Aucune
+				{% endif %}
 
 				</td>
-				<td>
-
-						{{ interval.days }}j
-				
-					
-				</td>
+			
 				<td>
 					<a	type="button"	href="{{ path('app_job_tracking', {'id': job.id}) }}"	class="btn btn-primary btn-sm">
 						Visualiser
