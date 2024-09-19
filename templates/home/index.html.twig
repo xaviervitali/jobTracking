@@ -32,7 +32,7 @@
 	{% endif %}
 </div>
 
-<h4>Candidatures de l'année <span class="badge text-bg-secondary">{{ jobsData |reduce((carry, v) => carry + v ) }}</h4>
+<h4>Candidatures de l'année <span class="badge text-bg-secondary">{{ jobsData |reduce((carry, v) => carry + v * k) }}</h4>
 	<div class="bg-white">
 <div id="chart"></div>
 </div>

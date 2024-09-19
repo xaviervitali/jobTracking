@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const categories = JSON.parse(chartDataSelector.getAttribute("data-chart-categories")).map(e => formatDate(e))
   const jobsData = JSON.parse(chartDataSelector.getAttribute("data-chart-jobs-data"));
   const responsesData = JSON.parse(chartDataSelector.getAttribute("data-chart-responses-data"));
-    console.log(jobsData == responsesData);
     
   var options = {
     series: [
@@ -45,5 +44,7 @@ function formatDate(inputDate) {
     const formattedDate = date.toLocaleDateString('fr-FR', options);
 
     // Retourner le résultat, avec la première lettre du mois en minuscule
-    return formattedDate.charAt(0).toLowerCase() + formattedDate.slice(1);
+  return formattedDate.charAt(0).toLowerCase() + formattedDate.slice(1);
+  
+
 }
