@@ -11,11 +11,11 @@ enum PostitColors: string
     public static function getColors(): array
     {
         return [
-            'Rose' => self::ROSE,
-            'Rose clair' => self::ROSE_CLAIR,
-            'Cyan' => self::CYAN,
-            'Jaune' => self::JAUNE,
-            'Jaune clair' => self::JAUNE_CLAIR,
+            'Rose' => self::ROSE->value,
+            'Rose clair' => self::ROSE_CLAIR->value,
+            'Cyan' => self::CYAN->value,
+            'Jaune' => self::JAUNE->value,
+            'Jaune clair' => self::JAUNE_CLAIR->value,
         ];
     }
 }

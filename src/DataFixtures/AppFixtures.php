@@ -22,7 +22,7 @@ class AppFixtures extends AbstractFixture
     {
         $plaintextPassword = 'abcd';
         $actions = ActionStatus::getActions();
-
+        dump($actions);
         $this->createMany(User::class, 10, function ($user) use ($plaintextPassword) {
 
             $user
@@ -55,7 +55,8 @@ class AppFixtures extends AbstractFixture
         });
 
         $i = 0;
-        foreach ($actions as $action ) {
+        foreach (array_keys($actions) as   $action ) {
+            dump($action);
             $newAction = new Action();
             $newAction
                 ->setName($action)
@@ -94,7 +95,7 @@ class AppFixtures extends AbstractFixture
 
             $jobCreatedAt = DateTime::createFromImmutable($job->getCreatedAt());
             $createdAt =  DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween($jobCreatedAt));
-            $color =$this->faker->randomElement(PostitColors::getColors());
+            $color =$this->faker->randomElement(PostitColors::getColors())->value;
             $note
                 ->setCreatedAt($createdAt)
                 ->setContent($this->faker->paragraphs(rand(1, 2), true))

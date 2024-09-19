@@ -1,6 +1,0 @@
-{{ form_start(form) }}
-{{ form_widget(form.action) }}
-    {{ form_widget(form.createdAt, {attr: {'min' : min}} ) }}
-
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}

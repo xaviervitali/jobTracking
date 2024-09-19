@@ -1,7 +1,16 @@
-{{ form_start(formJobTracking) }}
-{{ form_widget(formJobTracking.action) }}
-    {# {{ form_widget(formJobTracking.createdAt, {attr: {'min' : min}} ) }} #} 
-    {{ form_widget(formJobTracking.createdAt ) }}
+{{ form_start(formJobTracking, {'attr' : {'data-turbo':"false" }}
+) }}
+{% for child in formJobTracking.action %}
+    <div class="form-check">
+        {{ form_widget(child, {'attr': {'class': 'form-check-input' }}
+        ) }}
+        {{ form_label(child, null, {'label_attr': {'class': 'form-check-label' }}
+        ) }}
+    </div>
+{% endfor %}
+{{ form_widget(formJobTracking.createdAt ) }}
 
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+<button class="btn btn-success">
+    {{ button_label|default('Save') }}
+</button>
 {{ form_end(formJobTracking) }}

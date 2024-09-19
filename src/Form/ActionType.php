@@ -25,7 +25,7 @@ class ActionType extends AbstractType
             $choices[$action->getName()] = $action->getId();
         }
         ksort($choices);
-        
+
 
         // Ajout du champ radio avec des choix dynamiques
         $builder
@@ -34,7 +34,7 @@ class ActionType extends AbstractType
                 'expanded' => true, // pour rendre les options sous forme de boutons radio
                 'multiple' => false, // assure que ce ne soit pas un champ de case à cocher, "
                 'label' => false,
-               'label_attr' => ['class' => 'form-check-label'],
+                'label_attr' => ['class' => 'form-check-label'],
             ]);
     }
 }

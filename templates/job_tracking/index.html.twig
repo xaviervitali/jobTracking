@@ -10,7 +10,7 @@
 {% block body %}
   {% if job.notes | length  > 0 %}
 
-    <div class="d-flex gap-2 flex-wrap my-3">
+    <div class="d-flex gap-2 flex-wrap my-3 justify-content-between">
       {% for note in job.notes %}
         {% include "_postit.html.twig" with {
         createdAt :note.createdAt,

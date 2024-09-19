@@ -75,7 +75,7 @@ final class NoteController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_note_delete')]
-    public function delete(Note $note, EntityManagerInterface $entityManager, Security $security, JobRepository $jobRepository): Response
+    public function delete(Note $note, EntityManagerInterface $entityManager, Security $security): Response
     {
         $job = $note->getJob();
         $user = $security->getUser();

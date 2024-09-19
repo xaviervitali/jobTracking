@@ -35,11 +35,19 @@ class NoteType extends AbstractType
                 'label' => false
             ])
             ->add('color', ChoiceType::class, [
-                'choices' => PostitColors::getColors(),
-                'expanded' => true,
-                'multiple' => false,
-                'label' => false
+                'choices' => PostitColors::getColors(), // Assurez-vous que cette méthode retourne un tableau du format attendu.
+                'expanded' => true,  // Afficher sous forme de boutons radio
+                'multiple' => false, // Assurer qu'une seule couleur peut être sélectionnée
+                'label' => false,    // Ne pas afficher de label global
+                'data' => '#feff9c', // Valeur par défaut (la couleur sélectionnée par défaut),
+                'choice_attr' => function ($choice, $key, $index) {
+                    // $choice est la valeur (#ff7eb9, #ff65a3, etc.)
+                    // $key est l'intitulé ('Rose', 'Pink', etc.)
+                    return ['data-color' => $choice]; // Ajouter data-color et un style en ligne
+                },
+       
             ]);
+            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

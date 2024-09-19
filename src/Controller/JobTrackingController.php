@@ -19,7 +19,7 @@ class JobTrackingController extends AbstractController
 {
 
     #[Route('/new_job_tracking/{id}', name: 'app_new_job_tracking', methods: ['GET', 'POST'])]
-    public function new(Job $job, Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function new(Job $job, Request $request, EntityManagerInterface $entityManager, Security $security)
     {
         $jobTracking = new JobTracking();
 
@@ -43,7 +43,8 @@ class JobTrackingController extends AbstractController
 
         }
 
-        return $this->redirectToRoute('app_job_tracking', ['id'=>$job->getId()]);
+        return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()], Response::HTTP_SEE_OTHER);
+
     }
 
     // #[Route('new_job_tracking/', name: 'app_new_job_tracking')]
