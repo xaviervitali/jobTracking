@@ -1,13 +1,42 @@
-<ul class="list-group">
-{% if (job.getJobTracking | length) < 1 %}
+{% if (jobTrackings | length) < 1 %}
   Aucun
-{% endif %}
+{% else %}
 
-{% for jobTracking in job.getJobTracking %}
-  <li class="list-group-item">
-    {{ jobTracking.action.name }}
-    le
-    {{ jobTracking.createdAt | date('d/m/Y') }}
-  </li>
-{% endfor %}
-</ul>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          Date
+        </th>
+        <th>
+          Action
+        </th>
+        {% if notEditing %}
+
+          <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for jobTracking in jobTrackings %}
+        <tr>
+          <td>
+            {{ jobTracking.createdAt | date('d/m/Y') }}
+          </td>
+          <td>
+            {{ jobTracking.action.name }}
+          </td>
+          {% if notEditing %}
+            <td>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#handleModifyModal"   
+               data-jobtracking-id="{{ jobTracking.id }}"
+              data-jobtracking-action="{{ jobTracking.action.id }}">
+                Modifier
+              </button>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

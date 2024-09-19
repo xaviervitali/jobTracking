@@ -1,20 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello JobTrackingController!{% endblock %}
+{% block stylesheet %}{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/volume2/web/jobTracking/src/Controller/JobTrackingController.php</code></li>
-        <li>Your template at <code>/volume2/web/jobTracking/templates/job_tracking/index.html.twig</code></li>
-    </ul>
-</div>
+{% block title %}
+  {{ job.recruiter }}
+  -
+  {{ job.title }}
 {% endblock %}
+{% block body %}
+  {% if job.notes | length  > 0 %}
+
+    <div class="d-flex gap-2 flex-wrap my-3">
+      {% for note in job.notes %}
+        {% include "_postit.html.twig" with {
+        createdAt :note.createdAt,
+        content: note.content ,
+        noteId: note.id, 
+        color :note.color
+        } %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="d-flex justify-content-between gap-5 flex-wrap align-items-start mb-3">
+
+    <div class="flex-grow-1">
+
+      <div class="border rounded p-3 bg-white">
+        <h4>
+          Offre d'emploi
+        </h4>
+        {% include "job_tracking/_job.html.twig" %}
+
+      </div>
+      <div class="flex-grow-1">
+        <div class="border rounded p-3 bg-white mb-2">
+          <h4>
+            Action du jour
+          </h4>
+          {% include "job_tracking/_actions.html.twig" %}
+        </div>
+        <div class="border rounded p-3 bg-white">
+          <h4></h4>
+          {% include "job_tracking/note/_form.html.twig" %}
+        </div>
+      </div>
+    </div>
+    <h4>
+      Historique
+    </h4>
+    {% set notEditing =  true %}
+    {% include "job_tracking/_job_tracking.html.twig"%}
+  </div>
+  {% include "job_tracking/_delete_job_modal.html.twig"%}
+  {% include "job_tracking/_edit_job_tracking_modal.html.twig" with {
+    jobTrackings : job.jobTracking
+  }%}
+</div>
+{% endblock %}{% block javascripts %}
+<script src="{{ asset('js/jobEdit.js') }}"></script>{% endblock %}

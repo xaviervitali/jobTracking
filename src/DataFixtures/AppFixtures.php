@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use ActionStatus;
 use App\Entity\Action;
 use App\Entity\User;
 use App\Entity\Job;
@@ -10,6 +11,7 @@ use App\Entity\Note;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
+use PostitColors;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends AbstractFixture
@@ -19,17 +21,7 @@ class AppFixtures extends AbstractFixture
     public function loadData(ObjectManager $manager): void
     {
         $plaintextPassword = 'abcd';
-        $actions = [
-            'Rejet de candidature' => 1,
-            'Entretien téléphonique' => 0,
-            'Entretien visio' => 0,
-            'Entretien physique' => 0,
-            'Entretien technique' => 0,
-            'Tests psychométriques' => 0,
-            'Exercices pratiques ou études de cas' => 0,
-            'Acceptation' => 1,
-            'Refus de l\'offre' => 1
-        ];
+        $actions = ActionStatus::getActions();
 
         $this->createMany(User::class, 10, function ($user) use ($plaintextPassword) {
 
@@ -63,11 +55,11 @@ class AppFixtures extends AbstractFixture
         });
 
         $i = 0;
-        foreach ($actions as $action => $setClosed) {
+        foreach ($actions as $action ) {
             $newAction = new Action();
             $newAction
                 ->setName($action)
-                ->setSetClosed($setClosed);
+                ->setSetClosed(ActionStatus::isFinalAction($action));
             $manager->persist($newAction);
             $this->addReference(Action::class . '_' . $i, $newAction);
             $i++;
@@ -102,12 +94,13 @@ class AppFixtures extends AbstractFixture
 
             $jobCreatedAt = DateTime::createFromImmutable($job->getCreatedAt());
             $createdAt =  DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween($jobCreatedAt));
-
+            $color =$this->faker->randomElement(PostitColors::getColors());
             $note
                 ->setCreatedAt($createdAt)
                 ->setContent($this->faker->paragraphs(rand(1, 2), true))
                 ->setUser($user)
-                ->setJob($job);
+                ->setColor($color)
+                ->setJob($job); 
         });
     }
 }

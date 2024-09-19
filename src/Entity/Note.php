@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\NoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups as AttributeGroups;
+
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
 class Note
@@ -12,20 +14,27 @@ class Note
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[AttributeGroups(["note"])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[AttributeGroups(["note"])]
     private ?\DateTimeImmutable $createdAt = null;
 
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT)]   
+    #[AttributeGroups(["note"])]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
+    #[AttributeGroups(["note"])]
     private ?Job $job = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?User $user = null;
+
+    #[ORM\Column(length: 8, nullable: true)]
+    private ?string $color = null;
 
     public function getId(): ?int
     {
@@ -77,6 +86,18 @@ class Note
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

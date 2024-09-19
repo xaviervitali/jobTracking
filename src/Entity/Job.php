@@ -66,7 +66,6 @@ class Job
     public function __construct()
     {
         $this->jobTracking = new ArrayCollection();
-        $this->users = new ArrayCollection();
         $this->notes = new ArrayCollection();
     }
 

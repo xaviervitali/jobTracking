@@ -1,5 +1,8 @@
+const jobIdSelector = document.querySelector(".job-id");
+const jobId = JSON.parse(jobIdSelector.getAttribute("data-id"));
+
 function deleteJob(id) {
-  window.location = "/candidature/" + id + "/delete";
+  parent.window.location.href = "/candidature/" + id + "/delete";
 }
 
 function modifyJob() {
@@ -14,45 +17,71 @@ function modifyJob() {
 
 function handleJobModify() {
   const jobForm = document.querySelector("form[name=job_form]");
-  const jobIdSelector = document.querySelector(".job-id");
-  document.querySelector(".loading-spinner").classList.remove("d-none");
-  const jobId = JSON.parse(jobIdSelector.getAttribute("data-id"));
+  jobForm.submit()
+}
+// document.querySelector("form[name=action]").addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   document.querySelector(".loading-spinner").classList.remove("d-none");
 
-  fetch("/candidature/" + jobId, {
-    body: new FormData(jobForm),
-    method: "POST",
-  }).then((e) => {
-    if (e.statusText === "OK") {
-      location.reload();
-    }
-  });
+//   const action = document.querySelector(
+//     "input[type='radio'][name='action[name]']:checked"
+//   );
+
+//   if (action) {
+//     const formData = new FormData();
+//     formData.append("jobId", jobId);
+//     formData.append("actionId", +action.value);
+
+//     fetch("/new_job_tracking/", {
+//       body: formData,
+//       method: "POST",
+//     })
+//       .then((response) => response.json())
+//       .then((e) => {
+//         if (e === "Ok") {
+//           parent.window.location.reload();
+//         }
+//       });
+//   }
+// });
+
+// app_note_delete
+function deleteNote(id) {
+  parent.window.location.href = "/note/" + id + "/delete";
 }
 
-c= document
-  .querySelector("form[name=action]")
-  .addEventListener("submit", (e) => {
-     e.preventDefault();
-        document.querySelector(".loading-spinner").classList.remove("d-none");
-        const jobIdSelector = document.querySelector(".job-id");
-        const action = document.querySelector("input[type='radio'][name='action[name]']:checked");
+document.querySelector("form[name=note]").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  formData.set("note[job]", jobId);
+  e.target.submit()
+  // fetch("/note/new", {
+  //   body: formData,
+  //   method: "POST",
+  // })
+  //   .then((response) => response.json())
+  //   .then((e) => {
+  //     if (e === "Ok") {
+  //       parent.window.location.reload();
+  //     }
+  //   });
+});
 
-      const jobId = JSON.parse(jobIdSelector.getAttribute("data-id"));
+// Écouter l'ouverture de la modal
+var handleModifyModal = document.getElementById("handleModifyModal");
+handleModifyModal.addEventListener("show.bs.modal", function (event) {
+  // Le bouton qui déclenche la modal
+  var button = event.relatedTarget;
 
+  // Extraire les données du bouton via les attributs data-*
+  var jobTrackingId = button.getAttribute("data-jobtracking-id");
+  var jobTrackingAction = button.getAttribute("data-jobtracking-action");
 
-        if (action) {
-
-            const formData = new FormData();
-            formData.append('jobId', jobId);
-            formData.append('actionId', +action.value);
-            fetch("/newJobTracking/" , {
-                body:formData,
-                method: "POST",
-            }).then(response => response.json()
-            ).then(e => {
-                if (e === 'Ok') {
-                  parent.window.location.href = '/'
-            }})
-        
-        }
-  });
-
+  // Sélectionner les éléments du formulaire dans la modal et leur attribuer les valeurs
+  var modal = this;
+  modal.querySelector("#job_tracking_createdAt").value = jobTrackingId;
+  modal.querySelector(
+    "#job_tracking_action option[value = '" + jobTrackingAction + "']"
+  ).setAttribute('selected', true)
+  modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/action/'+ jobTrackingId+'/edit')
+});

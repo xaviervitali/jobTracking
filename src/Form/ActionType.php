@@ -33,10 +33,8 @@ class ActionType extends AbstractType
                 'choices' => $choices,
                 'expanded' => true, // pour rendre les options sous forme de boutons radio
                 'multiple' => false, // assure que ce ne soit pas un champ de case à cocher, "
-                'label' => 'Réponse de l\'employeur',
-                'choice_attr' => function () {
-                    return ['class' => 'form-check-input']; // Ajout de la classe CSS ici
-                },     'label_attr' => ['class' => 'form-check-label'],
+                'label' => false,
+               'label_attr' => ['class' => 'form-check-label'],
             ]);
     }
 }

@@ -1,0 +1,7 @@
+{{ form_start(formJobTracking) }}
+{{ form_widget(formJobTracking.action) }}
+    {# {{ form_widget(formJobTracking.createdAt, {attr: {'min' : min}} ) }} #} 
+    {{ form_widget(formJobTracking.createdAt ) }}
+
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(formJobTracking) }}

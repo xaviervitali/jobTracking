@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Job;
+use DateTimeImmutable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -14,12 +15,16 @@ class JobFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $date =  new DateTimeImmutable();
+        $dateIso8601 = $date->format('c');
+        $dateMax = substr($dateIso8601, 0, -6);
+
         $builder
             ->add('recruiter', TextType::class, ['label'=>'Employeur', 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Nom de l\'employeur']])
-            ->add('title', TextType::class, ['label'=>'Intitulé','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Titre de l\'annonce']])
-            ->add('source', TextType::class, ['label'=>'Source','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Source de l\'annonce']])
-            ->add('offerDescription', TextareaType::class, ['label'=>'Détail','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Texte de l\'annonce']])
-            ->add('created_at', DateType::class, ['label'=>'Date','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Candidature le', 'value'=>date('Y-m-d')]])
+            ->add('title', TextType::class, ['label'=>'Intitulé de l\'offre','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Titre de l\'annonce']])
+            ->add('source', TextType::class, ['label'=>'Source de l\'offre','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Source de l\'annonce']])
+            ->add('offerDescription', TextareaType::class, ['label'=>'Description du poste','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Texte de l\'annonce','rows' => '10']])
+            ->add('created_at', DateType::class, ['label'=>'Date de candidature','attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Candidature le',  'max'=>  $dateMax]])
             ->add('coverLetter', TextareaType::class, ['label'=>'Lettre de motivation',  'required' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Lettre de motivation', 'required'=>false]])
 
         ;

@@ -1,0 +1,20 @@
+{% set action =   '/note/new'  %}
+{{ form_start(formNote,  {attr: {'novalidate': 'novalidate', 'action': action}}) }}
+    {{ form_widget(formNote.content) }}
+    {% for child in formNote.color %}
+    <div class="form-check">
+        {{ form_widget(child, {
+            'attr': {
+                'class': 'form-check-input'
+            }
+        }) }}
+        <label for="{{ child.vars.id }}" class="form-check-label">
+            <span style="display:inline-block; width: 20px; height: 20px; background-color: {{ child.vars.value }}; margin-right: 5px;"></span>
+            {{ child.vars.label }}
+        </label>
+    </div>
+{% endfor %}
+    <div class="d-flex justify-content-end gap-3 ">
+    <button class="btn btn-info">{{ button_label|default('Valider') }}</button>
+    </div>
+{{ form_end(formNote) }}
