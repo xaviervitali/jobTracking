@@ -10,6 +10,7 @@ use App\Form\ActionType;
 use App\Form\JobFormType;
 use App\Form\JobTrackingType;
 use App\Form\NoteType;
+use App\Repository\JobRepository;
 use App\Repository\JobTrackingRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,12 +24,18 @@ class HomeController extends AbstractController
 {
     #[Route('/synthese', name: 'app_synthese')]
     public function synthese(
-        JobTrackingRepository $jobTracking,
+        JobTrackingRepository $jobTrackingRepository,
+        JobRepository $jobRepository,
         Security $security
     ): Response {
         $user = $security->getUser();
-        $jobsInProgress = $jobTracking->findJobsByUserOrderedByDate($user);
+        $jobsInProgress = $jobTrackingRepository->findJobsByUserOrderedByDate($user);
+        $months = [];
+        $jobs= $jobRepository->findBy(['user'=>$user]);
 
+
+        
+        dd($jobs);
         return $this->render('home/index.html.twig', [
             'user' => $user,
             'jobsInProgress' =>   $jobsInProgress
