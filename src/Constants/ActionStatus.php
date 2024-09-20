@@ -16,6 +16,7 @@ class ActionStatus
     public const RELANCE_TELEPHONIQUE = 0;
     public const RELANCE_MAIL = 0;
     public const RELANCE_PRESENTIEL = 0;
+    public const ABANDON_CANDIDATURE = 0;
 
     // Méthode pour récupérer les actions avec leur statut
     public static function getActions(): array
@@ -33,6 +34,7 @@ class ActionStatus
             'Relance téléphonique' => self::RELANCE_TELEPHONIQUE,
             'Relance mail' => self::RELANCE_MAIL,
             'Relance en présentiel' => self::RELANCE_PRESENTIEL,
+            'Abandon de la candidature' => self::ABANDON_CANDIDATURE,
         ];
     }
 
@@ -42,7 +44,8 @@ class ActionStatus
         return in_array($action, [
             self::REJET_CANDIDATURE,
             self::ACCEPTATION,
-            self::REFUS_OFFRE
+            self::REFUS_OFFRE,
+            self::ABANDON_CANDIDATURE,
         ]);
     }
 }

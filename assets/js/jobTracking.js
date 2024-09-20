@@ -1,3 +1,6 @@
+import '../styles/postit.css'
+
+
 
 
 function deleteJob(id) {
@@ -24,22 +27,7 @@ function deleteNote(id) {
   parent.window.location.href = "/note/" + id + "/delete";
 }
 
-document.querySelector("form[name=note]").addEventListener("submit", (e) => {
-  e.preventDefault();
-  document.querySelector('option[value="'+ jobId+'"]').setAttribute('selected', true)
 
-  e.target.submit()
-  // fetch("/note/new", {
-  //   body: formData,
-  //   method: "POST",
-  // })
-  //   .then((response) => response.json())
-  //   .then((e) => {
-  //     if (e === "Ok") {
-  //       parent.window.location.reload();
-  //     }
-  //   });
-});
 
 // Écouter l'ouverture de la modal
 const handleModifyModal = document.getElementById("handleModifyModal");
@@ -54,8 +42,13 @@ handleModifyModal.addEventListener("show.bs.modal", function (event) {
   // Sélectionner les éléments du formulaire dans la modal et leur attribuer les valeurs
   const modal = this;
   modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/action/' + jobTrackingId + '/edit')
-  document.querySelector('input[name="job_tracking[action]"][value="'+jobTrackingAction+'"]').setAttribute('checked', true)
+  document.querySelector('input[name="job_tracking[action]"][value="' + jobTrackingAction + '"]').setAttribute('checked', true)
 
   modal.querySelector("#job_tracking_createdAt").value = jobTrackingCreatedAt;
-  
+
 });
+
+window.modifyJob = modifyJob;
+window.deleteJob = deleteJob;
+window.handleJobModify = handleJobModify;
+window.deleteNote = deleteNote;

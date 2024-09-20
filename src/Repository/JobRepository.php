@@ -28,6 +28,7 @@ class JobRepository extends ServiceEntityRepository
            ->setParameter('user', $user)
            ->andWhere('j.createdAt > :date')
            ->setParameter('date', $date)
+           ->orderBy('j.createdAt', 'asc')
            ->getQuery()
            ->getResult()
        ;

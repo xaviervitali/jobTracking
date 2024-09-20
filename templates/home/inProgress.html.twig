@@ -1,4 +1,4 @@
-<table id="table"	class="table table-striped">
+<table	id="table"	class="table table-striped">
 	<thead>
 		<tr>
 			<th>
@@ -17,12 +17,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		 {% set now = date() %}
-		 {% for jobInProgress in jobsInProgress %}
-		 {% set job = jobInProgress  %}
+		{% set now = date() %}
+		{% for jobInProgress in jobsInProgress %}
+			{% set job = jobInProgress %}
 
-			  <tr>
-				
+			<tr>
+
 				<td>
 					{{ job.recruiter }}
 				</td>
@@ -31,30 +31,33 @@
 				</td>
 				<td>
 					{% set oldDate = date(job.createdAt | date('Y-m-d')) %}
-					 {% set interval = now.diff(oldDate) %}
-						{{ oldDate | date('d/m/Y') }}
+					{% set interval = now.diff(oldDate) %}
+					{{ oldDate | date('d/m/Y') }}
 				</td>
 				<td>
-					{% set lastJobTracking = job.jobtracking | last %}
+					{% set lastJobTracking = job.jobtracking|sort((a, b) => a.createdAt <=> b.createdAt) | last %}
 					{% if lastJobTracking | length > 0 %}
-					
-					{{ lastJobTracking.action.name }}
-					{% set oldDate = date(lastJobTracking.createdAt | date('Y-m-d')) %}
-					{% set intervalJobTracking = now.diff(oldDate) %}
-					({{ intervalJobTracking.days }}j) 
 
+						{{ lastJobTracking.action.name }}
+						{% set oldDate = date(lastJobTracking.createdAt | date('Y-m-d')) %}
+						{% set intervalJobTracking = now.diff(oldDate) %}
+						(
+						{{ intervalJobTracking.days }}
+						j)
 					{% else %}
 						Aucune
-				{% endif %}
+					{% endif %}
 
 				</td>
-			
+
 				<td>
+			
 					<a	type="button"	href="{{ path('app_job_tracking', {'id': job.id}) }}"	class="btn btn-primary btn-sm">
 						Visualiser
 					</a>
+
 				</td>
-			 </tr> 
-		 {% endfor %} 
+			</tr>
+		{% endfor %}
 	</tbody>
 </tbody></table>

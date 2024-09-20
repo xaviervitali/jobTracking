@@ -122,7 +122,7 @@ class HomeController extends AbstractController
         $formJobTracking = $this->createForm(JobTrackingType::class, $jobTracking);
 
         $note = new Note();
-        $formNote = $this->createForm(NoteType::class, $note);
+        $formNote = $this->createForm(NoteType::class, $note, ['job'=>$job]);
 
         $jobTrackings =  $job->getJobTracking()->toArray();
         usort($jobTrackings, function ($a, $b) {

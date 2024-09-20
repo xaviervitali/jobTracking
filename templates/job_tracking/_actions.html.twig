@@ -1,5 +1,6 @@
 
-{% set action =   '/new_job_tracking/' ~ job.id  %}
+{% set  action= path('app_new_job_tracking', {'id': job.id})  %}
+
 
 {{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"false" }}) }}
 {# {{ form_widget(formAction) }} #}

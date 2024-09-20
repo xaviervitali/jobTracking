@@ -25,12 +25,16 @@ class NoteType extends AbstractType
             'Jaune clair' => '#fff740'
         ];
 
+
+        $job = $options['job'] ?? null;
+
         $builder
 
             ->add('content', TextareaType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Nouvelle note']])
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'id',
+                'data' => $job,
                 'attr' => ['class' => "d-none"],
                 'label' => false
             ])
@@ -54,6 +58,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
+            'job' => null, // Option pour passer un Job
         ]);
     }
 }

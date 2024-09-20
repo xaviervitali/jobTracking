@@ -1,4 +1,9 @@
-import "./bootstrap.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+import 'jquery';
+// import 'bootstrap-table/dist/bootstrap-table.min.css';
+// import 'bootstrap-table';
+
 /*
  * Welcome to your app's main JavaScript file!
  *
@@ -6,6 +11,10 @@ import "./bootstrap.js";
  * which should already be in your base.html.twig.
  */
 import "./styles/app.css";
+
+// jQuery est nécessaire pour Bootstrap Table
+import $ from 'jquery';
+global.$ = global.jQuery = $;
 
 // console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");
 document.addEventListener('DOMContentLoaded', function() {

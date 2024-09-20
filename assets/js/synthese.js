@@ -1,4 +1,6 @@
 
+import "../styles/synthese.css";
+import ApexCharts from 'apexcharts'
 
 document.addEventListener("DOMContentLoaded", function () {
   const chartDataSelector = document.querySelector(".js-chart-data");
@@ -18,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ],
     chart: {
-      height: 350,
+      height: 'auto',
       type: "radar",
     },
     yaxis: {

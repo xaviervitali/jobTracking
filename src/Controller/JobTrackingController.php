@@ -29,6 +29,7 @@ class JobTrackingController extends AbstractController
         if (!$actionId) {
             throw $this->createNotFoundException('Action ID not found in request');
         }
+        
         $action = $entityManager->getRepository(Action::class)->find($actionId);
 
         if ( $job->getUser() == $security->getUser()) {
@@ -43,60 +44,11 @@ class JobTrackingController extends AbstractController
 
         }
 
-        return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()], Response::HTTP_SEE_OTHER);
+        // return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_synthese',  [], Response::HTTP_SEE_OTHER);
 
     }
 
-    // #[Route('new_job_tracking/', name: 'app_new_job_tracking')]
-    // function newJobTracking(Request $request, EntityManagerInterface $entityManager, Security $security)
-    // {
-
-
-    //     $actionId = $entityManager->getRepository(Action::class)->find($request->request->get('actionId'));
-
-    //     // $formAction->handleRequest($request);
-    //     if (!$actionId) {
-    //         throw $this->createNotFoundException('Action ID not found in request');
-    //     }
-
-    //     // Récupérer l'entité Action à partir de l'identifiant
-    //     $action = $entityManager->getRepository(Action::class)->find($actionId);
-
-    //     if (!$action) {
-    //         throw $this->createNotFoundException('Action not found');
-    //     }
-
-    //     $jobId = $entityManager->getRepository(Job::class)->find($request->request->get('jobId'));
-
-    //     // $formAction->handleRequest($request);
-    //     if (!$jobId) {
-    //         throw $this->createNotFoundException('Job ID not found in request');
-    //     }
-
-    //     // Récupérer l'entité Action à partir de l'identifiant
-    //     $job = $entityManager->getRepository(Job::class)->find($jobId);
-
-    //     if (!$job) {
-    //         throw $this->createNotFoundException('Action not found');
-    //     }
-
-    //     if ($job->getUser() !== $security->getUser()) {
-    //         throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce job.');
-    //     }
-
-    //     $jobTracking = new JobTracking();
-    //     $jobTracking
-    //         ->setJob($job)
-    //         ->setAction($action)
-    //         ->setUser($security->getUser())
-    //         ->setCreatedAt(new DateTimeImmutable());
-    //     $entityManager->persist($jobTracking);
-    //     $entityManager->flush();
-    //     $this->addFlash("info", "Action " . $action->getName() . " ajoutée");
-
-
-    //     return $this->json('Ok');
-    // }
 
 
 

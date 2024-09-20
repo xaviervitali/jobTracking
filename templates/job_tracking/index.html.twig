@@ -1,11 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheet %}{% endblock %}
+
 
 {% block title %}
   {{ job.recruiter }}
   -
   {{ job.title }}
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+    {{ encore_entry_link_tags('jobTracking') }} {# Inclure le fichier CSS compilé #}
+{% endblock %}
+
+
+{% block javascripts %}
+{{ encore_entry_script_tags('jobTracking') }}
+
 {% endblock %}
 {% block body %}
   {% if job.notes | length  > 0 %}
@@ -56,5 +67,5 @@
     jobTrackings : job.jobTracking
   }%}
 </div>
-{% endblock %}{% block javascripts %}
-<script src="{{ asset('js/jobEdit.js') }}"></script>{% endblock %}
+{% endblock %}
+
