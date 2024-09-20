@@ -16,7 +16,6 @@
 
 {% endblock %}
 {% block body %}
-
 	<div	class="js-chart-data"	data-chart-jobs-data="{{ jobsData |serialize(format = 'json') }}"	data-chart-responses-data="{{ responsesData |serialize(format = 'json') }}" data-chart-categories="{{ categories |serialize(format = 'json') }}"></div>
 	<h4>Candidatures en cours <span class="badge text-bg-secondary">{{ jobsInProgress | length}}</span></h4>
 	{% if jobsInProgress | length > 0 %}
@@ -33,7 +32,7 @@
 </div>
 <hr>
 <h4>Candidatures de l'année <span class="badge text-bg-secondary">{{ jobsData |reduce((carry, v) => carry + v ) }}</h4>
-	<div class="bg-white">
+	<p>Delai moyen d'une candidature {{ delay }} jours</p>
 <div id="chart"></div>
 </div>
 {% endblock %}

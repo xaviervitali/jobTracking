@@ -2,14 +2,15 @@
 	<thead>
 		<tr>
 			<th>
+				 Le
+			</th>
+			<th>
 				Employeur
 			</th>
 			<th>
-				Titre de l'annonce
+				Initulé de l'annonce
 			</th>
-			<th>
-				Candidature initiale le
-			</th>
+	
 			<th>
 				Derniere Action
 			</th>
@@ -22,18 +23,16 @@
 			{% set job = jobInProgress %}
 
 			<tr>
-
+				<td>
+					{{ job.createdAt | date('d/m/Y') }}
+				</td>
 				<td>
 					{{ job.recruiter }}
 				</td>
 				<td>
 					{{ job.title }}
 				</td>
-				<td>
-					{% set oldDate = date(job.createdAt | date('Y-m-d')) %}
-					{% set interval = now.diff(oldDate) %}
-					{{ oldDate | date('d/m/Y') }}
-				</td>
+			
 				<td>
 					{% set lastJobTracking = job.jobtracking|sort((a, b) => a.createdAt <=> b.createdAt) | last %}
 					{% if lastJobTracking | length > 0 %}

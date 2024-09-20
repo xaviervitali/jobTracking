@@ -11,7 +11,7 @@ use App\Form\JobFormType;
 use App\Form\JobTrackingType;
 use App\Form\NoteType;
 use App\Repository\JobRepository;
-use App\Repository\JobTrackingRepository;
+use App\Service\JobService;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,67 +29,25 @@ class HomeController extends AbstractController
         Security $security
     ): Response {
         $user = $security->getUser();
-        $jobsInProgress = [];
-        $closedJobs = [];
         $date = new DateTime();
         $date->modify('-1 year');
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobs = $jobRepository->findByUserAndMoreThanDate( $user, $date);
+        $jobService = new JobService($user, $date, $jobRepository);
+        $delays = $jobService->getDelays();
 
-        foreach ($jobs as $job) {
-           $isClosed = count (array_filter(
-                $job->getJobTracking()->toArray(),
-                function (JobTracking $jobTracking) {
-                    return !!$jobTracking->getAction()->isSetClosed();
-                }
-            )) > 0;
-
-            if($isClosed){
-                $closedJobs[] = $job;
-            } else {
-                $jobsInProgress[] = $job;
-            }
+        if(!empty($delays)){
+            $delay = array_sum($delays)/count($delays);
 
         }
-
-        $dates = array_unique(array_map(function (Job $job) {
-            return $job->getCreatedAt()->format('Y-m');
-        }, $jobs));
-        sort($dates);
-
-
-        $completeDates =    $this->addIntermediatedatesToNow($dates[0]);
-
-
-        $jobsPerMonth = [];
-        $closedJobsPerMonth = [];
-        foreach ($completeDates as $month) {
-            $jobsPerMonth[$month] = count(array_filter(
-                $jobs,
-                function (Job $job) use ($month) {
-                    return $job->getCreatedAt()->format('Y-m') == $month;
-                }
-            ));
-
-            $closedJobsPerMonth[$month] = count(array_filter(
-                $closedJobs,
-                function (Job $job) use ($month) {
-                    return $job->getCreatedAt()->format('Y-m') == $month;
-                }
-            ));
-        }
-
-
-
-
-
+        $jobsPerMonth = $jobService->getJobsPerMonth();
 
         return $this->render('home/index.html.twig', [
-            'jobsInProgress' => $jobsInProgress,
-            'jobsData' => array_values($jobsPerMonth),
-            'responsesData' => array_values($closedJobsPerMonth),
+            'jobsInProgress' => $jobService->getJobsInProgress(),
+            'jobsData' => array_values( $jobsPerMonth),
+            'responsesData' => array_values($jobService->getlosedJobsPerMonth()),
             'categories' => array_keys($jobsPerMonth),
+            'delay' => $delay
 
         ]);
     }
@@ -122,7 +80,7 @@ class HomeController extends AbstractController
         $formJobTracking = $this->createForm(JobTrackingType::class, $jobTracking);
 
         $note = new Note();
-        $formNote = $this->createForm(NoteType::class, $note, ['job'=>$job]);
+        $formNote = $this->createForm(NoteType::class, $note, ['job' => $job]);
 
         $jobTrackings =  $job->getJobTracking()->toArray();
         usort($jobTrackings, function ($a, $b) {
@@ -134,7 +92,7 @@ class HomeController extends AbstractController
             'formAction' => $formAction,
             'formJobTracking' => $formJobTracking,
             'job' => $job,
-            'jobTrackings' => $jobTrackings
+            'jobTrackings' => $jobTrackings,
         ]);
     }
 
@@ -164,19 +122,5 @@ class HomeController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()]);
-    }
-
-    private function addIntermediatedatesToNow($startDate)
-    {
-        $completeDates = [];
-        $start = new DateTime($startDate);
-        $end = new DateTime();
-
-        // Ajoute tous les mois entre les deux dates, y compris la date de début
-        while ($start <= $end) {
-            $completeDates[] = $start->format('Y-m');
-            $start->modify('+1 month'); // Ajoute un mois
-        }
-        return $completeDates;
     }
 }
