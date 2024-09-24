@@ -31,7 +31,7 @@ class JobTrackingType extends AbstractType
         ->add('createdAt', DateType::class, [
             'label' => 'Date',
             'widget' => 'single_text', // Permet l'affichage d'un input HTML5 de type date
-            'attr' => ['class' => 'form-control'],
+            'attr' => ['class' => 'form-control '],
             'html5' => true, // Activer le contrôle des dates au niveau du navigateur
             'years' => range(date('Y') - 10, date('Y')), // Limite la sélection d'années
         ])
@@ -39,13 +39,9 @@ class JobTrackingType extends AbstractType
             'class' => Action::class,
             'choice_label' => 'name', // Le label qui sera affiché
             'label' => 'Action',
-            'attr' => ['class' => "form-select"], // Utilisé pour les "select", mais pas nécessaire ici avec les radio
-            'choice_attr' => function (Action $action) {
-                return ['class' => 'form-check-input']; // Applique la classe aux boutons radio
-            },
-            'expanded' => true, // Options sous forme de boutons radio
+            'attr' => ['class' => "form-select mb-3"], // Utilisé pour les "select", mais pas nécessaire ici avec les radio
+            'expanded' => false, // Options sous forme de boutons radio
             'multiple' => false, // Un seul bouton peut être sélectionné
-            'label_attr' => ['class' => 'form-check-label'], // Classe CSS pour les labels
         ])
 
         ;

@@ -4,8 +4,6 @@
 	Votre suivi
 {% endblock %}
 
-{% block stylesheets %}{# <link rel="stylesheet" href=" {{ asset('assets/styles/synthese.css') }}"> #}
-{% endblock %}
 
 {% block javascripts %}
 
@@ -17,33 +15,25 @@
 	<div	class="js-chart-data"	data-chart-jobs-data="{{ jobsData |serialize(format = 'json') }}"></div>
 	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"></div>
 </hr>
-{# <h4>
-	Candidatures en cours
-	<span	class="badge text-bg-secondary">
-	{{ jobsInProgress | length }}
-	</span>
-</h4> #}
 
 {% if jobsInProgress | length > 0 %}
-	<div	class="in-progress  p-4">
+	<div	class="in-progress">
+		<a	href="{{ path('candidature_new') }}">
+			Ajouter une candidature
+		</a>
 
-	
-<div	id="chart"	class='d-flex justify-content-center bg-white border rounded p-3 '></div>
-	<div class='bg-white  border rounded p-3 my-3'>
-		<h4>
-			Liste des candidatures en cours
-		</h4>
+		<div	id="chart"	class='d-flex justify-content-center bg-white border rounded p-3 '></div>
+		<div	class='bg-white  border rounded p-3 my-3'>
+			<h4>
+				Liste des candidatures en cours
+			</h4>
 
-		
-		{% include "home/inProgress.html.twig" %}
-	</div>
+			{% include "home/inProgress.html.twig" %}
+		</div>
 
-		{% else %}
-			<p>
-				Pas de candidature en cours
-				<a	href="">
-					Ajouter une candidature
-				</a>
-			</p>
-		{% endif %}
+	{% else %}
+		<p>
+			Pas de candidature en cours
+		</p>
+	{% endif %}
 </div>{% endblock %}

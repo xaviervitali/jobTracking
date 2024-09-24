@@ -2,15 +2,9 @@
 {% set  action= path('app_new_job_tracking', {'id': job.id})  %}
 
 
-{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"false" }}) }}
-{# {{ form_widget(formAction) }} #}
-{% for child in formAction.name %}
-  <div class="form-check">
-    {{ form_widget(child, {'attr': {'class': 'form-check-input'}}) }}
-    {{ form_label(child, null, {'label_attr': {'class': 'form-check-label'}}) }}
-  </div>
-{% endfor %}
-<div class="d-flex justify-content-end gap-3">
+{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"false"}}) }}
+{{ form_widget(formAction) }}
+<div class="d-flex justify-content-end gap-3 mt-3">
   <button type="submit" class="btn btn-success d-block">Valider</button>
 </div>
 {{ form_end(formAction) }}

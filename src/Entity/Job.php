@@ -61,6 +61,9 @@ class Job
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'job', orphanRemoval: true)]
     private Collection $notes;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $publicationDate = null;
+
 
 
     public function __construct()
@@ -202,6 +205,18 @@ class Job
                 $note->setJob(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublicationDate(): ?\DateTimeInterface
+    {
+        return $this->publicationDate;
+    }
+
+    public function setPublicationDate(?\DateTimeInterface $publicationDate): static
+    {
+        $this->publicationDate = $publicationDate;
 
         return $this;
     }

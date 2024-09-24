@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     newLink.textContent = 'Visualiser';
 
     // Ajouter une classe à l'élément <a> (optionnel)
-    newLink.classList.add('btn', 'btn-primary');
+    // newLink.classList.add('btn', 'btn-primary');
 
     return {
       ...jobTracking,
@@ -69,7 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
       { data: "name" },
       { data: "link" },
     ],
-    language
+    language,
+    responsive: true
     // config options...
   });
 });

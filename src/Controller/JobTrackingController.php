@@ -5,7 +5,11 @@ namespace App\Controller;
 use App\Entity\Action;
 use App\Entity\Job;
 use App\Entity\JobTracking;
+use App\Entity\Note;
+use App\Form\ActionType;
+use App\Form\JobFormType;
 use App\Form\JobTrackingType;
+use App\Form\NoteType;
 use App\Repository\JobTrackingRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +21,50 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class JobTrackingController extends AbstractController
 {
+
+    #[Route('/candidature/{id}', name: 'app_job_tracking')]
+    public function candidature(Job $job, Security $security, EntityManagerInterface $em, Request $request)
+    {
+        $user = $security->getUser();
+        if ($job->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce job.');
+        }
+
+        $formJob = $this->createForm(JobFormType::class, $job);
+        $formJob->handleRequest($request);
+
+
+        if ($formJob->isSubmitted() && $formJob->isValid()) {
+            $newJob =  $formJob->getData();
+            $em->persist($newJob);
+
+            $em->persist($newJob);
+            $em->flush();
+
+            $this->addFlash("info", "Annonce modifiée");
+        }
+
+        $formAction = $this->createForm(ActionType::class);
+
+        $jobTracking = new JobTracking();
+        $formJobTracking = $this->createForm(JobTrackingType::class, $jobTracking);
+
+        $note = new Note();
+        $formNote = $this->createForm(NoteType::class, $note, ['job' => $job]);
+
+        $jobTrackings =  $job->getJobTracking()->toArray();
+        usort($jobTrackings, function ($a, $b) {
+            return $a->getCreatedAt() <=> $b->getCreatedAt();
+        });
+        return $this->render('job_tracking/index.html.twig', [
+            'form' => $formJob,
+            'formNote' => $formNote,
+            'formAction' => $formAction,
+            'formJobTracking' => $formJobTracking,
+            'job' => $job,
+            'jobTrackings' => $jobTrackings,
+        ]);
+    }
 
     #[Route('/new_job_tracking/{id}', name: 'app_new_job_tracking', methods: ['GET', 'POST'])]
     public function new(Job $job, Request $request, EntityManagerInterface $entityManager, Security $security)

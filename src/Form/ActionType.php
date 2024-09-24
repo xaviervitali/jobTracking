@@ -31,9 +31,10 @@ class ActionType extends AbstractType
         $builder
             ->add('name', ChoiceType::class, [
                 'choices' => $choices,
-                'expanded' => true, // pour rendre les options sous forme de boutons radio
+                'expanded' => false, // pour rendre les options sous forme de boutons radio
                 'multiple' => false, // assure que ce ne soit pas un champ de case à cocher, "
                 'label' => false,
+                'attr' => ['class' => 'form-select'],
                 'label_attr' => ['class' => 'form-check-label'],
             ]);
     }

@@ -42,7 +42,7 @@ handleModifyModal.addEventListener("show.bs.modal", function (event) {
   modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/job_tracking/' + jobTrackingId + '/edit')
 
 
-  document.querySelector('input[name="job_tracking[action]"][value="' + jobTrackingAction + '"]').setAttribute('checked', true)
+  document.querySelector('select[name="job_tracking[action]"').value = jobTrackingAction
   modal.querySelector("#job_tracking_createdAt").value = jobTrackingCreatedAt;
 
 });

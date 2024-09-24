@@ -1,10 +1,12 @@
-<?php 
+<?php
 class ActionStatus
 {
     // Actions finales
     public const REJET_CANDIDATURE = 1;
     public const ACCEPTATION = 1;
     public const REFUS_OFFRE = 1;
+    public const ABANDON_CANDIDATURE = 1;
+    public const ANNONCE_SUPPRIMEE = 1;
 
     // Actions non finales
     public const ENTRETIEN_TELEPHONIQUE = 0;
@@ -16,7 +18,7 @@ class ActionStatus
     public const RELANCE_TELEPHONIQUE = 0;
     public const RELANCE_MAIL = 0;
     public const RELANCE_PRESENTIEL = 0;
-    public const ABANDON_CANDIDATURE = 0;
+
 
     // Méthode pour récupérer les actions avec leur statut
     public static function getActions(): array
@@ -35,6 +37,7 @@ class ActionStatus
             'Relance mail' => self::RELANCE_MAIL,
             'Relance en présentiel' => self::RELANCE_PRESENTIEL,
             'Abandon de la candidature' => self::ABANDON_CANDIDATURE,
+            'Annonce supprimée' => self::ANNONCE_SUPPRIMEE,
         ];
     }
 
@@ -46,6 +49,7 @@ class ActionStatus
             self::ACCEPTATION,
             self::REFUS_OFFRE,
             self::ABANDON_CANDIDATURE,
+            self::ANNONCE_SUPPRIMEE,
         ]);
     }
 }

@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
-
 {% block title %}
   {{ job.recruiter }}
   -
@@ -9,13 +7,13 @@
 {% endblock %}
 
 {% block stylesheets %}
-{{ parent() }}
-    {{ encore_entry_link_tags('jobTracking') }} {# Inclure le fichier CSS compilé #}
+  {{ parent() }}
+  {{ encore_entry_link_tags('jobTracking') }}
+{# Inclure le fichier CSS compilé #}
 {% endblock %}
 
-
 {% block javascripts %}
-{{ encore_entry_script_tags('jobTracking') }}
+  {{ encore_entry_script_tags('jobTracking') }}
 
 {% endblock %}
 {% block body %}
@@ -56,14 +54,24 @@
         </div>
       </div>
     </div>
-    <h4>
-      Historique
-    </h4>
-    {% set notEditing =  true %}
-    {% include "job_tracking/_job_tracking.html.twig"%}
-  </div>
-  {% include "job_tracking/_delete_job_modal.html.twig"%}
-  {% include "job_tracking/_edit_job_tracking_modal.html.twig" %}
-</div>
-{% endblock %}
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Historique
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            {% set notEditing =  true %}
+            {% include "job_tracking/_job_tracking.html.twig" %}
+          </div>
+        </div>
+      </div>
 
+    </div>
+
+  </div>
+  {% include "job_tracking/_delete_job_modal.html.twig" %}
+  {% include "job_tracking/_edit_job_tracking_modal.html.twig" %}
+</div>{% endblock %}

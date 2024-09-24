@@ -1,20 +1,15 @@
 {{ form_start(formJobTracking, {'attr' : {'data-turbo':"false" } }
 ) }}
-{% for child in formJobTracking.action %}
-    <div class="form-check">
-        {{ form_widget(child, {'attr': {'class': 'form-check-input' } }) }}
-        {{ form_label(child, null, {'label_attr': {'class': 'form-check-label'} } ) }}
-    </div>
-{% endfor %}
-{{ form_widget(formJobTracking.createdAt ) }}
+{{ form_widget(formJobTracking.action) }}
+{{ form_widget(formJobTracking.createdAt  ) }}
 <div class="modal-footer">
     <div class="d-flex justify-content-end gap-1">
         <button class="btn btn-success">
             {{ button_label|default('Save') }}
         </button>
-        <button class="btn btn-danger delete" onclick="handleDeleteJobTracking(event)">
+        <button class="btn btn-danger delete" onclick="handleDeleteJobTracking()">
             Supprimer
-    </button>
+        </button>
     </div>
 </div>
 {{ form_end(formJobTracking) }}

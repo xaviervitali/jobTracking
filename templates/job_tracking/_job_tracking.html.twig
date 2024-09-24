@@ -28,7 +28,7 @@
           </td>
           {% if notEditing %}
             <td>
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#handleModifyModal" data-job-tracking-id="{{ jobTracking.id }}" data-job-tracking-action="{{ jobTracking.action.id }}" data-job-tracking-created-at="{{ jobTracking.createdAt | date('c') | slice(0,10)}}">
+              <button class="btn  btn-link" data-bs-toggle="modal" data-bs-target="#handleModifyModal" data-job-tracking-id="{{ jobTracking.id }}" data-job-tracking-action="{{ jobTracking.action.id }}" data-job-tracking-created-at="{{ jobTracking.createdAt | date('c') | slice(0,10)}}">
                 Modifier
               </button>
             </td>
