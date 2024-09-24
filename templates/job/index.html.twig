@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Job index{% endblock %}
+{% block javascripts %}
 
+	{{ encore_entry_script_tags('candidatures') }}
+
+{% endblock %}
 {% block body %}
+
+<div	class="js-table-data"	data-table-items="{{ jobs  }}" data-table-jobs-per-month="{{ jobsPerMonths | serialize }}" data-table-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}"></div>
 
  {{ include('home/inProgress.html.twig') }}
 

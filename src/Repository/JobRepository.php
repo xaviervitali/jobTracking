@@ -6,6 +6,8 @@ use App\Entity\Job;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -13,9 +15,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class JobRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager, Connection $connection)
     {
         parent::__construct($registry, Job::class);
+        $this->entityManager = $entityManager;
+        $this->connection = $connection;
     }
 
 
@@ -23,17 +27,20 @@ class JobRepository extends ServiceEntityRepository
 
     public function findByUser(User $user): ?array
     {
-        return $this->createQueryBuilder('j')
-            ->andWhere('j.user = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    public function findJobsInProgressByUser(User $user): ?array
-    {
 
         return $this->createQueryBuilder('j')
+            ->where('j.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findJobsInProgressOrClosedByUser(User $user, $inProgress = true): ?array
+    {
+
+        $where = $inProgress ? 'jt IS NULL OR a.setClosed = 0 OR a.setClosed is null' : 'jt IS NOT NULL AND a.setClosed = 1';
+
+        return  $this->createQueryBuilder('j')
             ->leftJoin('j.jobTracking', 'jt') // Jointure avec job_tracking
             ->leftJoin('jt.action', 'a')      // Jointure avec action
             ->where('j.user = :user')         // Condition sur l'utilisateur
@@ -45,10 +52,56 @@ class JobRepository extends ServiceEntityRepository
             ->addSelect('j.title') // Sélectionner la date max
             ->addSelect('j.createdAt') // Sélectionner la date max
             ->addSelect('j.id') // Sélectionner la date max
-            ->addSelect('j.recruiter') // Sélectionner la date max
-            ->andWhere('jt IS NULL OR a.setClosed = 0 OR a.setClosed is null')
+            ->addSelect('j.recruiter')
+            ->andWhere($where)
+
+
             ->orderBy('maxCreatedAt', 'desc') // Tri par la date max
             ->getQuery()
             ->getResult();
+    }
+
+    public function findJobsUser(User $user): ?array
+    {
+
+        return $this->createQueryBuilder('j')
+            ->leftJoin('j.jobTracking', 'jt') // Jointure avec job_tracking
+            ->leftJoin('jt.action', 'a')      // Jointure avec action
+            ->where('j.user = :user')         // Condition sur l'utilisateur
+            ->setParameter('user', $user)
+            ->groupBy('j.id')                 // Grouper par job.id
+            ->addSelect('a.name') // Sélectionner la date max
+            ->addSelect('a.setClosed') // Sélectionner la date max
+            ->addSelect('j.title') // Sélectionner la date max
+            ->addSelect('j.createdAt') // Sélectionner la date max
+            ->addSelect('j.id') // Sélectionner la date max
+            ->addSelect('j.recruiter') // Sélectionner la date max
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getJobsPerMonth($user)
+    {
+
+        $sql = "SELECT    DATE_FORMAT(created_at, '%Y-%m') AS yearmonth,
+    COUNT(*) AS count  FROM `job` WHERE user_id = :user GROUP BY
+    yearmonth
+ORDER BY
+    yearmonth;";
+
+
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+
+        return $stmt->fetchAllAssociative();
+    }
+
+    public function getClosedJobsPerMonth($user)
+    {
+
+        $sql = "SELECT  count(*) as count, DATE_FORMAT(job.created_at, '%Y-%m') AS yearmonth, SUM(action.set_closed) as set_closed  FROM `job` INNER join job_tracking on job_tracking.job_id = job.id inner join action on job_tracking.action_id = action.id WHERE job.user_id = :user GROUP BY yearmonth HAVING set_closed > 0 ORDER BY yearmonth;";
+
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+
+        return $stmt->fetchAllAssociative();
     }
 }

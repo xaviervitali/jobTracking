@@ -24,6 +24,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "angularx-social-login": "^4.1.0",
         "apexcharts": "^3.53.0",
         "bootstrap": "^5.3.3",
         "datatables.net-dt": "^2.1.7",

@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ActionRepository;
-use App\Repository\ResponseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
 class Action
@@ -20,7 +20,7 @@ class Action
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?bool $setClosed = null;
+        private ?bool $setClosed = null;
 
     /**
      * @var Collection<int, JobTracking>

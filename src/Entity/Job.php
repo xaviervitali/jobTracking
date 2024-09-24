@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups as AttributeGroups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
@@ -16,31 +16,31 @@ class Job
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     private ?int $id = null;
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column(length: 255)]
     private ?string $recruiter = null;
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $offerDescription = null;
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $coverLetter = null;
 
-    #[AttributeGroups(["job"])]
+    #[Groups(["job"])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $source = null;
 
@@ -52,7 +52,7 @@ class Job
     #[ORM\OneToMany(targetEntity: JobTracking::class, mappedBy: 'job', orphanRemoval: true)]
     private Collection $jobTracking;
 
-    #[ORM\ManyToOne(inversedBy: 'jobs')]
+    #[ORM\ManyToOne(inversedBy: 'job')]
     private ?User $user = null;
 
     /**

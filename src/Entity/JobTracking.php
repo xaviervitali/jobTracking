@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\JobTrackingRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups as AttributeGroups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: JobTrackingRepository::class)]
 class JobTracking
@@ -12,10 +12,10 @@ class JobTracking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[AttributeGroups(["job"])]
     private ?int $id = null;
 
     #[ORM\Column]
+
     private ?\DateTimeImmutable $createdAt = null;
 
 

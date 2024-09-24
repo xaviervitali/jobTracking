@@ -2,20 +2,18 @@
 
 namespace App\Service;
 
-use App\Entity\Job;
-use App\Entity\JobTracking;
 use App\Entity\User;
 use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 class JobService
 {
-        private array $jobs;
+    private  $jobs;
 
-    private array $jobsInProgress = [];
-    private array $closedJobs = [];
+    private  $jobsInProgress = [];
+    private  $closedJobs = [];
     private array $delays  = [];
     private array $jobsPerMonth;
 
@@ -23,10 +21,9 @@ class JobService
     private DateTimeImmutable $minDate;
 
 
-    public function __construct(User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository,)
+    public function __construct(private User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository,)
     {
         $this->minDate = $minDate;
-        $this->jobs = $jobRepository->findJobsByUserOrderedByDate($user);
     }
 
 
@@ -35,22 +32,26 @@ class JobService
 
     public function getJobsInProgress()
     {
-        return     $this->jobsInProgress;
+ 
+        return     $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user));
     }
 
     public function getClosedJob()
     {
-        return     $this->closedJobs;
+        return  $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user, false));
     }
 
     public function  getJobsPerMonth()
     {
-        return $this->jobsPerMonth;
+        dump($this->user->getId());
+        $jobsPerMonth = $this->jobRepository->getJobsPerMonth($this->user);
+        return $this->fillJobsPerMonth($jobsPerMonth);
     }
 
-    public function  getlosedJobsPerMonth()
+    public function  getClosedJobsPerMonth()
     {
-        return $this->closedJobsPerMonth;
+        $jobsPerMonth = $this->jobRepository->getClosedJobsPerMonth($this->user);
+        return $this->fillJobsPerMonth($jobsPerMonth);
     }
 
     public function getDelays()
@@ -58,30 +59,6 @@ class JobService
         return $this->delays;
     }
 
-
-    public function  irrigateJobsArrays()
-    {
-        foreach ($this->jobs as $job) {
-            $closedJobTracking = array_filter(
-                (array) $job->getJobTracking(),
-                function (JobTracking $jobTracking) {
-                    return !!$jobTracking->getAction()->isSetClosed();
-                }
-            );
-            $isClosed = count($closedJobTracking) > 0;
-
-            if ($isClosed) {
-                $this->closedJobs[] = $job;
-                $origin = $job->getCreatedAt();
-                $target = $closedJobTracking[0]->getCreatedAt();
-                $this->delays[] =  intval($origin->diff($target)->format('%a'));
-            } else {
-                $this->jobsInProgress[] = $job;
-            }
-        }
-        $this->setJobsPerMonth();
-        
-    }
     private function getDateBetween()
     {
         $completeDates = [];
@@ -95,23 +72,39 @@ class JobService
         }
         return $completeDates;
     }
-    private function setJobsPerMonth()
+    private function fillJobsPerMonth($jobs)
     {
+
+        $jobsPerMonth = [];
+
         foreach ($this->getDateBetween() as $month) {
-            $this->jobsPerMonth[$month] = count(array_filter(
-                $this->jobs,
-                function (Job $job) use ($month) {
-                    return $job->getCreatedAt()->format('Y-m') == $month;
-                }
-            ));
 
-            $this->closedJobsPerMonth[$month] = count(array_filter(
-                $this->closedJobs,
-                function (Job $job) use ($month) {
-
-                    return $job->getCreatedAt()->format('Y-m') == $month;
+            $count = 0;
+        
+          $currentMonth =  array_filter(
+                 $jobs,
+                function ( $job) use ($month) {
+                    return $job['yearmonth'] === $month;
                 }
-            ));
+            );
+
+            if(count( $currentMonth )>0){
+                $count = $currentMonth[array_key_first($currentMonth)]['count'];
+            }
+            $jobsPerMonth[$month] = $count;
+
+         
         }
+        return $jobsPerMonth;
+    }
+
+    private function mapFindJobsInProgressOrClosedByUserRepo($repo)
+    {
+        $jobs = [];
+        foreach ($repo as $job) {
+            $jobs[] = $job[0];
+        }
+
+        return $jobs;
     }
 }

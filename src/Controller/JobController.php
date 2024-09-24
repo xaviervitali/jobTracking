@@ -3,29 +3,54 @@
 namespace App\Controller;
 
 use App\Entity\Job;
-use App\Entity\JobTracking;
-use App\Entity\Note;
-use App\Form\ActionType;
 use App\Form\JobFormType;
-use App\Form\JobTrackingType;
-use App\Form\JobType;
-use App\Form\NoteType;
 use App\Repository\JobRepository;
+use App\Repository\JobTrackingRepository;
+use App\Service\JobService;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 final class JobController extends AbstractController
 {
     #[Route('/job', name: 'app_job_index', methods: ['GET'])]
-    public function index(JobRepository $jobRepository): Response
+    public function index(JobRepository $jobRepository, SerializerInterface $serializer, JobTrackingRepository $jobTrackingRepository, Security $security): Response
     {
+        $user =$security->getUser();
+   
+
+        $date = new \DateTime();
+        $date->modify('-1 year');
+
+        $date = DateTimeImmutable::createFromMutable($date);
+
+        $jobService =new JobService($user, $date, $jobRepository);
+        
+        $jobsPerMonths = $jobService->getJobsPerMonth();
+        $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
+
+
+
+        $userJobs = $jobRepository->findBy(['user'=> $user]);
+
+        $jsonContent = $serializer->serialize($userJobs, 'json', [
+            'groups' => ['job'],
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return $object->getId();
+            },
+        ]);
         return $this->render('job/index.html.twig', [
-            'jobs' => $jobRepository->findAll(),
+           'jobs'=> $jsonContent,
+           'jobsPerMonths'=>$jobsPerMonths,
+           'closedJobsPerMonth'=>$closedJobsPerMonth,
+
         ]);
     }
 

@@ -35,7 +35,7 @@ class HomeController extends AbstractController
         $date->modify('-1 year');
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobsInProgressByUser = $jobRepository->findJobsInProgressByUser($user);
+        $jobsInProgressByUser = $jobRepository->findJobsInProgressOrClosedByUser($user);
 
         $jobs= array_map(function($jobInProgress){return $jobInProgress[0];}, $jobsInProgressByUser);
 

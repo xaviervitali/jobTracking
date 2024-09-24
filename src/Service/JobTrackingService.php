@@ -2,13 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Job;
-use App\Entity\JobTracking;
-use App\Entity\User;
-use App\Repository\JobRepository;
-use DateTime;
-use DateTimeImmutable;
-
 
 class JobTrackingService
 {
