@@ -1,15 +1,7 @@
+@import url('https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css');
 
 .navbar {
   border-bottom: 1px solid #888;
-}
-
-/* label {
-  display: none !important;
-} */
-
-#job-accor .accordion-body{
-    max-height: 50vh;
-    overflow: auto;
 }
 
 .alert-block {
@@ -18,4 +10,8 @@
 
 .alert.fade-out {
   opacity: 0;
+}
+
+body {
+  background: #eee;
 }

@@ -12,6 +12,7 @@ use App\Form\JobTrackingType;
 use App\Form\NoteType;
 use App\Repository\JobRepository;
 use App\Service\JobService;
+use App\Service\JobTrackingService;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,28 +27,40 @@ class HomeController extends AbstractController
     #[Route('/synthese', name: 'app_synthese')]
     public function synthese(
         JobRepository $jobRepository,
-        Security $security
+        Security $security,
+     
     ): Response {
         $user = $security->getUser();
         $date = new DateTime();
         $date->modify('-1 year');
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobService = new JobService($user, $date, $jobRepository);
-        $delays = $jobService->getDelays();
+        $jobsInProgressByUser = $jobRepository->findJobsInProgressByUser($user);
 
-        if(!empty($delays)){
-            $delay = array_sum($delays)/count($delays);
+        $jobs= array_map(function($jobInProgress){return $jobInProgress[0];}, $jobsInProgressByUser);
 
-        }
-        $jobsPerMonth = $jobService->getJobsPerMonth();
+        $jobsInProgress = array_map(function($jobInProgress){return array_slice($jobInProgress, 1);}, $jobsInProgressByUser);
+
+        $jobTrackingService = new JobTrackingService();
+        $jobData = $jobTrackingService->getActionsCountForJobs($jobs);
+ 
+       
+
+        // $delays = $jobService->getDelays();
+
+        // if(!empty($delays)){
+        //     $delay = array_sum($delays)/count($delays);
+
+        // }
+        // $jobsPerMonth = $jobService->getJobsPerMonth();
 
         return $this->render('home/index.html.twig', [
-            'jobsInProgress' => $jobService->getJobsInProgress(),
-            'jobsData' => array_values( $jobsPerMonth),
-            'responsesData' => array_values($jobService->getlosedJobsPerMonth()),
-            'categories' => array_keys($jobsPerMonth),
-            'delay' => $delay
+            'jobsInProgress' => $jobsInProgress,
+             'jobsData' => $jobData,
+             'jobsInProgressJson' => json_encode($jobsInProgress),
+            // 'responsesData' => array_values($jobService->getlosedJobsPerMonth()),
+            // 'categories' => array_keys($jobsPerMonth),
+            // 'delay' => $delay
 
         ]);
     }

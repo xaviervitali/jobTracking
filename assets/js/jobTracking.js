@@ -1,8 +1,5 @@
 import '../styles/postit.css'
 
-
-
-
 function deleteJob(id) {
   parent.window.location.href = "/candidature/" + id + "/delete";
 }
@@ -31,24 +28,35 @@ function deleteNote(id) {
 
 // Écouter l'ouverture de la modal
 const handleModifyModal = document.getElementById("handleModifyModal");
+let jobTrackingId = 0
 handleModifyModal.addEventListener("show.bs.modal", function (event) {
   // Le bouton qui déclenche la modal
   const button = event.relatedTarget;
 
   // Extraire les données du bouton via les attributs data-*
-  const jobTrackingId = button.getAttribute("data-job-tracking-id");
+  jobTrackingId = button.getAttribute("data-job-tracking-id");
   const jobTrackingAction = button.getAttribute("data-job-tracking-action");
   const jobTrackingCreatedAt = button.getAttribute("data-job-tracking-created-at");
   // Sélectionner les éléments du formulaire dans la modal et leur attribuer les valeurs
   const modal = this;
-  modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/action/' + jobTrackingId + '/edit')
-  document.querySelector('input[name="job_tracking[action]"][value="' + jobTrackingAction + '"]').setAttribute('checked', true)
+  modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/job_tracking/' + jobTrackingId + '/edit')
 
+
+  document.querySelector('input[name="job_tracking[action]"][value="' + jobTrackingAction + '"]').setAttribute('checked', true)
   modal.querySelector("#job_tracking_createdAt").value = jobTrackingCreatedAt;
 
 });
+
+
+function handleDeleteJobTracking(event) {
+  event.preventDefault()
+  if (window.confirm('Êtes-vous sûr de vouloir supprimer cette entrée ?')) {
+    parent.window.location.href = "/job_tracking/" + jobTrackingId + "/delete"
+  }
+}
 
 window.modifyJob = modifyJob;
 window.deleteJob = deleteJob;
 window.handleJobModify = handleJobModify;
 window.deleteNote = deleteNote;
+window.handleDeleteJobTracking = handleDeleteJobTracking;

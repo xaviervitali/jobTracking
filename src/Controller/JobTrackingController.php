@@ -29,10 +29,10 @@ class JobTrackingController extends AbstractController
         if (!$actionId) {
             throw $this->createNotFoundException('Action ID not found in request');
         }
-        
+
         $action = $entityManager->getRepository(Action::class)->find($actionId);
 
-        if ( $job->getUser() == $security->getUser()) {
+        if ($job->getUser() == $security->getUser()) {
             $jobTracking->setJob($job)
                 ->setUser($security->getUser())
                 ->setCreatedAt(new DateTimeImmutable())
@@ -41,19 +41,17 @@ class JobTrackingController extends AbstractController
 
             $entityManager->persist($jobTracking);
             $entityManager->flush();
-
         }
 
         // return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()], Response::HTTP_SEE_OTHER);
         return $this->redirectToRoute('app_synthese',  [], Response::HTTP_SEE_OTHER);
-
     }
 
 
 
 
 
-    #[Route('action/{id}/edit', name: 'app_job_tracking_edit', methods: ['GET', 'POST'])]
+    #[Route('job_tracking/{id}/edit', name: 'app_job_tracking_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, JobTracking $jobTracking, EntityManagerInterface $entityManager, JobTrackingRepository $jobTrackingRepository): Response
     {
 
@@ -83,5 +81,24 @@ class JobTrackingController extends AbstractController
             'formJobTracking' => $form,
             'jobTrackings' => $jobTrackings
         ]);
+    }
+
+
+    #[Route('job_tracking/{id}/delete', name: 'app_job_tracking_delete', methods: ['GET', 'POST'])]
+    public function delete(JobTracking $jobTracking, EntityManagerInterface $entityManager, Request $request, JobTrackingRepository $jobTrackingRepository, Security $security): Response
+    {
+        $currentJobTracking = $jobTrackingRepository->findOneBy(['id' => $jobTracking]);
+
+        if ($currentJobTracking->getUser() !== $security->getUser()) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce job.');
+        }
+
+        if ($currentJobTracking && $currentJobTracking->getUser() === $security->getUser()) {
+            $entityManager->remove($currentJobTracking);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_synthese',  [], Response::HTTP_SEE_OTHER);
+
     }
 }

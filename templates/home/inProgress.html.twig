@@ -1,62 +1,22 @@
-<table	id="table"	class="table table-striped">
+<table	id="table"	data-toggle="table"	data-search="true"	class="table table-striped">
 	<thead>
 		<tr>
 			<th>
-				 Le
+				Le
 			</th>
 			<th>
 				Employeur
 			</th>
 			<th>
-				Initulé de l'annonce
+				Intitulé
 			</th>
-	
 			<th>
-				Derniere Action
+				Dernière action
 			</th>
-			<th></th>
+			<th	data-field="link">
+				Action
+			</th>
 		</tr>
 	</thead>
-	<tbody>
-		{% set now = date() %}
-		{% for jobInProgress in jobsInProgress %}
-			{% set job = jobInProgress %}
-
-			<tr>
-				<td>
-					{{ job.createdAt | date('d/m/Y') }}
-				</td>
-				<td>
-					{{ job.recruiter }}
-				</td>
-				<td>
-					{{ job.title }}
-				</td>
-			
-				<td>
-					{% set lastJobTracking = job.jobtracking|sort((a, b) => a.createdAt <=> b.createdAt) | last %}
-					{% if lastJobTracking | length > 0 %}
-
-						{{ lastJobTracking.action.name }}
-						{% set oldDate = date(lastJobTracking.createdAt | date('Y-m-d')) %}
-						{% set intervalJobTracking = now.diff(oldDate) %}
-						(
-						{{ intervalJobTracking.days }}
-						j)
-					{% else %}
-						Aucune
-					{% endif %}
-
-				</td>
-
-				<td>
-			
-					<a	type="button"	href="{{ path('app_job_tracking', {'id': job.id}) }}"	class="btn btn-primary btn-sm">
-						Visualiser
-					</a>
-
-				</td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</tbody></table>
+	<tbody></tbody>
+</table>

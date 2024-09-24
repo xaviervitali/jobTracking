@@ -7,8 +7,14 @@
     </div>
 {% endfor %}
 {{ form_widget(formJobTracking.createdAt ) }}
-
-<button class="btn btn-success">
-    {{ button_label|default('Save') }}
-</button>
+<div class="modal-footer">
+    <div class="d-flex justify-content-end gap-1">
+        <button class="btn btn-success">
+            {{ button_label|default('Save') }}
+        </button>
+        <button class="btn btn-danger delete" onclick="handleDeleteJobTracking(event)">
+            Supprimer
+    </button>
+    </div>
+</div>
 {{ form_end(formJobTracking) }}

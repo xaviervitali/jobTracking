@@ -1,5 +1,9 @@
 
-.in-progress {
+table {
     max-height: 70vh;
     overflow: auto;
+}
+
+.fixed-table-loading {
+    display: none !important;
 }

@@ -1,52 +1,75 @@
-
 import "../styles/synthese.css";
-import ApexCharts from 'apexcharts'
+
+
+import { ApexCharts, moment, DataTable, language } from '../app';
 
 document.addEventListener("DOMContentLoaded", function () {
+  // chart
   const chartDataSelector = document.querySelector(".js-chart-data");
-  const categories = JSON.parse(chartDataSelector.getAttribute("data-chart-categories")).map(e => formatDate(e))
   const jobsData = JSON.parse(chartDataSelector.getAttribute("data-chart-jobs-data"));
-  const responsesData = JSON.parse(chartDataSelector.getAttribute("data-chart-responses-data"));
-    
-  var options = {
-    series: [
-      {
-        name: "Candidatures",
-        data: jobsData,
-      },
-      {
-        name: "Candidatures closes",
-        data: responsesData,
-      },
-    ],
+
+  const series = Object.values(jobsData)
+  const labels = Object.keys(jobsData)
+
+  const options = {
+    title: { text: "Synthèse graphique" },
+    series,
     chart: {
-      height: 'auto',
-      type: "radar",
+      width: 500,
+      type: 'pie',
     },
-    yaxis: {
-      stepSize: Math.max(...jobsData, ...responsesData) +1,
-    },
-    xaxis: {
-      categories: categories,
-    },
+    labels,
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: {
+          // width: 200
+        },
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }]
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  const chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render();
+
+  //table
+  const tableDataSelector = document.querySelector(".js-table-data");
+  const tableData = JSON.parse(tableDataSelector.getAttribute("data-table-items")).map((jobTracking) => {
+    const createdAtDate = new Date(jobTracking.createdAt.date);
+    const formatedName = !!jobTracking.name ? jobTracking.name : 'Attente réponse candidature'
+    // Créer un nouvel élément <a>
+    const newLink = document.createElement('a');
+
+    // Définir les attributs de l'élément <a>
+    newLink.href = '/candidature/' + jobTracking.id;
+    newLink.textContent = 'Visualiser';
+
+    // Ajouter une classe à l'élément <a> (optionnel)
+    newLink.classList.add('btn', 'btn-primary');
+
+    return {
+      ...jobTracking,
+      name: formatedName,
+      createdAt: createdAtDate.toLocaleDateString(),
+      link: newLink.outerHTML
+    }
+  })
+
+
+
+  new DataTable('#table', {
+    data: tableData,
+    columns: [
+      { data: "createdAt" },
+      { data: "recruiter" },
+      { data: "title" },
+      { data: "name" },
+      { data: "link" },
+    ],
+    language
+    // config options...
+  });
 });
-
-function formatDate(inputDate) {
-    // Créer une nouvelle date à partir de la chaîne d'entrée (en ajoutant '-01' pour le jour)
-    const date = new Date(inputDate + '-01');
-    
-    // Options pour formater le mois en français abrégé
-    const options = { month: 'short', year: '2-digit' };
-
-    // Formater la date en français
-    const formattedDate = date.toLocaleDateString('fr-FR', options);
-
-    // Retourner le résultat, avec la première lettre du mois en minuscule
-  return formattedDate.charAt(0).toLowerCase() + formattedDate.slice(1);
-  
-
-}

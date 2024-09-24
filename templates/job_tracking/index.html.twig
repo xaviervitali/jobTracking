@@ -63,9 +63,7 @@
     {% include "job_tracking/_job_tracking.html.twig"%}
   </div>
   {% include "job_tracking/_delete_job_modal.html.twig"%}
-  {% include "job_tracking/_edit_job_tracking_modal.html.twig" with {
-    jobTrackings : job.jobTracking
-  }%}
+  {% include "job_tracking/_edit_job_tracking_modal.html.twig" %}
 </div>
 {% endblock %}
 

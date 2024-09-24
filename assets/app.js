@@ -1,22 +1,15 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
-import 'jquery';
-// import 'bootstrap-table/dist/bootstrap-table.min.css';
-// import 'bootstrap-table';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ApexCharts from 'apexcharts';
+import moment from 'moment';
+import DataTable from 'datatables.net-dt';
+import language from 'datatables.net-plugins/i18n/fr-FR.mjs';
 
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
+
 import "./styles/app.css";
 
-// jQuery est nécessaire pour Bootstrap Table
-import $ from 'jquery';
-global.$ = global.jQuery = $;
-
-// console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");
+export { ApexCharts, moment, DataTable, language };
+    
 document.addEventListener('DOMContentLoaded', function() {
     const alertElement = document.getElementById('alert');
     const fadeOutBtn = document.getElementById('fadeOutBtn');

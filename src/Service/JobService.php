@@ -9,11 +9,10 @@ use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
 
-use function PHPUnit\Framework\isEmpty;
 
 class JobService
 {
-    private array $jobs;
+        private array $jobs;
 
     private array $jobsInProgress = [];
     private array $closedJobs = [];
@@ -27,9 +26,9 @@ class JobService
     public function __construct(User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository,)
     {
         $this->minDate = $minDate;
-        $this->jobs = $jobRepository->findByUserAndMoreThanDate($user, $minDate);
-        $this->setValues();
+        $this->jobs = $jobRepository->findJobsByUserOrderedByDate($user);
     }
+
 
 
 
@@ -60,11 +59,11 @@ class JobService
     }
 
 
-    private function  setValues()
+    public function  irrigateJobsArrays()
     {
         foreach ($this->jobs as $job) {
             $closedJobTracking = array_filter(
-                $job->getJobTracking()->toArray(),
+                (array) $job->getJobTracking(),
                 function (JobTracking $jobTracking) {
                     return !!$jobTracking->getAction()->isSetClosed();
                 }
@@ -81,6 +80,7 @@ class JobService
             }
         }
         $this->setJobsPerMonth();
+        
     }
     private function getDateBetween()
     {
