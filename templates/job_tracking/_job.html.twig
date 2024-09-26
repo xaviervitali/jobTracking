@@ -4,24 +4,19 @@
   {% include "job/show.html.twig" %}
   <div class="d-flex justify-content-end gap-3 ">
 
-    <button class="btn btn-danger  action d-none" data-bs-toggle="modal" data-bs-target="#handleDeleteModal">
+    <button class="btn btn  action d-none text-danger" data-bs-toggle="modal" data-bs-target="#handleDeleteModal">
       Supprimer la candidature
     </button>
 
-    <button class="btn btn-success  action  submit  d-none" onClick='handleJobModify()'>
+    <button class="btn btn  action  submit  d-none" onClick='handleJobModify()'>
       Valider
-      <div class="spinner-border loading-spinner d-none" style="    height: 1rem  !important;
-      width: 1rem !important;" role="status">
-        <span class="visually-hidden">
-          Loading...
-        </span>
-      </div>
+ 
     </button>
 
-    <button class="btn btn-secondary  action  submit  d-none" onClick='modifyJob()'>
+    <button class="btn   action  submit  d-none" onClick='modifyJob()'>
       Annuler
     </button>
-    <button class="btn btn-warning  modify   action d-block" onClick='modifyJob()'>
+    <button class="btn   modify   action d-block" onClick='modifyJob()'>
       Modifier l'offre
     </button>
 

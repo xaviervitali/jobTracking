@@ -5,6 +5,12 @@ import moment from 'moment';
 import DataTable from 'datatables.net-dt';
 import language from 'datatables.net-plugins/i18n/fr-FR.mjs';
 
+import 'jquery';
+
+// jQuery est nécessaire pour Bootstrap Table
+import $ from 'jquery';
+global.$ = global.jQuery = $;
+
 
 import "./styles/app.css";
 

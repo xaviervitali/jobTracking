@@ -10,14 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class JobService
 {
-    private  $jobs;
-
-    private  $jobsInProgress = [];
-    private  $closedJobs = [];
     private array $delays  = [];
-    private array $jobsPerMonth;
-
-    private array $closedJobsPerMonth;
     private DateTimeImmutable $minDate;
 
 
@@ -43,7 +36,6 @@ class JobService
 
     public function  getJobsPerMonth()
     {
-        dump($this->user->getId());
         $jobsPerMonth = $this->jobRepository->getJobsPerMonth($this->user);
         return $this->fillJobsPerMonth($jobsPerMonth);
     }

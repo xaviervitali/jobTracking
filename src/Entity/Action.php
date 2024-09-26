@@ -17,9 +17,11 @@ class Action
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["job"])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(["job"])]
         private ?bool $setClosed = null;
 
     /**

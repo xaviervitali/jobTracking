@@ -17,14 +17,14 @@
 
 {% if jobsInProgress | length > 0 %}
 	<div	class="in-progress">
-		<div	class="my-2">
-			<a	href="{{ path('candidature_new') }}">
+		<a	href="{{ path('candidature_new') }}">
+			<h4	class="bg-div  border rounded p-3 my-3 text-center">
 				Ajouter une candidature
-			</a>
-		</div>
+			</h4>
+		</a>
 
-		<div	id="chart"	class='d-flex justify-content-center bg-white border rounded p-3 '></div>
-		<div	class='bg-white  border rounded p-3 my-3'>
+		<div	id="chart"	class='d-flex justify-content-center bg-div border rounded p-3 text-white'></div>
+		<div	class='bg-div  border rounded p-3 my-3'>
 			<h4>
 				Liste des candidatures en cours
 			</h4>

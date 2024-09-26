@@ -16,7 +16,7 @@
     </div>
 {% endfor %}
     <div class="d-flex justify-content-end gap-3 ">
-    <button class="btn btn-info">{{ button_label|default('Valider') }}</button>
+    <button class="btn ">{{ button_label|default('Valider') }}</button>
     </div>
     {{ form_widget(formNote.job, {'attr' :{ 'value' : job.id } }) }}
 {{ form_end(formNote) }}

@@ -2,6 +2,7 @@
 
 .navbar {
   border-bottom: 1px solid #888;
+  padding: 3vh;
 }
 
 .alert-block {
@@ -13,5 +14,26 @@
 }
 
 body {
-  background: #eee;
+  background-color: #606468;
 }
+
+.bg-div {
+  background-color: #eee  !important;
+}
+
+.bg-mintgrey{
+background-color: #D3F3EE !important;
+} 
+
+.bg-frenchrose {
+  background-color: #EA4C88 !important;
+}
+
+.bg-apricot{
+  background-color: #FFCAAF !important;
+}
+
+.dt-layout-row select, .dt-layout-row input, .dt-paging-button{
+  background-color: white !important;
+}
+

@@ -15,11 +15,12 @@ class JobTracking
     private ?int $id = null;
 
     #[ORM\Column]
-
+    #[Groups(["job"])]
     private ?\DateTimeImmutable $createdAt = null;
 
 
     #[ORM\ManyToOne(inversedBy: 'jobTrackings')]
+    #[Groups(["job"])]
     private ?Action $action = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobTracking')]

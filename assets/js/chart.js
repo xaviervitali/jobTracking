@@ -11,29 +11,29 @@ import { ApexCharts } from '../app';
 export function generatePieChart(labels, series, selector = "#chart") {
 
 
-    const options = {
-        title: { text: "Synthèse graphique" },
-        series,
+  const options = {
+    title: { text: "Synthèse graphique" },
+    series,
+    chart: {
+      width: 500,
+      type: 'pie',
+    },
+    labels,
+    responsive: [{
+      breakpoint: 480,
+      options: {
         chart: {
-            width: 500,
-            type: 'pie',
+          // width: 200
         },
-        labels,
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    // width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    };
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }]
+  };
 
-    const chart = new ApexCharts(document.querySelector(selector), options);
-    chart.render();
+  const chart = new ApexCharts(document.querySelector(selector), options);
+  chart.render();
 }
 
 /**
@@ -47,43 +47,43 @@ export function generatePieChart(labels, series, selector = "#chart") {
  * 
  * @url https://apexcharts.com/javascript-chart-demos/column-charts/basic/
  */
-function generateColumnChart(series, categories, title = '',  selector = "#chart") {
-        
-    var options = {
-        series,
-        chart: {
-        type: 'bar',
-        height: 350
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'rounded'
-        },
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-      },
-      xaxis: {
-        categories,
-      },
-      yaxis: {
-        title: {
-          text: title
-        }
-      },
-      fill: {
-        opacity: 1
-      },
+export function generateColumnChart(series, categories, title = '', selector = "#chart") {
 
-      };
+  var options = {
+    series,
+    chart: {
+      type: 'bar',
+      height: 350
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    },
+    xaxis: {
+      categories,
+    },
+    yaxis: {
+      title: {
+        text: title
+      }
+    },
+    fill: {
+      opacity: 1
+    },
 
-      var chart = new ApexCharts(document.querySelector(selector), options);
-      chart.render();
+  };
+
+  var chart = new ApexCharts(document.querySelector(selector), options);
+  chart.render();
 }

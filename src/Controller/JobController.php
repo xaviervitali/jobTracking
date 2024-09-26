@@ -38,14 +38,15 @@ final class JobController extends AbstractController
 
 
 
-        $userJobs = $jobRepository->findBy(['user'=> $user]);
+        $userJobs = $jobRepository->findByUser($user);
 
         $jsonContent = $serializer->serialize($userJobs, 'json', [
             'groups' => ['job'],
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-                return $object->getId();
-            },
+            // AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+            //     return $object->getId();
+            // },
         ]);
+        
         return $this->render('job/index.html.twig', [
            'jobs'=> $jsonContent,
            'jobsPerMonths'=>$jobsPerMonths,

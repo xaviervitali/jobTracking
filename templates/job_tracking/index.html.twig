@@ -34,7 +34,7 @@
 
     <div class="flex-grow-1">
 
-      <div class="border rounded p-3 bg-white">
+      <div class="border rounded p-3 bg-div">
         <h4>
           Offre d'emploi
         </h4>
@@ -42,20 +42,20 @@
 
       </div>
       <div class="flex-grow-1">
-        <div class="border rounded p-3 bg-white mb-2">
+        <div class="border rounded p-3 bg-div mb-2">
           <h4>
             Action du jour
           </h4>
           {% include "job_tracking/_actions.html.twig" %}
         </div>
-        <div class="border rounded p-3 bg-white">
+        <div class="border rounded p-3 bg-div">
           <h4></h4>
           {% include "job_tracking/note/_form.html.twig" %}
         </div>
       </div>
     </div>
     <div class="accordion" id="accordionExample">
-      <div class="accordion-item">
+      <div class="accordion-item  bg-div">
         <h2 class="accordion-header">
           <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             Historique

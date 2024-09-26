@@ -160,11 +160,6 @@ class Job
         return $this->jobTracking;
     }
 
-    public function getJobTrackingByUser(User $user): Collection
-    {
-        return $this->jobTracking->get;
-    }
-
 
 
     public function getUser(): ?User

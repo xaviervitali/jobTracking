@@ -2,7 +2,9 @@ import { DataTable, language, moment } from '../app';
 
 export function generateDataTable(tableData, columnsKeys, selector = '#table') {
     tableData = tableData.map((jobTracking) => {
-        const createdAtDate = moment(jobTracking.createdAt.date).format('DD/MM/YYYY');
+        
+        const date = jobTracking.createdAt.date ?? jobTracking.createdAt
+        const createdAtDate = moment(date).format('DD/MM/YYYY');
         const formatedName = formatActionField(jobTracking)
         const newLink = document.createElement('a');
 
@@ -29,14 +31,22 @@ export function generateDataTable(tableData, columnsKeys, selector = '#table') {
         data: tableData,
         columns,
         language,
-        responsive: true
+        responsive: true,
+        createdRow: function (row, data, dataIndex) {
+            console.log(data);
+            
+            if (!!data.setClosed) {
+                $(row).find('td').addClass('bg-antracite');
+            }
+        }
         // config options...
     });
 }
 
 function formatActionField(jobTracking){
     let name = 'Attente réponse candidature'
-    let date = jobTracking.createdAt.date
+    let date = jobTracking.createdAt.date ?? jobTracking.createdAt
+    
 
     if (jobTracking.name) {
         name = jobTracking.name

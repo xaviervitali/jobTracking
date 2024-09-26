@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Job index{% endblock %}
+{% block title %}Vos candidatures{% endblock %}
 {% block javascripts %}
 
 	{{ encore_entry_script_tags('candidatures') }}
 
 {% endblock %}
 {% block body %}
+<div id="chart" class="border rounded p-3 bg-div"></div>
 
-<div	class="js-table-data"	data-table-items="{{ jobs  }}" data-table-jobs-per-month="{{ jobsPerMonths | serialize }}" data-table-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}"></div>
-
- {{ include('home/inProgress.html.twig') }}
+<div	class="js-table-data"	data-table-items="{{ jobs  }}" data-jobs-per-month="{{ jobsPerMonths | serialize }}" data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}" class="border rounded p-3 bg-div"></div>
+<div class="border rounded p-3 my-3 bg-div">
+{{ include('home/inProgress.html.twig') }}
+</div>
 
 
 {% endblock %}
