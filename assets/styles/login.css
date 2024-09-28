@@ -1,27 +1,24 @@
-/* config.css */
-
 :root {
-    --baseColor: #606468;
-  }
-  
-  /* helpers/align.css */
-  
-  .align {
-    display: grid;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    justify-items: center;
-    place-items: center;
-  }
-  
-  .grid {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 20rem;
-  }
-  
+  --baseColor: #606468;
+}
+
+.align {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  width: 80vw;
+  max-width: 1320px;
+  /* width: 90%; */
+  margin: auto;
+}
+
+
   /* helpers/hidden.css */
   
   .hidden {
@@ -148,20 +145,27 @@
   
   .form input[type="password"],
   .form input[type="text"],
+  .form input[type="email"],
   .form input[type="submit"] {
     width: 100%;
   }
   
   .form__field {
+    /* width: 80vw;
+    max-width: 1320px; */
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+
+
   }
   
   .form__input {
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1;
+            
+           
   }
   
   /* modules/login.css */
@@ -187,6 +191,7 @@
   
   .login label,
   .login input[type="text"],
+  .login input[type="email"],
   .login input[type="password"],
   .login input[type="submit"] {
     border-radius: 0.25rem;
@@ -204,7 +209,9 @@
   }
   
   .login input[type="password"],
-  .login input[type="text"] {
+  .login input[type="text"],
+  .login input[type="email"]
+   {
     background-color: #3b4148;
     background-color: var(--loginInputBackgroundColor);
     border-bottom-left-radius: 0;
@@ -214,7 +221,10 @@
   .login input[type="password"]:focus,
   .login input[type="password"]:hover,
   .login input[type="text"]:focus,
-  .login input[type="text"]:hover {
+  .login input[type="text"]:hover,
+  .login input[type="email"]:focus,
+  .login input[type="email"]:hover
+  {
     background-color: #434a52;
     background-color: var(--loginInputHoverBackgroundColor);
   }
@@ -244,4 +254,19 @@
   .text--center {
     text-align: center;
   }
-  
+
+  .password-strength {
+    position: relative;
+}
+
+#password-strength-meter {
+    height: 10px;
+    width: 100%;
+    background-color: #ddd;
+    margin-top: 10px;
+}
+
+#password-strength-text {
+    font-size: 0.875rem;
+    margin-top: 5px;
+}

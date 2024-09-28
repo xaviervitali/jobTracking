@@ -45,20 +45,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, JobTracking>
      */
-    #[ORM\OneToMany(targetEntity: JobTracking::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: JobTracking::class, mappedBy: 'user', cascade:['remove'])]
     private Collection $jobTrackings;
 
     /**
      * @var Collection<int, Job>
      */
-    #[ORM\OneToMany(targetEntity: Job::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Job::class, mappedBy: 'user'
+    , cascade:['remove'] )]
     private Collection $jobs;
 
     /**
      * @var Collection<int, Note>
      */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user', cascade:['remove'])]
     private Collection $notes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
 
     public function __construct()
     {
@@ -256,6 +260,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $note->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }

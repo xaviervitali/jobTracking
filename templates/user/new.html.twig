@@ -1,11 +1,25 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Document
+        </title>
 
-{% block title %}New User{% endblock %}
-
-{% block body %}
-    <h1>Create new User</h1>
-
+        <link rel="stylesheet" href="{{ asset('/styles/login.css') }}">
+    </head>
+    <body class="align">
+{# <h1>My job tracker</h1> #}
+        <div class="grid">
+    
     {{ include('user/_form.html.twig') }}
+        </div>
+</body>
+<script src="{{ asset('/js/register.js') }}"></script>
+</html>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-{% endblock %}
+
+
+
+{# <a href="{{ path('app_user_index') }}">back to list</a> #}

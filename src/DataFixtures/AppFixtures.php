@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use ActionStatus;
+use App\Constants\ActionStatus;
 use App\Entity\Action;
 use App\Entity\User;
 use App\Entity\Job;
@@ -11,7 +11,7 @@ use App\Entity\Note;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
-use PostitColors;
+use App\Enums\PostitColors;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends AbstractFixture

@@ -40,16 +40,14 @@ class Job
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $coverLetter = null;
 
-    #[Groups(["job"])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $source = null;
+
 
     /**
      * @var Collection<int, JobTracking>
      */
 
 
-    #[ORM\OneToMany(targetEntity: JobTracking::class, mappedBy: 'job', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: JobTracking::class, mappedBy: 'job', cascade:['remove'])]
     private Collection $jobTracking;
 
     #[ORM\ManyToOne(inversedBy: 'job')]
@@ -58,11 +56,16 @@ class Job
     /**
      * @var Collection<int, Note>
      */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'job', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'job',  cascade:['remove'])]
     private Collection $notes;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $publicationDate = null;
+    #[ORM\ManyToOne(inversedBy: 'job')]
+    private ?JobSource $jobSource = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobs')]
+    private ?JobSource $source = null;
+
+
 
 
 
@@ -139,17 +142,7 @@ class Job
         return $this;
     }
 
-    public function getSource(): ?string
-    {
-        return $this->source;
-    }
 
-    public function setSource(?string $source): static
-    {
-        $this->source = $source;
-
-        return $this;
-    }
 
 
     /**
@@ -204,15 +197,29 @@ class Job
         return $this;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
+    public function getJobSource(): ?JobSource
     {
-        return $this->publicationDate;
+        return $this->jobSource;
     }
 
-    public function setPublicationDate(?\DateTimeInterface $publicationDate): static
+    public function setJobSource(?JobSource $jobSource): static
     {
-        $this->publicationDate = $publicationDate;
+        $this->jobSource = $jobSource;
 
         return $this;
     }
+
+    public function getSource(): ?JobSource
+    {
+        return $this->source;
+    }
+
+    public function setSource(?JobSource $source): static
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+
 }

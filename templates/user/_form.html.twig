@@ -1,4 +1,31 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{{ form_start(form, {attr : {class: 'form login' }}
+) }}
+<div class="form__field">
+    {{ form_widget(form.email) }}
+</div>
+<div class="form__field">
+    {{ form_widget(form.firstname) }}
+</div>
+
+<div class="form__field">
+    {{ form_widget(form.lastname) }}
+</div>
+<div class="form__field">
+    {{ form_widget(form.password.first) }}
+</div>
+
+
+<div class="form__field">
+    {{ form_widget(form.password.second) }}
+    {{ form_errors(form.password.second) }}
+</div>
+<div class="password-strength ">
+    <div id="password-strength-meter"></div>
+    <p id="password-strength-text"></p>
+    {{ form_errors(form.password.first) }}
+</div>
+<div class="form__field">
+    <input type="submit"></input>
+    {# <button class="btn">{{ button_label|default('Save') }}</button> #}
+    {{ form_end(form) }}
+    

@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="{{ asset('/styles/login.css') }}">
     </head>
     <body class="align">
-<h1>My job tracker</h1>
+{# <h1>My job tracker</h1> #}
         <div class="grid">
 
             <form method="post" class="form login">
@@ -29,7 +29,8 @@
                 {# <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1> #}
                 {# <label for="username">Email</label> #}
 
-                    <div class="form__field"> <label for="login__username">
+                    <div class="form__field"> 
+                    <label for="login__username">
                         <svg class="icon">
                             <use xlink:href="#icon-user"></use>
                         </svg>
@@ -37,7 +38,7 @@
                             Email
                         </span>
                     </label>
-                    <input  type="text" class="form__input" type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+                    <input  type="text" class="form__input" type="email" value="{{ last_username }}" name="_username" id="username"  autocomplete="email" required autofocus placeholder="Email">
                 </div>
 
                 <div class="form__field">
@@ -52,7 +53,7 @@
                     {# <label for="password">
                         Mot de passe
                     </label> #}
-                    <input type="password" class="form__input" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                    <input type="password" class="form__input" name="_password" id="password"  autocomplete="current-password" required placeholder="Mot de passe">
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </div>
@@ -73,7 +74,7 @@
 
             <p class="text--center">
                 Pas encore membre ?
-                <a href="#">
+                <a href="{{ url( 'app_user_new') }}">
                     S'inscrire
                 </a>
                 <svg class="icon">

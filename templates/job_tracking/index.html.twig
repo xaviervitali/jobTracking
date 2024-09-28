@@ -1,21 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-  {{ job.recruiter }}
-  -
-  {{ job.title }}
-{% endblock %}
-
 {% block stylesheets %}
-  {{ parent() }}
-  {{ encore_entry_link_tags('jobTracking') }}
-{# Inclure le fichier CSS compilé #}
+  <link rel="stylesheet" href="{{ asset('styles/postit.css')}}">
 {% endblock %}
 
 {% block javascripts %}
   {{ encore_entry_script_tags('jobTracking') }}
 
 {% endblock %}
+
 {% block body %}
   {% if job.notes | length  > 0 %}
 
@@ -30,7 +23,7 @@
       {% endfor %}
     </div>
   {% endif %}
-  <div class="d-flex justify-content-between gap-5 flex-wrap align-items-start mb-3">
+  <div class="d-flex justify-content-between gap-3 flex-wrap  mb-3">
 
     <div class="flex-grow-1">
 
@@ -41,7 +34,7 @@
         {% include "job_tracking/_job.html.twig" %}
 
       </div>
-      <div class="flex-grow-1">
+      <div class="flex-grow-1 d-flex flex-column gap-3 justify-content-between">
         <div class="border rounded p-3 bg-div mb-2">
           <h4>
             Action du jour

@@ -1,4 +1,4 @@
-@import url('https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css');
+@import url("https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.css");
 
 .navbar {
   border-bottom: 1px solid #888;
@@ -18,22 +18,21 @@ body {
 }
 
 .bg-div {
-  background-color: #eee  !important;
+  background-color: #eee !important;
 }
 
-.bg-mintgrey{
-background-color: #D3F3EE !important;
-} 
-
-.bg-frenchrose {
-  background-color: #EA4C88 !important;
-}
-
-.bg-apricot{
-  background-color: #FFCAAF !important;
-}
-
-.dt-layout-row select, .dt-layout-row input, .dt-paging-button{
+.dt-layout-row select,
+.dt-layout-row input,
+.dt-paging-button {
   background-color: white !important;
 }
 
+.brand-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.color-grey {
+  color: grey !important;
+}

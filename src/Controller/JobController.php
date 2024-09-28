@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Job;
+use App\Entity\JobTracking;
+use App\Enums\ActionStatus;
 use App\Form\JobFormType;
+use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobTrackingRepository;
 use App\Service\JobService;
@@ -14,7 +17,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 
@@ -56,17 +58,29 @@ final class JobController extends AbstractController
     }
 
     #[Route('/nouvelle_candidature', name: 'candidature_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security, ActionRepository $actionRepository): Response
     {
         $job = new Job();
         $form = $this->createForm(JobFormType::class, $job);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $newAction = $actionRepository->findOneBy(['name' => ActionStatus::getStartActionName()]);
+            $user = $security->getUser();
+
+            $job->setUser($user);
             $entityManager->persist($job);
+
+            $jobTracking = new JobTracking();
+            $jobTracking->setAction($newAction)
+                ->setJob($job)
+                ->setCreatedAt($job->getCreatedAt())
+                ->setUser($user);
+            $entityManager->persist($jobTracking);
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_job_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_synthese', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('job/new.html.twig', [

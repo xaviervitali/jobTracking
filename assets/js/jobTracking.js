@@ -1,4 +1,3 @@
-import '../styles/postit.css'
 
 function deleteJob(id) {
   parent.window.location.href = "/candidature/" + id + "/delete";

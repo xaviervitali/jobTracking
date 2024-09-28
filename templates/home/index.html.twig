@@ -11,30 +11,23 @@
 {% endblock %}
 
 {% block body %}
-	<div	class="js-chart-data"	data-chart-jobs-data="{{ jobsData |serialize(format = 'json') }}"></div>
 	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"></div>
 </hr>
 
-{% if jobsInProgress | length > 0 %}
-	<div	class="in-progress">
-		<a	href="{{ path('candidature_new') }}">
-			<h4	class="bg-div  border rounded p-3 my-3 text-center">
-				Ajouter une candidature
-			</h4>
-		</a>
+<a	href="{{ path('candidature_new') }}">
+	<h4	class="bg-div  border rounded p-3 my-3 text-center">
+		Ajouter une candidature
+	</h4>
+</a>
+<div	class="in-progress">
 
-		<div	id="chart"	class='d-flex justify-content-center bg-div border rounded p-3 text-white'></div>
-		<div	class='bg-div  border rounded p-3 my-3'>
-			<h4>
-				Liste des candidatures en cours
-			</h4>
+	<div	id="chart"	class='d-flex justify-content-center bg-div border rounded p-3 text-white'></div>
+	<div	class='bg-div  border rounded p-3 my-3'>
+		<h4>
+			Liste des candidatures en cours
+		</h4>
 
-			{% include "home/inProgress.html.twig" %}
-		</div>
+		{% include "home/inProgress.html.twig" %}
+	</div>
 
-	{% else %}
-		<p>
-			Pas de candidature en cours
-		</p>
-	{% endif %}
 </div>{% endblock %}

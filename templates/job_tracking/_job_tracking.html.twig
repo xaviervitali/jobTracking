@@ -11,28 +11,35 @@
         <th>
           Action
         </th>
-        {% if notEditing %}
 
+        {% if notEditing %}
           <th></th>
         {% endif %}
       </tr>
+
     </thead>
     <tbody>
       {% for jobTracking in jobTrackings %}
         <tr>
-          <td>
+          <td {% if   loop.index == 1 %} class="color-grey" {% endif %}>
+
             {{ jobTracking.createdAt | date('d/m/Y') }}
           </td>
-          <td>
+          <td {% if   loop.index == 1 %} class="color-grey" colspan="2" {% endif %}>
             {{ jobTracking.action.name }}
           </td>
+
           {% if notEditing %}
-            <td>
-              <button class="btn  btn-link" data-bs-toggle="modal" data-bs-target="#handleModifyModal" data-job-tracking-id="{{ jobTracking.id }}" data-job-tracking-action="{{ jobTracking.action.id }}" data-job-tracking-created-at="{{ jobTracking.createdAt | date('c') | slice(0,10)}}">
-                Modifier
-              </button>
+            <td {% if   loop.index == 1 %} class="color-grey" {% endif %}>
+
+              {% if   loop.index > 1 %}
+                <button class="btn  btn-link" data-bs-toggle="modal" data-bs-target="#handleModifyModal" data-job-tracking-id="{{ jobTracking.id }}" data-job-tracking-action="{{ jobTracking.action.id }}" data-job-tracking-created-at="{{ jobTracking.createdAt | date('c') | slice(0,10) }}">
+                  Modifier
+                </button>
+              {% endif %}
             </td>
           {% endif %}
+
         </tr>
       {% endfor %}
     </tbody>

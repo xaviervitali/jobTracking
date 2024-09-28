@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Enums;
 enum PostitColors: string
 {
     case ROSE = '#ff7eb9';

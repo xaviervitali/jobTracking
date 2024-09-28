@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Job;
 use App\Entity\Note;
-use PostitColors;
+use App\Enums\PostitColors;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,13 +17,6 @@ class NoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $colors = [
-            'Rose' => '#ff7eb9',
-            'Rose clair' => '#ff65a3',
-            'Cyan' => '#7afcff',
-            'Jaune' => '#feff9c',
-            'Jaune clair' => '#fff740'
-        ];
 
 
         $job = $options['job'] ?? null;
