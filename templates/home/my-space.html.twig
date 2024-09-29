@@ -17,19 +17,30 @@
 <div class="js-table-data"	data-table-items="{{ jobs  }}"></div>
 <div class="border rounded p-3 my-3 bg-div">
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="mySpaceAccordion">
   <div class="accordion-item">
     <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#allJobs" aria-expanded="false" aria-controls="allJobs">
         Toutes les candidatures
       </button>
     </h2>
-    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+    <div id="allJobs" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
       <div class="accordion-body">
 	  {{ include('home/inProgress.html.twig') }}
       </div>
     </div>
   </div>
+  <div class="accordion-item">
+  <h2 class="accordion-header">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cv" aria-expanded="false" aria-controls="cv">
+      CVs
+    </button>
+  </h2>
+  <div id="cv" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
+    <div class="accordion-body">
+{{ include('cv/_form.html.twig') }}
+  </div>
+</div>
 </div>
 
 

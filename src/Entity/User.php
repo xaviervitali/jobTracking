@@ -64,11 +64,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
 
+    /**
+     * @var Collection<int, CV>
+     */
+    #[ORM\OneToMany(targetEntity: CV::class, mappedBy: 'user')]
+    private Collection $cVs;
+
     public function __construct()
     {
         $this->jobTrackings = new ArrayCollection();
         $this->jobs = new ArrayCollection();
         $this->notes = new ArrayCollection();
+        $this->cVs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -272,6 +279,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setToken(?string $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CV>
+     */
+    public function getCVs(): Collection
+    {
+        return $this->cVs;
+    }
+
+    public function addCV(CV $cV): static
+    {
+        if (!$this->cVs->contains($cV)) {
+            $this->cVs->add($cV);
+            $cV->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCV(CV $cV): static
+    {
+        if ($this->cVs->removeElement($cV)) {
+            // set the owning side to null (unless already changed)
+            if ($cV->getUser() === $this) {
+                $cV->setUser(null);
+            }
+        }
 
         return $this;
     }
