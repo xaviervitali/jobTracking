@@ -8,28 +8,18 @@ import { ApexCharts } from '../app';
  * 
  * @url https://apexcharts.com/javascript-chart-demos/pie-charts/simple-pie-chart/
  */
-export function generatePieChart(labels, series, selector = "#chart") {
+export function generatePieChart(labels, series, title= "Synthèse graphique",selector = "#chart") {
 
 
   const options = {
-    title: { text: "Synthèse graphique" },
+    title: { text: title },
     series,
     chart: {
-      width: 500,
+      height: '300',
       type: 'pie',
     },
     labels,
-    responsive: [{
-      breakpoint: 480,
-      options: {
-        chart: {
-          // width: 200
-        },
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }]
+
   };
 
   const chart = new ApexCharts(document.querySelector(selector), options);
@@ -53,7 +43,7 @@ export function generateColumnChart(series, categories, title = '', selector = "
     series,
     chart: {
       type: 'bar',
-      height: 350
+      height: 350,
     },
     plotOptions: {
       bar: {

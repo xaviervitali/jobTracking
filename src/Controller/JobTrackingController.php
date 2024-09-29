@@ -6,10 +6,13 @@ use App\Entity\Action;
 use App\Entity\Job;
 use App\Entity\JobTracking;
 use App\Entity\Note;
+use App\Enums\ActionStatus;
 use App\Form\ActionType;
 use App\Form\JobFormType;
 use App\Form\JobTrackingType;
 use App\Form\NoteType;
+use App\Repository\ActionRepository;
+use App\Repository\JobRepository;
 use App\Repository\JobTrackingRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +26,7 @@ class JobTrackingController extends AbstractController
 {
 
     #[Route('/candidature/{id}', name: 'app_job_tracking')]
-    public function candidature(Job $job, Security $security, EntityManagerInterface $em, Request $request)
+    public function candidature(Job $job, Security $security, EntityManagerInterface $em, Request $request, JobTrackingRepository $jobTrackingRepository, ActionRepository $actionRepository, JobRepository $jobRepository)
     {
         $user = $security->getUser();
         if ($job->getUser() !== $user) {
@@ -36,8 +39,13 @@ class JobTrackingController extends AbstractController
 
         if ($formJob->isSubmitted() && $formJob->isValid()) {
             $newJob =  $formJob->getData();
-            $em->persist($newJob);
+            $firstActionId = $actionRepository->findOneBy(['name' => ActionStatus::getStartActionName()]);
 
+            $firstJobTracking = $jobTrackingRepository->findOneBy(['action' => $firstActionId, 'job'=>$newJob]);
+            $firstJobTracking->setCreatedAt($newJob->getCreatedAt());
+
+            
+            $em->persist($firstJobTracking);
             $em->persist($newJob);
             $em->flush();
 
@@ -63,6 +71,7 @@ class JobTrackingController extends AbstractController
             'formJobTracking' => $formJobTracking,
             'job' => $job,
             'jobTrackings' => $jobTrackings,
+            'isClosedJob' => $jobRepository->isClosedJob($job)
         ]);
     }
 
@@ -118,7 +127,7 @@ class JobTrackingController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+          
             $entityManager->flush();
 
             return $this->redirectToRoute('app_job_tracking', ['id' => $jobTracking->getJob()->getId()], Response::HTTP_SEE_OTHER);

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -9,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class HomeController extends AbstractController
 {
@@ -24,13 +26,28 @@ class HomeController extends AbstractController
 
         $jobsInProgressByUser = $jobRepository->findJobsInProgressOrClosedByUser($user);
 
-        $jobsInProgress = array_map(function($jobInProgress){return array_slice($jobInProgress, 1);}, $jobsInProgressByUser);
         
         return $this->render('home/index.html.twig', [
-             'jobsInProgressJson' => json_encode($jobsInProgress),
+             'jobsInProgressJson' => json_encode($jobsInProgressByUser),
         ]);
     }
 
 
+    #[Route('/mon_espace', name: 'app_user_show', methods: ['GET'])]
+    public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security): Response
+    {
+        $user = $security->getUser();
+        $userJobs = $jobRepository->findByUser($user);
+
+        $jsonContent = $serializer->serialize($userJobs, 'json', [
+            'groups' => ['job'],
+
+        ]);
+
+        return $this->render('home/my-space.html.twig', [
+           'jobs'=> $jsonContent,
+            'user' => $user,
+        ]);
+    }
 
 }

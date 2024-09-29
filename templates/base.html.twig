@@ -42,13 +42,14 @@
 						</li>
 						<li	class="nav-item">
 							<a	class="nav-link {% if app.request.get('_route') == 'app_job_index' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_index') }}">
-								Candidatures
+								Tableau de bord
 							</a>
 						</li>
 						<li	class="nav-item">
-							<a	class="nav-link"	href="#">
-								Mon espace
-							</a>
+				
+						<a	class="nav-link {% if app.request.get('_route') ==	'app_user_show'  %}active{% endif %}"	aria-current="page"	href="{{ url( 	'app_user_show', {id: app.user.id}) }}">
+						Mon espace
+					</a>
 						</li>
 						<li	class="nav-item">
 							<a	class="nav-link"	href="{{ url( 'app_logout') }}">

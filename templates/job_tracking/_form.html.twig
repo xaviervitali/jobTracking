@@ -4,12 +4,13 @@
 {{ form_widget(formJobTracking.createdAt  ) }}
 <div class="modal-footer">
     <div class="d-flex justify-content-end gap-1">
-        <button class="btn btn-success">
+    <a class="btn btn-link text-danger delete" href="{{ path('app_job_tracking_delete', {id:0}) }}" name="delete">
+    Supprimer
+</a>
+        <button class="btn btn-link" name="edit">
             {{ button_label|default('Save') }}
         </button>
-        <button class="btn btn-danger delete" onclick="handleDeleteJobTracking()">
-            Supprimer
-        </button>
+     
     </div>
 </div>
 {{ form_end(formJobTracking) }}

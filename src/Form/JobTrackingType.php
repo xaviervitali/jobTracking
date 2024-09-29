@@ -3,13 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Action;
-use App\Entity\Job;
 use App\Entity\JobTracking;
-use App\Entity\User;
 use DateTimeImmutable;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,7 +42,7 @@ class JobTrackingType extends AbstractType
             'expanded' => false, // Options sous forme de boutons radio
             'multiple' => false, // Un seul bouton peut être sélectionné
         ])
-
+// ->add('id', TextType::class, ['attr'=>['class'=>'d-none']])
         ;
     }
 

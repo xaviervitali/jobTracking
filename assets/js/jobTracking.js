@@ -39,23 +39,16 @@ handleModifyModal.addEventListener("show.bs.modal", function (event) {
   // Sélectionner les éléments du formulaire dans la modal et leur attribuer les valeurs
   const modal = this;
   modal.querySelector('form[name="job_tracking"]').setAttribute('action', '/job_tracking/' + jobTrackingId + '/edit')
-
-
   document.querySelector('select[name="job_tracking[action]"').value = jobTrackingAction
   modal.querySelector("#job_tracking_createdAt").value = jobTrackingCreatedAt;
+  modal.querySelector("a.btn.btn-link.text-danger.delete").href = modal.querySelector("a.btn.btn-link.text-danger.delete").href.replace('/0/', '/'+jobTrackingId+'/')
 
 });
 
 
-function handleDeleteJobTracking(event) {
-  event.preventDefault()
-  if (window.confirm('Êtes-vous sûr de vouloir supprimer cette entrée ?')) {
-    parent.window.location.href = "/job_tracking/" + jobTrackingId + "/delete"
-  }
-}
+
 
 window.modifyJob = modifyJob;
 window.deleteJob = deleteJob;
 window.handleJobModify = handleJobModify;
 window.deleteNote = deleteNote;
-window.handleDeleteJobTracking = handleDeleteJobTracking;

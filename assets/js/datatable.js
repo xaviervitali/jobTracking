@@ -34,8 +34,8 @@ export function generateDataTable(tableData, columnsKeys, selector = '#table') {
         responsive: true,
         createdRow: function (row, data, dataIndex) {
             
-            if (!!data.setClosed) {
-                $(row).find('td').addClass('bg-antracite');
+            if (!!data.set_closed) {
+                $(row).find('td').addClass('color-grey');
             }
         }
         // config options...

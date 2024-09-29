@@ -31,6 +31,7 @@ class JobService
 
     public function getClosedJob()
     {
+        
         return  $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user, false));
     }
 
@@ -64,6 +65,8 @@ class JobService
         }
         return $completeDates;
     }
+
+    
     private function fillJobsPerMonth($jobs)
     {
 

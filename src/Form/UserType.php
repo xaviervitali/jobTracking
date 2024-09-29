@@ -19,7 +19,7 @@ class UserType extends AbstractType
     ->add('email', EmailType::class, [
         'label' => false, 
         'attr' => [
-            'class' => 'form__input', 
+            'class' => 'form__input form-control my-1', 
             'placeholder' => 'Adresse Email', 
             'autocomplete' => 'email'
         ]
@@ -27,14 +27,14 @@ class UserType extends AbstractType
     ->add('firstname', TextType::class, [
         'label' => false, 
         'attr' => [
-            'class' => 'form__input', 
+            'class' => 'form__input form-control my-1', 
             'placeholder' => 'Prénom'
         ]
     ])
     ->add('lastname', TextType::class, [
         'label' => false, 
         'attr' => [
-            'class' => 'form__input', 
+            'class' => 'form__input form-control my-1', 
             'placeholder' => 'Nom'
         ]
     ])
@@ -43,7 +43,7 @@ class UserType extends AbstractType
         'first_options' => [
             'label' => false,
             'attr' => [
-                'class' => 'form__input', 
+                'class' => 'form__input form-control my-1', 
                 'placeholder' => 'Mot de passe'
             ],
             'constraints' => [
@@ -69,7 +69,7 @@ class UserType extends AbstractType
         'second_options' => [
             'label' => false,
             'attr' => [
-                'class' => 'form__input', 
+                'class' => 'form__input form-control my-1', 
                 'placeholder' => 'Confirmer le mot de passe'
             ]
         ],

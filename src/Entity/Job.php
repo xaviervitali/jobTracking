@@ -59,8 +59,7 @@ class Job
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'job',  cascade:['remove'])]
     private Collection $notes;
 
-    #[ORM\ManyToOne(inversedBy: 'job')]
-    private ?JobSource $jobSource = null;
+  
 
     #[ORM\ManyToOne(inversedBy: 'jobs')]
     private ?JobSource $source = null;
@@ -197,17 +196,7 @@ class Job
         return $this;
     }
 
-    public function getJobSource(): ?JobSource
-    {
-        return $this->jobSource;
-    }
 
-    public function setJobSource(?JobSource $jobSource): static
-    {
-        $this->jobSource = $jobSource;
-
-        return $this;
-    }
 
     public function getSource(): ?JobSource
     {

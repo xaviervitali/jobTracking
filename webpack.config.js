@@ -28,6 +28,7 @@ Encore
     .addEntry('jobTracking', './assets/js/jobTracking.js')
     .addEntry('candidatures', './assets/js/candidatures.js')
     .addEntry('register', './assets/js/register.js')
+    .addEntry('mySpace', './assets/js/mySpace.js')
 
     
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
