@@ -58,12 +58,11 @@ class HomeController extends AbstractController
             $cvFile = $formCV->get('cvFile')->getData();
             if ($cvFile) {
                 $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $cv->setCVFile($cvFile);
                 $cv
-                ->setTitle($originalFilename)
-                ->setUser($user)
-                ->setUpdatedAt(new DateTimeImmutable());
+                    ->setTitle($originalFilename)
+                    ->setUser($user);
                 $entityManager->persist($cv);
-
                 $entityManager->flush();
             }
         }

@@ -7,13 +7,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class CvType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('cvFile', FileType::class, [
+            ->add('cvFile', VichFileType::class, [
                 'label' => 'Télécharger votre CV (PDF)',
 
                 // non-mappé signifie que ce champ n'est pas directement lié à l'entité

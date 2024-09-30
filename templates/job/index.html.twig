@@ -3,21 +3,17 @@
 {% block title %}Vos candidatures{% endblock %}
 {% block javascripts %}
 
-	{{ encore_entry_script_tags('candidatures') }}
+	{{ encore_entry_script_tags('board') }}
 
 {% endblock %}
 {% block body %}
-<div class="d-flex gap-3 flex-wrap">
-<div id="chart-bar-jobs-per-month" class="border rounded p-3 bg-div flex-grow-1"></div>
-<div id="chart-pie-source"  class="border rounded p-3 bg-div flex-grow-1 d-flex flex-column justify-content-center"></div>
-<div id="chart-pie-action"  class="border rounded p-3 bg-div flex-grow-1 d-flex flex-column justify-content-center"></div>
-<div  class="border rounded p-3 bg-div flex-grow-1 ">
-<p><strong>Taux des actions sur le total des candidatures</strong></p>
-<ul class="taux list-group"></ul>
-</div>
+<div class="d-flex  flex-wrap justify-content-between">
+<div id="chart-bar-jobs-per-month" class="bg-div m-3 flex-grow-1"></div>
+<div id="chart-pie-action"  class="bg-div  m-3 flex-grow-1"></div>
+<div id="chart-pie-source"  class="bg-div m-3  flex-grow-1"></div>
+<div id="chart-stacked-actions-by-source"  class="bg-div  m-3 flex-grow-1"></div>
 
-</div>
-<div	class="js-chart-data" data-jobs-per-month="{{ jobsPerMonths | serialize }}" data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}" data-job-sources="{{ jobSources | serialize }}" data-job-actions="{{ jobActions | serialize }}" class="border rounded p-3 bg-div"></div>
+<div	class="js-chart-data" data-jobs-per-month="{{ jobsPerMonths | serialize }}" data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}" data-job-sources="{{ jobSources | serialize }}" data-job-actions="{{ jobActions | serialize }}"  data-actions-by-source ="{{ actionsBySourceCount | serialize }}" ></div>
 
 
 

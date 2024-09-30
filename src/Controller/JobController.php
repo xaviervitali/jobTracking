@@ -8,6 +8,7 @@ use App\Enums\ActionStatus;
 use App\Form\JobFormType;
 use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
+use App\Repository\JobSourceRepository;
 use App\Repository\JobTrackingRepository;
 use App\Service\JobService;
 use DateTimeImmutable;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class JobController extends AbstractController
 {
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
-    public function index(JobRepository $jobRepository,  ActionRepository $actionRepository, Security $security): Response
+    public function index(JobRepository $jobRepository,  ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
     {
         
         $user =$security->getUser();
@@ -38,6 +39,7 @@ final class JobController extends AbstractController
         $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
         $jobSources = $jobRepository->getJobSourceCountByUser($user);
         $jobActions = $actionRepository->getActionCountAndRatioByUser($user);
+        $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
 
 
         return $this->render('job/index.html.twig', [
@@ -45,6 +47,7 @@ final class JobController extends AbstractController
            'closedJobsPerMonth'=>$closedJobsPerMonth,
            'jobSources'=>$jobSources,
            'jobActions'=>$jobActions,
+           'actionsBySourceCount'=>$actionsBySourceCount,
 
         ]);
     }

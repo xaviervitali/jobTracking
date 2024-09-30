@@ -26,7 +26,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('synthese', './assets/js/synthese.js')
     .addEntry('jobTracking', './assets/js/jobTracking.js')
-    .addEntry('candidatures', './assets/js/candidatures.js')
+    .addEntry('board', './assets/js/board.js')
     .addEntry('register', './assets/js/register.js')
     .addEntry('mySpace', './assets/js/mySpace.js')
 

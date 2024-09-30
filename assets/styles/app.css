@@ -19,6 +19,8 @@ body {
 
 .bg-div {
   background-color: #eee !important;
+  border-radius: .5rem !important;
+  padding: 1rem !important;
 }
 
 .dt-layout-row select,

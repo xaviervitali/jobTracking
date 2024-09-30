@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\JobSource;
+use App\Entity\User;
+use App\Enums\ActionStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +42,16 @@ class JobSourceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function getActionsNameAndCountByJobSource(User $user)
+    {
+
+
+        $sql = "SELECT  action.name, job_source.name as source, COUNT(*) as count FROM `job` inner join job_source on job_source.id = job.source_id inner join job_tracking on job_tracking.job_id = job.id INNER join action on action.id = job_tracking.action_id WHERE job.user_id = :userId and not action.name = :notActionName group by action.name, job_source.name";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->executeQuery($sql, ['userId' => $user->getId(), 'notActionName' => ActionStatus::getStartActionName()]);
+
+        return $stmt->fetchAllAssociative();
+    }
 }

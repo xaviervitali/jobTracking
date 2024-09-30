@@ -8,17 +8,25 @@ import { ApexCharts } from '../app';
  * 
  * @url https://apexcharts.com/javascript-chart-demos/pie-charts/simple-pie-chart/
  */
-export function generatePieChart(labels, series, title= "Synthèse graphique",selector = "#chart") {
+export function generatePieChart(labels, series, title = "Synthèse graphique", selector = "#chart") {
 
 
   const options = {
     title: { text: title },
     series,
     chart: {
-      height: '300',
+      height: 500,
+      width: 500,
       type: 'pie',
     },
     labels,
+    dataLabels: {
+      enabled: true,
+      formatter: function (val, opts) {
+        return opts.w.globals.series[opts.seriesIndex]
+      },
+
+    }
 
   };
 
@@ -40,6 +48,11 @@ export function generatePieChart(labels, series, title= "Synthèse graphique",se
 export function generateColumnChart(series, categories, title = '', selector = "#chart") {
 
   var options = {
+    title: {
+      text: title,
+
+    },
+
     series,
     chart: {
       type: 'bar',
@@ -72,6 +85,41 @@ export function generateColumnChart(series, categories, title = '', selector = "
       opacity: 1
     },
 
+  };
+
+  var chart = new ApexCharts(document.querySelector(selector), options);
+  chart.render();
+}
+/**
+  * @param {*} series  array [{
+        name: 'Net Profit',
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+      },..]
+ * @param {*} categories xLabels
+ * @param {*} selector string 
+ * @url  https://apexcharts.com/javascript-chart-demos/column-charts/stacked/
+ */
+export function generateStackedColumnsChart(series, categories, title = '', selector) {
+  var options = {
+    title: {
+      text: title,
+
+    },
+
+    series,
+    chart: {
+      type: 'bar',
+      height: 350,
+      stacked: true,
+      toolbar: {
+        show: true
+      },
+    },
+
+    xaxis: {
+      categories,
+    },
+  
   };
 
   var chart = new ApexCharts(document.querySelector(selector), options);

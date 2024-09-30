@@ -27,7 +27,7 @@
 
     <div class="flex-grow-1">
 
-      <div class="border rounded p-3 bg-div">
+      <div class="bg-div">
         <h4>
           Offre d'emploi
         </h4>
@@ -38,14 +38,14 @@
       {% if not isClosedJob %}
         
    
-        <div class="border rounded p-3 bg-div mb-2">
+        <div class="bg-div mb-2">
           <h4>
             Action du jour
           </h4>
           {% include "job_tracking/_actions.html.twig" %}
         </div>
       {% endif %}
-        <div class="border rounded p-3 bg-div">
+        <div class="bg-div">
           <h4></h4>
           {% include "job_tracking/note/_form.html.twig" %}
         </div>

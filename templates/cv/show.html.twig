@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="bg-div ">
+
+    <h2>Aperçu du CV</h2>
+    <iframe src="{{ asset('uploads/cv/' ~ cv.cvName) }}" width="100%" height="600px"></iframe>
+
+    <br>
+
+    <form method="post" action="{{ path('cv_delete', { 'id': cv.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cv.id) }}">
+        <button type="submit" class="btn btn-link text-danger">Supprimer</button>
+    </form>
+</div>
+    <br>
+    {# <a href="{{ path('cv_index') }}">Retour à la liste</a> #}
+{% endblock %}

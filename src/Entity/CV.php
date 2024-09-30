@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CVRepository::class)]
+#[Vich\Uploadable]
 class CV
 {
     #[ORM\Id]
@@ -21,6 +22,12 @@ class CV
     #[ORM\ManyToOne(inversedBy: 'cVs')]
     private ?User $user = null;
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
+
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    // NOTE: This is not a mapped field of entity metadata, just a simple property.
     #[Vich\UploadableField(mapping: 'cv', fileNameProperty: 'cvName', size: 'cvSize')]
     private ?File $cvFile = null;
 
@@ -32,9 +39,6 @@ class CV
 
     #[ORM\Column(nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
@@ -59,11 +63,6 @@ class CV
     public function getCVFile(): ?File
     {
         return $this->cvFile;
-        if (null !== $cvFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTimeImmutable();
-        }
     }
 
     public function setCVName(?string $cvName): void
@@ -76,26 +75,16 @@ class CV
         return $this->cvName;
     }
 
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
     public function setCVSize(?int $cvSize): void
     {
         $this->cvSize = $cvSize;
     }
 
-
-
     public function getCVSize(): ?int
     {
         return $this->cvSize;
     }
+
 
     public function getId(): ?int
     {
@@ -126,5 +115,10 @@ class CV
         $this->title = $title;
 
         return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 }

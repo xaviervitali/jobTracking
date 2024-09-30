@@ -1,5 +1,5 @@
 
-import { generateColumnChart, generatePieChart } from './chart.js';
+import { generateColumnChart, generatePieChart, generateStackedColumnsChart } from './chart.js';
 import moment from 'moment';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -25,24 +25,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const pieActionChartLabels = jobsActions.map(job => job.name); 
   const pieActionChartSeries = jobsActions.map(job => job.count); 
 
-  let html = ''
-  
-  // jobsActions.forEach(action => {
-  //   html += `<li class="list-group-item">${action.name} ${action.ratio * 100 } %</li>`
-    
-  // });
-  // for (let i = 0; i < pieActionChartLabels.length; i++){
-  //   html += `
-  //   <li class="list-group-item">${pieActionChartLabels[i]} 
-  //   ${Math.round(pieActionChartSeries[i] / totalJob * 100)} % </li>`
-  // }
-  
-document.querySelector('.taux').innerHTML = html
-  
-
-  
-
   generatePieChart(pieActionChartLabels, pieActionChartSeries, 'Actions sur candidatures', '#chart-pie-action')
 
+  const actionsBySourceCount = JSON.parse(chartDataSelector.getAttribute("data-actions-by-source"));
+
+  const categories = actionsBySourceCount.map(action => action.name);
+  const sources = [...new Set(actionsBySourceCount.map(action => action.source))];
+
+  // Initialisation des séries
+  const series = sources.map(source => ({
+      name: source,
+      data: Array(categories.length).fill(0) // Remplir avec des zéros
+  }));
+
+  // Remplissage des séries avec les données appropriées
+  actionsBySourceCount.forEach(action => {
+      const index = categories.indexOf(action.name); // Trouver l'index de l'action
+      const sourceIndex = sources.indexOf(action.source); // Trouver l'index de la source
+      if (index !== -1 && sourceIndex !== -1) {
+          series[sourceIndex].data[index] = action["count"]; // Assigner la valeur
+      }
+  });
+  generateStackedColumnsChart(series, categories, 'Actions par sources', '#chart-stacked-actions-by-source');
 
 });

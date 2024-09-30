@@ -1,48 +1,80 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Mon espace
+  Mon espace
 {% endblock %}
 
 {% block javascripts %}
 
-	{{ encore_entry_script_tags('mySpace') }}
+  {{ encore_entry_script_tags('mySpace') }}
 
 {% endblock %}
-
 
 {% block body %}
 
-{{ include('user/show.html.twig') }}
-<div class="js-table-data"	data-table-items="{{ jobs  }}"></div>
-<div class="border rounded p-3 my-3 bg-div">
+  {{ include('user/show.html.twig') }}
+  <div class="js-table-data" data-table-items="{{ jobs }}"></div>
+  <div class="my-3 bg-div">
 
-<div class="accordion" id="mySpaceAccordion">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#allJobs" aria-expanded="false" aria-controls="allJobs">
-        Toutes les candidatures
-      </button>
-    </h2>
-    <div id="allJobs" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
-      <div class="accordion-body">
-	  {{ include('home/inProgress.html.twig') }}
+    <div class="accordion" id="mySpaceAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#allJobs" aria-expanded="false" aria-controls="allJobs">
+            Toutes les candidatures
+          </button>
+        </h2>
+        <div id="allJobs" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
+          <div class="accordion-body">
+            {{ include('home/inProgress.html.twig') }}
+          </div>
+        </div>
       </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cv" aria-expanded="false" aria-controls="cv">
+            CVs
+          </button>
+        </h2>
+        <div id="cv" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
+          <div class="accordion-body">
+            {{ include('cv/_form.html.twig') }}
+            {% if( user.cvs | length > 0) %}
+              <div class="p-3">
+                <table class="table  table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        Nom du CV
+                      </th>
+                      <th scope="col">
+                        Date
+                      </th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cv in user.cvs %}
+                      <tr>
+                        <td>
+                          <a href="{{ path('cv_show', {id: cv.id}) }}">
+                            {{ cv.title }}
+                          </a>
+
+                        </td>
+                        <td>
+                          {{ cv.updatedAt | date('d/m/y') }}
+                        </td>
+
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-  <div class="accordion-item">
-  <h2 class="accordion-header">
-    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cv" aria-expanded="false" aria-controls="cv">
-      CVs
-    </button>
-  </h2>
-  <div id="cv" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
-    <div class="accordion-body">
-{{ include('cv/_form.html.twig') }}
-  </div>
-</div>
-</div>
-
-
-</div>
-{% endblock %}
+  {% endblock %}
+  
