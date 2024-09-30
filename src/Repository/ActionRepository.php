@@ -22,7 +22,7 @@ class ActionRepository extends ServiceEntityRepository
     }
 
     public function getActionCountAndRatioByUser(User $user){
-        $sql = "SELECT action.name, COUNT(*) AS count, COUNT(*) / ( SELECT COUNT(*) FROM job inner join job_tracking jt INNER JOIN action a ON a.id = jt.action_id WHERE jt.job_id = job.id AND a.name = :notActionName ) AS ratio FROM job INNER JOIN job_tracking ON job_tracking.job_id = job.id INNER JOIN action ON action.id = job_tracking.action_id WHERE job.user_id = :user AND NOT (action.name = :notActionName) GROUP BY action.name, job.id;";
+        $sql = "SELECT action.name, COUNT(*) AS count, COUNT(*) / ( SELECT COUNT(*) FROM job inner join job_tracking jt INNER JOIN action a ON a.id = jt.action_id WHERE jt.job_id = job.id AND a.name = :notActionName ) AS ratio FROM job INNER JOIN job_tracking ON job_tracking.job_id = job.id INNER JOIN action ON action.id = job_tracking.action_id WHERE job.user_id = :user AND NOT (action.name = :notActionName) GROUP BY action.name;";
 
         $stmt = $this->connection->executeQuery($sql, [
             'user' => $user->getId(),

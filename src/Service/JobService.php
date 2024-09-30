@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class JobService
 {
@@ -47,6 +46,13 @@ class JobService
         return $this->fillJobsPerMonth($jobsPerMonth);
     }
 
+    public function  getCurrentWeekJobs()
+    {
+        $jobsPerMonth = $this->jobRepository->getCurrentWeekJob($this->user);
+        return $this->fillJobsWeek($jobsPerMonth);
+    }
+
+
     public function getDelays()
     {
         return $this->delays;
@@ -70,6 +76,8 @@ class JobService
     private function fillJobsPerMonth($jobs)
     {
 
+ 
+
         $jobsPerMonth = [];
 
         foreach ($this->getDateBetween() as $month) {
@@ -91,6 +99,38 @@ class JobService
          
         }
         return $jobsPerMonth;
+    }
+
+    private function fillJobsWeek($jobs){
+
+        $jobsPerWeek =[];
+        $weekDates = [];
+        $start = new DateTime();
+        $start->modify('-1 week');
+        $end = new DateTime();
+
+        while ($start < $end) {
+            $weekDates[] = $start->format('Y-m-d');
+            $start->modify('+1 day'); // Ajoute un mois
+        }
+
+        foreach($weekDates as $weekDate){
+            $currentDay = array_filter(
+                $jobs,
+                function ($job) use ($weekDate) {
+                    $createdAt = New DateTime($job['created_at']);
+                   return  $createdAt->format('Y-m-d') === $weekDate;
+               });
+            $count = 0;
+               if(count( $currentDay )>0){
+                $count = $currentDay[array_key_first($currentDay)]['count'];
+            }
+            $jobsPerWeek[$weekDate] = $count;
+           ;
+        }
+
+        return $jobsPerWeek;
+
     }
 
     private function mapFindJobsInProgressOrClosedByUserRepo($repo)

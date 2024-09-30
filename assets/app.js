@@ -11,7 +11,7 @@ import 'jquery';
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
-
+moment.locale('fr-FR');
 import "./styles/app.css";
 
 export { ApexCharts, moment, DataTable, language };

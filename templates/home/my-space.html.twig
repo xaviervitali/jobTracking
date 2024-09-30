@@ -37,7 +37,6 @@
         </h2>
         <div id="cv" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
           <div class="accordion-body">
-            {{ include('cv/_form.html.twig') }}
             {% if( user.cvs | length > 0) %}
               <div class="p-3">
                 <table class="table  table-striped">
@@ -71,6 +70,9 @@
                 </table>
               </div>
             {% endif %}
+
+            {{ include('cv/_form.html.twig') }}
+
           </div>
         </div>
       </div>

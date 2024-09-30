@@ -7,9 +7,11 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CVRepository::class)]
 #[Vich\Uploadable]
+
 class CV
 {
     #[ORM\Id]
@@ -25,6 +27,7 @@ class CV
 
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cv_read'])]
     private ?string $title = null;
 
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -32,9 +35,11 @@ class CV
     private ?File $cvFile = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['cv_read'])]
     private ?string $cvName = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['cv_read'])]
     private ?int $cvSize = null;
 
     #[ORM\Column(nullable: true)]

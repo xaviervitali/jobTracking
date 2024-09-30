@@ -14,14 +14,20 @@
 	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"></div>
 </hr>
 
-<a	href="{{ path('candidature_new') }}">
-	<h4	class="bg-div my-3 text-center">
-		Ajouter une candidature
-	</h4>
-</a>
-<div	class="in-progress">
 
-	<div	id="chart"	class='d-flex justify-content-center bg-div text-white'></div>
+
+<div	class="in-progress">
+	<div	class="d-flex justify-content-between gap-3 align-items-stretch flex-wrap">
+		<div class='bg-div  flex-grow-1 d-flex flex-column justify-content-center'>
+			<a	href="{{ path('candidature_new') }}">
+				<h4	class="text-center ">
+					Ajouter une candidature
+				</h4>
+			</a>
+		</div>
+		<div	id="chart"	class='d-flex justify-content-center bg-div text-white'></div>
+
+	</div>
 	<div	class='bg-div my-3'>
 		<h4>
 			Liste des candidatures en cours

@@ -8,15 +8,15 @@ import { ApexCharts } from '../app';
  * 
  * @url https://apexcharts.com/javascript-chart-demos/pie-charts/simple-pie-chart/
  */
-export function generatePieChart(labels, series, title = "Synthèse graphique", selector = "#chart") {
+export function generatePieChart(labels, series, title = "Synthèse graphique", selector = "#chart", width = 500) {
 
 
   const options = {
     title: { text: title },
     series,
     chart: {
-      height: 500,
-      width: 500,
+      height: width,
+      width,
       type: 'pie',
     },
     labels,
@@ -25,6 +25,10 @@ export function generatePieChart(labels, series, title = "Synthèse graphique", 
       formatter: function (val, opts) {
         return opts.w.globals.series[opts.seriesIndex]
       },
+      responsive: [{
+        breakpoint: 500,
+        options: {},
+      }]
 
     }
 
@@ -45,7 +49,7 @@ export function generatePieChart(labels, series, title = "Synthèse graphique", 
  * 
  * @url https://apexcharts.com/javascript-chart-demos/column-charts/basic/
  */
-export function generateColumnChart(series, categories, title = '', selector = "#chart") {
+export function generateColumnChart(series, categories, title = '', selector = "#chart", width = 500) {
 
   var options = {
     title: {
@@ -57,33 +61,31 @@ export function generateColumnChart(series, categories, title = '', selector = "
     chart: {
       type: 'bar',
       height: 350,
+      width
     },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded'
-      },
-    },
+    responsive: [{
+      breakpoint: 500,
+      options: {},
+    }],
     dataLabels: {
       enabled: false
     },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
+    // stroke: {
+    //   show: true,
+    //   width: 2,
+    //   colors: ['transparent']
+    // },
     xaxis: {
       categories,
     },
-    yaxis: {
-      title: {
-        text: title
-      }
-    },
-    fill: {
-      opacity: 1
-    },
+    // yaxis: {
+    //   title: {
+    //     text: title
+    //   }
+    // },
+    // fill: {
+    //   opacity: 1
+    // },
 
   };
 
@@ -99,7 +101,7 @@ export function generateColumnChart(series, categories, title = '', selector = "
  * @param {*} selector string 
  * @url  https://apexcharts.com/javascript-chart-demos/column-charts/stacked/
  */
-export function generateStackedColumnsChart(series, categories, title = '', selector) {
+export function generateStackedColumnsChart(series, categories, title = '', selector, width = 500) {
   var options = {
     title: {
       text: title,
@@ -110,16 +112,20 @@ export function generateStackedColumnsChart(series, categories, title = '', sele
     chart: {
       type: 'bar',
       height: 350,
+      width,
       stacked: true,
       toolbar: {
         show: true
       },
     },
-
+   responsive: [{
+      breakpoint: 500,
+      options: {},
+    }],
     xaxis: {
       categories,
     },
-  
+
   };
 
   var chart = new ApexCharts(document.querySelector(selector), options);

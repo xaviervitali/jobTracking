@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\CV;
-use App\Entity\User;
 use App\Form\CvType;
 use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -55,16 +53,19 @@ class HomeController extends AbstractController
         $user = $security->getUser();
 
         if ($formCV->isSubmitted() && $formCV->isValid()) {
+            $currentCV = new CV();
             $cvFile = $formCV->get('cvFile')->getData();
             if ($cvFile) {
                 $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $cv->setCVFile($cvFile);
-                $cv
+                $currentCV->setCVFile($cvFile);
+                $currentCV
                     ->setTitle($originalFilename)
                     ->setUser($user);
-                $entityManager->persist($cv);
+                $entityManager->persist($currentCV);
                 $entityManager->flush();
+            
             }
+
         }
 
 

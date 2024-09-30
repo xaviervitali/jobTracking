@@ -10,6 +10,7 @@ use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
 use App\Repository\JobTrackingRepository;
+use App\Repository\UserRepository;
 use App\Service\JobService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,36 +19,38 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Smalot\PdfParser\Parser;
 
 final class JobController extends AbstractController
 {
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
     public function index(JobRepository $jobRepository,  ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
     {
-        
-        $user =$security->getUser();
-   
+
+        $user = $security->getUser();
+
         $date = new \DateTime();
         $date->modify('-1 year');
 
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobService =new JobService($user, $date, $jobRepository);
-        
+        $jobService = new JobService($user, $date, $jobRepository);
+
         $jobsPerMonths = $jobService->getJobsPerMonth();
         $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
         $jobSources = $jobRepository->getJobSourceCountByUser($user);
+        $currentWeekJob = $jobService->getCurrentWeekJobs($user);
         $jobActions = $actionRepository->getActionCountAndRatioByUser($user);
         $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
 
 
         return $this->render('job/index.html.twig', [
-           'jobsPerMonths'=>$jobsPerMonths,
-           'closedJobsPerMonth'=>$closedJobsPerMonth,
-           'jobSources'=>$jobSources,
-           'jobActions'=>$jobActions,
-           'actionsBySourceCount'=>$actionsBySourceCount,
+            'jobsPerMonths' => $jobsPerMonths,
+            'closedJobsPerMonth' => $closedJobsPerMonth,
+            'jobSources' => $jobSources,
+            'jobActions' => $jobActions,
+            'actionsBySourceCount' => $actionsBySourceCount,
+            'currentWeekJob' => $currentWeekJob,
 
         ]);
     }
@@ -84,8 +87,8 @@ final class JobController extends AbstractController
         ]);
     }
 
-    
-    
+
+
 
 
     #[Route('/candidature/{id}/delete', name: 'candidature_delete')]
@@ -116,5 +119,52 @@ final class JobController extends AbstractController
         }
 
         return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()]);
+    }
+
+
+    #[Route('/motivation_text', name: 'motivation_text')]
+    public function motivationText(Security $security, UserRepository $userRepository)
+    {
+        $user = $security->getUser();
+        $prompt = 'Génère une lettre de motivation.';
+
+        if ($user) {
+            $user = $userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
+        }
+
+        $parser = new Parser();
+        $pdf = $parser->parseFile('uploads/cv/' . $user->getCvs()[0]->getCVName());
+        $text = $pdf->getText();
+        $client = new \GuzzleHttp\Client();
+        $response = null;
+
+        try {
+            $response = $client->post('https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Authorization' => "Bearer " . $_ENV['API_KEY'],
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => "$prompt. Voici mon CV :.$text"
+                            // 'content' => "Génère une lettre de motivation pour un poste de Développeur Web. Voici mon CV : [INFORMATIONS DU CV] et voici l'offre d'emploi : [DETAILS DE L'OFFRE]."
+                        ]
+                    ],
+                    'max_tokens' => 300,
+                ],
+            ]);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            if ($e->getResponse()->getStatusCode() === 429) {
+                // Attendre avant de réessayer
+                sleep(10); // Ajustez ce délai selon vos besoins
+                // Réessayez la requête ici
+                
+            }
+        }
+
+        return $this->json($response);
     }
 }

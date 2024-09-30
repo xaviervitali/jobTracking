@@ -98,4 +98,11 @@ ORDER BY
 
         return $stmt->fetchAllAssociative();
     }
+
+    public function getCurrentWeekJob(User $user){
+        $sql = "SELECT job.created_at,  count(*) as count FROM `job` WHERE job.user_id = :user and DATEDIFF( NOW(), job.created_at) < 7 group by job.created_at;";
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+
+        return $stmt->fetchAllAssociative();
+    }
 }
