@@ -27,7 +27,7 @@ final class UserController extends AbstractController
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,  UserPasswordHasherInterface $passwordHasher, Security $security): Response
     {
-        if(!!$security->getUser()->getUserIdentifier()){
+        if(!!$security->getUser()){
             return $this->redirectToRoute('app_synthese');
         }
         $user = new User();

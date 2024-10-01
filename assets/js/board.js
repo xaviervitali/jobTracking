@@ -5,7 +5,7 @@ import moment from 'moment';
 document.addEventListener("DOMContentLoaded", function () {
 
   const width = document.querySelector(".container-xxl").clientWidth
-  const widthByChart = (width / 2.5 > 500 ? width.toString() / 2.5 : 500).toString();
+  const widthByChart = (width / 2.5 > 500 ? width / 2.5 : width*0.9).toString();
 
   const chartDataSelector = document.querySelector(".js-chart-data");
 
@@ -54,11 +54,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const chartCurrentWeekJobsSeries = [{ data: Object.values(currentWeekJobs) } ]
   const chartCurrentWeekJobsCategories = Object.keys(currentWeekJobs).map(date => moment(date).format('ddd DD'))
 
+  //closed job actions
+
+  const jobsClosedActions = JSON.parse(chartDataSelector.getAttribute("data-closed-actions"));
+  const pieClosedActionChartLabels = jobsClosedActions.map(job => job.name); 
+  const pieClosedActionChartSeries = jobsClosedActions.map(job => job.count); 
 
   // charts
   generateStackedColumnsChart(actionsBySourceSeries, actionsBySourceCategories, 'Actions par sources', '#chart-stacked-actions-by-source', widthByChart);
   generatePieChart(pieActionChartLabels, pieActionChartSeries, 'Actions sur candidatures', '#chart-pie-action', widthByChart)
   generatePieChart(pieSourceChartLabels, pieSourceChartSeries, 'Sources des candidatures', '#chart-pie-source', widthByChart)
+  generatePieChart(pieClosedActionChartLabels, pieClosedActionChartSeries, 'Causes de clôture', '#chart-pie-closed-action', widthByChart)
   generateColumnChart(colChartSeries, colChatCategories, 'Candidatures sur l\'année', '#chart-bar-jobs-per-month', widthByChart)
   generateColumnChart(chartCurrentWeekJobsSeries, chartCurrentWeekJobsCategories, 'Candidatures de la semaine', '#chart-bar-jobs-week', widthByChart)
    

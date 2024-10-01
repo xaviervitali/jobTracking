@@ -39,8 +39,9 @@ final class JobController extends AbstractController
         $jobsPerMonths = $jobService->getJobsPerMonth();
         $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
         $jobSources = $jobRepository->getJobSourceCountByUser($user);
-        $currentWeekJob = $jobService->getCurrentWeekJobs($user);
+        $currentWeekJob = $jobService->getCurrentWeekJobs();
         $jobActions = $actionRepository->getActionCountAndRatioByUser($user);
+        $jobClosedActions = $actionRepository->getActionCountAndRatioByUser($user, true);
         $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
 
 
@@ -51,7 +52,7 @@ final class JobController extends AbstractController
             'jobActions' => $jobActions,
             'actionsBySourceCount' => $actionsBySourceCount,
             'currentWeekJob' => $currentWeekJob,
-
+            'jobClosedActions' => $jobClosedActions,
         ]);
     }
 
