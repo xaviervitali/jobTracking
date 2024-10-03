@@ -29,10 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
   generatePieChart(labels, series)
 
 
-  generateDataTable(tableData, ["createdAt",
-    "recruiter",
-    "title",
-    "name",
-    "link"]);
+  generateDataTable(tableData );
 
 });

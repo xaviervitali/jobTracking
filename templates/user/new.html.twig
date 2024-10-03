@@ -4,13 +4,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-            Document
+            Suivi des candidatures
         </title>
+        <link rel="icon" type="image/jpg" href="{{asset('img/logo.jpg')}}" />
 
-        <link rel="stylesheet" href="{{ asset('/styles/login.css') }}">
+        {{ encore_entry_link_tags('login') }}
+
     </head>
     <body class="align">
-{# <h1>My job tracker</h1> #}
+<h1>Inscription</h1>
         <div class="grid">
     
     {{ include('user/_form.html.twig') }}

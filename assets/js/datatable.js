@@ -1,11 +1,13 @@
-import { DataTable, language, moment, noActionLabel } from '../app';
+import { DataTable, language, moment } from '../app';
 
-export function generateDataTable(tableData, columnsKeys, selector = '#table') {
+export function generateDataTable(tableData, columnsKeys = [
+    "recruiter",
+    "title",
+    "name",
+    "delai",
+    "link"], selector = '#table') {
     tableData = tableData.map((jobTracking) => {
         
-        const date = jobTracking.createdAt
-        const createdAtDate = moment(date).format('DD/MM/YYYY');
-        const formatedName = formatActionField(jobTracking)
         const newLink = document.createElement('a');
 
         newLink.href = '/candidature/' + jobTracking.id;
@@ -13,13 +15,11 @@ export function generateDataTable(tableData, columnsKeys, selector = '#table') {
 
 
         return {
-            ...jobTracking,
-            name: formatedName,
-            createdAt: createdAtDate,
+            ... jobTracking,
+            delai : getDelai(jobTracking),
             link: newLink.outerHTML
         }
     })
-
 
     const columns = []
 
@@ -42,19 +42,13 @@ export function generateDataTable(tableData, columnsKeys, selector = '#table') {
     });
 }
 
-function formatActionField(jobTracking){
-    let name = noActionLabel
-    let date = jobTracking.createdAt
+function getDelai(jobTracking) {
+    const isFinalAction = jobTracking.set_closed
+    let date = jobTracking.maxCreatedAt
+    let startDate = isFinalAction?moment(jobTracking.createdAt):moment();
     
-
-    if (jobTracking.name) {
-        name = jobTracking.name
-        date = jobTracking.maxCreatedAt
-    }
-
-    const diffStr = moment().diff(date, 'days')
-
-    return name + ' (' + diffStr + 'j)'
+    const diffStr = startDate.diff(date, 'days')
+    return  diffStr
 
 
 }

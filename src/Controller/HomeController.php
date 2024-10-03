@@ -37,7 +37,7 @@ class HomeController extends AbstractController
 
 
     #[Route('/mon_espace', name: 'app_user_show')]
-    public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security, Request $request, EntityManagerInterface $entityManager): Response
+    public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security): Response
     {
         $user = $security->getUser();
 
@@ -48,27 +48,10 @@ class HomeController extends AbstractController
         ]);
 
         $cv = new CV();
-        $formCV = $this->createForm( CvType::class, $cv);
-        $formCV->handleRequest($request);
+        $formCV = $this->createForm(CvType::class, $cv, [
+            'action' => $this->generateUrl('cv_new'), // Remplace 'nom_de_la_route' par ta route Symfony
+        ]);
         $user = $security->getUser();
-
-        if ($formCV->isSubmitted() && $formCV->isValid()) {
-            $currentCV = new CV();
-            $cvFile = $formCV->get('cvFile')->getData();
-            if ($cvFile) {
-                $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $currentCV->setCVFile($cvFile);
-                $currentCV
-                    ->setTitle($originalFilename)
-                    ->setUser($user);
-                $entityManager->persist($currentCV);
-                $entityManager->flush();
-            
-            }
-
-        }
-
-
 
         return $this->render('home/my-space.html.twig', [
            'jobs'=> $jsonContent,

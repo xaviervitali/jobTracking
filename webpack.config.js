@@ -30,7 +30,7 @@ Encore
     .addEntry('register', './assets/js/register.js')
     .addEntry('mySpace', './assets/js/mySpace.js')
 
-    
+    .addStyleEntry('login', './assets/styles/login.css')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
