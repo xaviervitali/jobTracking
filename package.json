@@ -34,6 +34,7 @@
         "datatables.net-dt": "^2.1.7",
         "datatables.net-plugins": "^2.1.7",
         "jquery": "^3.7.1",
-        "moment": "^2.30.1"
+        "moment": "^2.30.1",
+        "swiper": "^11.1.14"
     }
 }

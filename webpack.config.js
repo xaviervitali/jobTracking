@@ -29,8 +29,12 @@ Encore
     .addEntry('board', './assets/js/board.js')
     .addEntry('register', './assets/js/register.js')
     .addEntry('mySpace', './assets/js/mySpace.js')
+    .addEntry('demo', './assets/js/demo.js')
 
     .addStyleEntry('login', './assets/styles/login.css')
+    .addStyleEntry('postit', './assets/styles/postit.css')
+    .addStyleEntry('swiper', 'swiper/css')
+    .addStyleEntry('demoCss', './assets/styles/demo.css')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

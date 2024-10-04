@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('styles/postit.css')}}">
+  {{ encore_entry_link_tags('postit') }}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -10,19 +11,19 @@
 {% endblock %}
 
 {% block body %}
-{% if job.notes | length  > 0 %}
+  {% if job.notes | length  > 0 %}
 
-<div class="d-flex gap-2 flex-wrap my-3 justify-content-between">
-  {% for note in job.notes %}
-    {% include "_postit.html.twig" with {
+    <div class="d-flex gap-2 flex-wrap my-3 justify-content-between">
+      {% for note in job.notes %}
+        {% include "_postit.html.twig" with {
     createdAt :note.createdAt,
     content: note.content ,
     noteId: note.id, 
     color :note.color
     } %}
-  {% endfor %}
-</div>
-{% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
   <div class="d-flex justify-content-between gap-3 flex-wrap  mb-3">
 
     <div class="flex-grow-1">
@@ -35,16 +36,15 @@
 
       </div>
       <div class="flex-grow-1 d-flex flex-column gap-3 justify-content-between">
-      {% if not isClosedJob %}
-        
-   
-        <div class="bg-div mb-2">
-          <h4>
-            Action du jour
-          </h4>
-          {% include "job_tracking/_actions.html.twig" %}
-        </div>
-      {% endif %}
+        {% if not isClosedJob %}
+
+          <div class="bg-div mb-2">
+            <h4>
+              Action du jour
+            </h4>
+            {% include "job_tracking/_actions.html.twig" %}
+          </div>
+        {% endif %}
         <div class="bg-div">
           <h4></h4>
           {% include "job_tracking/note/_form.html.twig" %}

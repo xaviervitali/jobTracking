@@ -1,0 +1,31 @@
+.swiper-container img {
+
+    width: 100%;
+    object-fit: contain;
+    
+}
+
+.swiper-container p > img {
+  height: 50vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+  
+}
+.swiper-container {
+    /* margin: auto;
+    width:100%;
+    height: 60vh; */
+  }
+
+  #modalImage{
+    width: 100%;
+    object-fit: contain;
+  }
+
+
+  .swiper-slide {
+    margin: 10px; /* Ajouter 10px de marge autour de chaque slide */
+    box-sizing: border-box; /* Assurez-vous que la marge est incluse dans les dimensions */
+
+}
