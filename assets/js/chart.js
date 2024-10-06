@@ -1,4 +1,30 @@
 import { ApexCharts } from '../app';
+import 'core-js/features/array';
+
+const fill = {
+  opacity: 0.9,
+  colors: [
+    '#9DD1C6', 
+    '#172633', 
+    '#ED8061', 
+    '#3498DB', 
+    '#E74C3C', 
+    '#9B59B6', 
+    '#F1C40F', 
+    '#2F414C', 
+    '#66DA26', 
+    '#546E7A', 
+    '#8E44AD', 
+    '#1ABC9C', 
+    '#34495E', 
+    '#C0392B', 
+    '#7F8C8D'  
+  ]
+};
+
+const responsive = [{
+  breakpoint: 500,
+}];
 
 /**
  * 
@@ -20,18 +46,17 @@ export function generatePieChart(labels, series, title = "Synthèse graphique", 
     },
     labels,
     legend: {
-      show: false},
+      show: true},
     
     dataLabels: {
       enabled: true,
       formatter: function (val, opts) {
-        return opts.w.globals.labels[opts.seriesIndex] + ':' +opts.w.globals.series[opts.seriesIndex]
+        return  opts.w.globals.series[opts.seriesIndex]
       },
-      responsive: [{
-        breakpoint: 500,
-      }]
+      responsive
 
-    }
+    },
+    fill
 
   };
 
@@ -57,35 +82,22 @@ export function generateColumnChart(series, categories, title = '', selector = "
       text: title,
 
     },
-
+    fill,
     series,
     chart: {
       type: 'bar',
       height: 350,
       width
     },
-    responsive: [{
-      breakpoint: 500,
-    }],
+    responsive,
     dataLabels: {
       enabled: false
     },
-    // stroke: {
-    //   show: true,
-    //   width: 2,
-    //   colors: ['transparent']
-    // },
+
     xaxis: {
       categories,
     },
-    // yaxis: {
-    //   title: {
-    //     text: title
-    //   }
-    // },
-    // fill: {
-    //   opacity: 1
-    // },
+
 
   };
 
@@ -120,10 +132,8 @@ export function generateStackedColumnsChart(series, categories, title = '', sele
         show: true
       },
     },
-    responsive: [{
-      breakpoint: 500,
-      options: {},
-    }],
+    responsive,
+    fill,
     xaxis: {
       categories,
       labels: { show: true, rotate: -45, rotateAlways: true, }
