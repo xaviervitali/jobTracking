@@ -70,6 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CV::class, mappedBy: 'user')]
     private Collection $cVs;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
     public function __construct()
     {
         $this->jobTrackings = new ArrayCollection();
@@ -309,6 +312,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $cV->setUser(null);
             }
         }
+
+        return $this;
+    }
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
