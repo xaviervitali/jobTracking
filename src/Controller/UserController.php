@@ -53,10 +53,13 @@ final class UserController extends AbstractController
 
             // Envoi de l'e-mail de validation
             $validationLink = $this->generateUrl('app_user_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-            $emailService->sendEmail(
+            $emailService->sendHtmlEmail(
                 $user->getEmail(),
                 'Validation de votre inscription',
-                "Bonjour, veuillez cliquer sur le lien suivant pour valider votre inscription : $validationLink"
+                $this->renderView('user/confirm.html.twig', [
+                    'user' => $user,
+                    'validationLink' => $validationLink,
+                ])
             );
 
 

@@ -12,13 +12,13 @@ class EmailService
     {
     }
 
-    public function sendEmail(String $to, String $subject, String $content)
+    public function sendHtmlEmail(String $to, String $subject, String $content)
     {
         $email = (new Email())
             ->from('no-reply@job-tracking.free.nf')  // Adresse d'expéditeur personnalisée
             ->to($to)                             // Destinataire
             ->subject($subject)                   // Sujet
-            ->text($content);                     // Contenu de l'e-mail
+            ->html($content);                     // Contenu de l'e-mail
 
         try {
             $this->mailer->send($email);

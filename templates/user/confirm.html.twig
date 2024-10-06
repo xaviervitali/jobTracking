@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Confirmation d'inscription
+{% endblock %}
+
+{% block body %}
+    <div class="align">
+        <div class="grid">
+            <h1 class="text--center">
+                Validation de votre Inscription
+            </h1>
+            <p>
+                Bonjour
+                {{ user.firstname }}
+                ,
+            </p>
+            <p>
+                Merci de vous être inscrit sur notre site ! Veuillez cliquer sur le bouton ci-dessous pour valider votre inscription.
+            </p>
+
+            <a href="{{ validationLink }}" class="btn btn-primary">
+                Valider mon inscription
+            </a>
+
+            <p>
+                Si vous n'avez pas demandé cette inscription, vous pouvez ignorer ce message.
+            </p>
+        </div>
+    </div>
+
+    <style>
+    .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        background-color: #ea4c88; /* Couleur de fond */
+        color: white; /* Couleur du texte */
+        border-radius: 0.25rem; /* Bord arrondi */
+        text-align: center;
+        text-decoration: none; /* Pas de soulignement */
+        transition: background-color 0.3s; /* Effet de transition */
+    }
+    
+    .btn:hover {
+        background-color: #d44179; /* Couleur au survol */
+    }
+</style>
+{% endblock %}
