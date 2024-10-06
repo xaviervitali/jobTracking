@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
+
+
 {% block stylesheets %}
     {{ encore_entry_link_tags('login') }}
     {{ encore_entry_link_tags('swiper') }}
     {{ encore_entry_link_tags('demoCss') }}
+{% endblock %}
+{% block header %}
 {% endblock %}
 {% block body %}
 
@@ -54,6 +58,7 @@
         <div>
             {{ include('security/_form.html.twig') }}
         </div>
+        <div class="text--center"> <a href="{{ path('app_forgot_password')}}">Mot de passe oublié </a> </div>
     </div>
 
 {% endblock %}

@@ -7,27 +7,21 @@
 				Suivi des candidatures
 			{% endblock %}
 		</title>
-		<link rel="icon" type="image/jpg" href="{{asset('img/logo.jpg')}}" />
+		<link	rel="icon"	type="image/jpg"	href="{{ asset('img/logo.jpg') }}" />
 		{{ encore_entry_link_tags('app') }}
 
 		{% block stylesheets %}{% endblock %}
-
-		{{ encore_entry_script_tags('app') }}
-
-		{% block javascripts %}{% endblock %}
 
 	</head>
 
 	<body>
 
 		{% block header %}
-		{% if app.user %}
 			<nav	class="navbar navbar-expand-lg bg-body-tertiary mb-3">
 				<a	class="navbar-brand"	href="{{ url( 'app_synthese') }}">
-				<img src="/assets/img/logo.jpg"class="brand-logo" alt="brand logo">
+					<img	src="/assets/img/logo.jpg"	class="brand-logo"	alt="brand logo">
 					Bienvenue
-			
-						{{ app.user.firstname }}
+					{{ app.user.firstname }}
 
 				</a>
 				<button	class="navbar-toggler"	type="button"	data-bs-toggle="collapse"	data-bs-target="#navbarNav"	aria-controls="navbarNav"	aria-expanded="false"	aria-label="Toggle navigation">
@@ -46,10 +40,10 @@
 							</a>
 						</li>
 						<li	class="nav-item">
-				
-						<a	class="nav-link {% if app.request.get('_route') ==	'app_user_show'  %}active{% endif %}"	aria-current="page"	href="{{ url( 	'app_user_show') }}">
-						Mon espace
-					</a>
+
+							<a	class="nav-link {% if app.request.get('_route') ==	'app_user_show' %}active{% endif %}"	aria-current="page"	href="{{ url( 	'app_user_show') }}">
+								Mon espace
+							</a>
 						</li>
 						<li	class="nav-item">
 							<a	class="nav-link"	href="{{ url( 'app_logout') }}">
@@ -58,27 +52,39 @@
 						</li>
 					</ul>
 				</div>
-			</div>
-		</body>
-	</html>
-</nav>
-{% endif %}
 
-{% endblock %}
-{% block alerts %}
-	{% for type, messages in app.session.flashBag.all %}
-		{% for message in messages %}
-			{% if type == 'error' %}
-				{% set type = 'danger' %}
-			{% endif %}
-			{% if type == 'message' %}
-				{% set type = 'info' %}
-			{% endif %}
-			<div	class="alert alert-{{ type }} alert-dismissible fade show"	role="alert">
-				{{ message|raw }}
-				<button	type="button"	class="btn-close"	data-bs-dismiss="alert"	aria-label="Close"></button>
-			</div>
+			</nav>
+		{% endblock %}
+		{% for type, messages in app.session.flashBag.all %}
+			{% for message in messages %}
+				{% if type == 'error' %}
+					{% set type = 'danger' %}
+				{% endif %}
+				{% if type == 'message' %}
+					{% set type = 'info' %}
+				{% endif %}
+				<div	class="alert alert-{{ type }} alert-dismissible fade show"	role="alert">
+					{{ message|raw }}
+					<button	type="button"	class="btn-close"	data-bs-dismiss="alert"	aria-label="Close"></button>
+				</div>
+			{% endfor %}
 		{% endfor %}
-	{% endfor %}
-{% endblock %}</div><div	class="container-xxl">
-{% block body %}{% endblock %}</div>{% block footer %}{% endblock %}</body></html>
+		{% if app.user %}
+
+			<div	class="container-xxl">
+			{% endif %}
+
+			{% block body %}{% endblock %}
+			
+			{% if app.user %}
+
+			</div>
+		{% endif %}
+
+		{% block footer %}{% endblock %}
+		{{ encore_entry_script_tags('app') }}
+
+		{% block javascripts %}{% endblock %}
+
+	</body>
+</html>

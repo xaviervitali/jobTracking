@@ -6,7 +6,7 @@
 }
 
 .swiper-container p > img {
-  height: 50vh;
+  height: 40vh;
 display: flex;
 flex-direction: column;
 justify-content: center;
@@ -29,3 +29,4 @@ justify-content: center;
     box-sizing: border-box; /* Assurez-vous que la marge est incluse dans les dimensions */
 
 }
+

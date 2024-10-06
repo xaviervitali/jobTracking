@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const passwordInput = document.querySelector('input[name="user[password][first]"]');
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput =  document.querySelector('input[name*="[password][first]"]');
     const passwordStrengthMeter = document.getElementById('password-strength-meter');
     const passwordStrengthText = document.getElementById('password-strength-text');
 

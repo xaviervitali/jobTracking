@@ -61,11 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const pieClosedActionChartSeries = jobsClosedActions.map(job => job.count); 
 
   // charts
-  generateStackedColumnsChart(actionsBySourceSeries, actionsBySourceCategories, 'Actions par sources', '#chart-stacked-actions-by-source', widthByChart);
   generatePieChart(pieActionChartLabels, pieActionChartSeries, 'Actions sur candidatures', '#chart-pie-action', widthByChart)
   generatePieChart(pieSourceChartLabels, pieSourceChartSeries, 'Sources des candidatures', '#chart-pie-source', widthByChart)
   generatePieChart(pieClosedActionChartLabels, pieClosedActionChartSeries, 'Causes de clôture', '#chart-pie-closed-action', widthByChart)
   generateColumnChart(colChartSeries, colChatCategories, 'Candidatures sur l\'année', '#chart-bar-jobs-per-month', widthByChart)
   generateColumnChart(chartCurrentWeekJobsSeries, chartCurrentWeekJobsCategories, 'Candidatures de la semaine', '#chart-bar-jobs-week', widthByChart)
-   
+  generateStackedColumnsChart(actionsBySourceSeries, actionsBySourceCategories, 'Actions par sources', '#chart-stacked-actions-by-source', widthByChart);
+  
 });

@@ -9,13 +9,14 @@ import { ApexCharts } from '../app';
  * @url https://apexcharts.com/javascript-chart-demos/pie-charts/simple-pie-chart/
  */
 export function generatePieChart(labels, series, title = "Synthèse graphique", selector = "#chart", width = 500) {
+  const type = labels.length > 3 ? 'donut' : 'pie';
   const options = {
     title: { text: title },
     series,
     chart: {
       height: 350,
       width,
-      type: 'donut',
+      type
     },
     labels,
     legend: {

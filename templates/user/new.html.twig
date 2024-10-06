@@ -6,22 +6,21 @@
         <title>
             Suivi des candidatures
         </title>
-        <link rel="icon" type="image/jpg" href="{{asset('img/logo.jpg')}}" />
+        <link rel="icon" type="image/jpg" href="{{ asset('img/logo.jpg') }}" />
 
         {{ encore_entry_link_tags('login') }}
 
     </head>
     <body class="align">
-<h1>Inscription</h1>
+        <h1>
+            Inscription
+        </h1>
         <div class="grid">
-    
-    {{ include('user/_form.html.twig') }}
+
+            {{ include('user/_form.html.twig') }}
         </div>
-</body>
-<script src="{{ asset('/js/register.js') }}"></script>
+    </body>
+    <script src="{{ asset('/js/register.js') }}"></script>
 </html>
-
-
-
 
 {# <a href="{{ path('app_user_index') }}">back to list</a> #}

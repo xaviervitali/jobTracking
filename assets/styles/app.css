@@ -36,5 +36,10 @@ body {
 }
 
 .color-grey {
-  color: grey !important;
+  /* color: grey !important; */
+}
+.alert { 
+  position: absolute !important;
+  top:0 !important;
+  right: 0 !important;
 }
