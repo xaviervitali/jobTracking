@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", function () {
   //actionsBySourceCount
   const actionsBySourceCount = JSON.parse(chartDataSelector.getAttribute("data-actions-by-source"));
 
-  const actionsBySourceCategories = actionsBySourceCount.map(action => action.name);
-  const sources = [...new Set(actionsBySourceCount.map(action => action.source))];
+  const actionsBySourceCategories = [...new Set(actionsBySourceCount.map(action => action.name))];
 
+  const sources = [...new Set(actionsBySourceCount.map(action => action.source))];
   const actionsBySourceSeries = sources.map(source => ({
       name: source,
       data: Array(actionsBySourceCategories.length).fill(0) // Remplir avec des zéros

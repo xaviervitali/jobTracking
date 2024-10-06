@@ -9,24 +9,25 @@ import { ApexCharts } from '../app';
  * @url https://apexcharts.com/javascript-chart-demos/pie-charts/simple-pie-chart/
  */
 export function generatePieChart(labels, series, title = "Synthèse graphique", selector = "#chart", width = 500) {
-
   const options = {
     title: { text: title },
     series,
     chart: {
-      height:350,
+      height: 350,
       width,
-      type: 'pie',
+      type: 'donut',
     },
     labels,
+    legend: {
+      show: false},
+    
     dataLabels: {
       enabled: true,
       formatter: function (val, opts) {
-        return opts.w.globals.series[opts.seriesIndex]
+        return opts.w.globals.labels[opts.seriesIndex] + ':' +opts.w.globals.series[opts.seriesIndex]
       },
       responsive: [{
         breakpoint: 500,
-        options: {},
       }]
 
     }
@@ -64,7 +65,6 @@ export function generateColumnChart(series, categories, title = '', selector = "
     },
     responsive: [{
       breakpoint: 500,
-      options: {},
     }],
     dataLabels: {
       enabled: false
@@ -106,7 +106,9 @@ export function generateStackedColumnsChart(series, categories, title = '', sele
       text: title,
 
     },
-
+    legend: {
+      show: true
+    },
     series,
     chart: {
       type: 'bar',
@@ -117,12 +119,13 @@ export function generateStackedColumnsChart(series, categories, title = '', sele
         show: true
       },
     },
-   responsive: [{
+    responsive: [{
       breakpoint: 500,
       options: {},
     }],
     xaxis: {
       categories,
+      labels: { show: true, rotate: -45, rotateAlways: true, }
     },
 
   };
