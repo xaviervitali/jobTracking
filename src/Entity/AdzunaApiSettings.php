@@ -40,13 +40,12 @@ class AdzunaApiSettings
 
     private ?string $whatExclude = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    #[Groups(groups: 'adzunaApiSettings')]
-
-    private ?array $whatOr = null;
 
     #[ORM\OneToOne(inversedBy: 'adzunaApiSettings', cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $whatOr = null;
 
     public function getId(): ?int
     {
@@ -113,17 +112,7 @@ class AdzunaApiSettings
         return $this;
     }
 
-    public function getWhatOr(): ?array
-    {
-        return $this->whatOr;
-    }
 
-    public function setWhatOr(?array $whatOr): static
-    {
-        $this->whatOr = $whatOr;
-
-        return $this;
-    }
 
     public function getUser(): ?User
     {
@@ -133,6 +122,18 @@ class AdzunaApiSettings
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getWhatOr(): ?string
+    {
+        return $this->whatOr;
+    }
+
+    public function setWhatOr(?string $whatOr): static
+    {
+        $this->whatOr = $whatOr;
 
         return $this;
     }

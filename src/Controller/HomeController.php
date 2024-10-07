@@ -66,14 +66,13 @@ class HomeController extends AbstractController
         $formApiSettings = $this->createForm(AdzunaApiSettingsType::class, $adzunaApiSettings);
     
 
-        $formApiSettings = $this->createForm(AdzunaApiSettingsType::class, $adzunaApiSettings);
 
         $formApiSettings->handleRequest($request);
         if ($formApiSettings->isSubmitted()) {
             $adzunaApiSettings
                 ->setCountry('fr');
-            // $entityManager->persist($adzunaApiSettings);
             $entityManager->flush();
+            return $this->redirectToRoute('app_job_alert');  
         }
 
         return $this->render('home/my-space.html.twig', [

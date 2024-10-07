@@ -45,13 +45,14 @@ class AdzunaApiSettingsType extends AbstractType
             ])
             ->add('whatExclude', TextType::class, [
                 'label' => false,
+                'required'=>false,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Mots clés à exclure',
                 ]
             ])
             // ->add('whatOr')
-            // ->add('user', EntityType::class, [
+            // ->add('user', EntityType::class, [utf8mb4_unicode_ci
             //     'class' => User::class,
             //     'choice_label' => 'id',
             // ])

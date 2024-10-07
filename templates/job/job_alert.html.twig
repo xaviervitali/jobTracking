@@ -7,7 +7,7 @@
 {% block body %}
     <div class="js-table-data"  data-table-items="{{ results }}" data-table-count="{{ count }}"></div>
     <div class="bg-div">
-        {% include "home/_dataTable.html.twig" with {'ths': [ 'Localisation','Employeur','Intitulé','Description', 'Lien']} %}
+        {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur', 'Publié le','Intitulé','Description','Localisation', 'Lien']} %}
     </div>
 
 {% endblock %}

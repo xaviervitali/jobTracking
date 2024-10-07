@@ -11,6 +11,7 @@ use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
 use App\Repository\JobTrackingRepository;
 use App\Repository\UserRepository;
+use App\Service\ApiService;
 use App\Service\JobService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +23,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Smalot\PdfParser\Parser;
 
 final class JobController extends AbstractController
 {
@@ -127,12 +127,12 @@ final class JobController extends AbstractController
 
 
     #[Route('/job_alert', name: 'app_job_alert')]
-    public function jobAlert(Security $security, UserRepository $userRepository, CacheInterface $cache): Response
+    public function jobAlert(Security $security, UserRepository $userRepository, CacheInterface $cache, ApiService $apiService): Response
     {
         $user = $security->getUser();
         $results = [];
         $count = 0;
-        
+
 
         // Récupération des paramètres de l'utilisateur
         $user = $userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
@@ -143,14 +143,14 @@ final class JobController extends AbstractController
             return $this->redirectToRoute('app_user_show');
         }
 
-        // Paramètres de l'API Adzuna
         $params = [
             'app_id' => $_ENV['ADZUNA_API_ID'],     // ID de l'API
             'app_key' => $_ENV['ADZUNA_API_KEY'],   // Clé de l'API
-            'results_per_page' => 20,               // Nombre de résultats par page
+            'results_per_page' => 100,               // Nombre de résultats par page
             'what' => $apiSettings->getWhat(),      // Mot clé de recherche
             'where' => $apiSettings->getCity(),     // Localisation
-            'what_exclude' => $apiSettings->getWhatExclude(), // Exclusion de certains mots-clés
+            'what_exclude' => $apiSettings->getWhatExclude(),
+            'sort_by' => 'date' // Exclusion de certains mots-clés
         ];
 
         // Calcul du nombre de secondes jusqu'à minuit
@@ -162,27 +162,29 @@ final class JobController extends AbstractController
         $cacheKey = 'adzuna_api_' . $user->getId();
 
         // Récupération des données en cache ou appel à l'API si nécessaire
-        $cachedData = $cache->get($cacheKey, function (ItemInterface $item) use ($params, $secondsUntilMidnight, $apiSettings) {
+        $cachedData = $cache->get($cacheKey, function (ItemInterface $item) use ($user, $secondsUntilMidnight, $apiService, $params, $apiSettings) {
             $item->expiresAfter($secondsUntilMidnight); // Expiration à minuit
 
-            // Si pas de cache ou paramètres différents, on fait la requête API
-            $client = new Client();
-            try {
-                $response = $client->get('https://api.adzuna.com/v1/api/jobs/' . $apiSettings->getCountry() . '/search/1', [
-                    'query' => $params,
-                ]);
+            // Appel à l'API via ApiService et retourne les données avec les paramètres actuels
+            $responseData = $apiService->getAdzunaJobs($params, $apiSettings->getCountry());
 
-                $responseData = json_decode($response->getBody()->getContents(), true);
-
-                // Retourner les nouveaux paramètres et la réponse de l'API
-                return [
-                    'params' => $params,
-                    'response' => $responseData,
-                ];
-            } catch (\GuzzleHttp\Exception\ClientException $e) {
-                throw new \RuntimeException('Erreur lors de l\'appel à l\'API Adzuna : ' . $e->getMessage());
-            }
+            // Retourner les paramètres et la réponse de l'API
+            return [
+                'params' => $params,
+                'response' => $responseData,
+            ];
         });
+
+        // Comparer les paramètres actuels avec ceux en cache
+        if (isset($cachedData['params']) && $cachedData['params'] !== $params) {
+            // Si les paramètres ont changé, faire une nouvelle requête API
+            $cachedData = [
+                'params' => $params,
+                'response' => $apiService->getAdzunaJobs($params, $apiSettings->getCountry()),
+            ];
+
+            // Pas besoin de mettre à jour manuellement le cache : la prochaine requête appellera automatiquement l'API si nécessaire
+        }
 
         // Récupérer la réponse des données en cache
         $responseData = $cachedData['response'];

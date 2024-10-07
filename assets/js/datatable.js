@@ -5,7 +5,8 @@ export function generateDataTable(tableData, columnsKeys = [
     "title",
     "name",
     "delai",
-    "link"], createLink = true, totalCount, selector = '#table') {
+    "link"], createLink = true, selector = '#table') {
+    
     if (createLink) {
         tableData = tableData.map((jobTracking) => {
 
@@ -46,7 +47,7 @@ export function generateDataTable(tableData, columnsKeys = [
         pageLength: 20,
         responsive: true,
         createdRow: function (row, data, dataIndex) {
-            $(row).find('td').addClass('pb-3 align-content-center');
+            $(row).find('td').addClass('align-content-center');
             if (!!data.set_closed) {
                 $(row).find('td').addClass('color-grey');
             }
@@ -54,7 +55,10 @@ export function generateDataTable(tableData, columnsKeys = [
         lengthChange: false,
         info: true,
         language: {
-            "search":         "Rechercher:",
+            infoEmpty: false,
+            // emptyTable: 'Aucune donnée',
+            // zeroRecords: 'Aucune donnée',
+            search: "Rechercher:",
             paginate: {
                 first: "Premier",
                 last: "Dernier",
