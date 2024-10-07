@@ -5,21 +5,23 @@ export function generateDataTable(tableData, columnsKeys = [
     "title",
     "name",
     "delai",
-    "link"], selector = '#table') {
-    tableData = tableData.map((jobTracking) => {
-        
-        const newLink = document.createElement('a');
+    "link"], createLink = true, totalCount, selector = '#table') {
+    if (createLink) {
+        tableData = tableData.map((jobTracking) => {
 
-        newLink.href = '/candidature/' + jobTracking.id;
-        newLink.textContent = 'Visualiser';
+            const newLink = document.createElement('a');
+
+            newLink.href = '/candidature/' + jobTracking.id;
+            newLink.textContent = 'Visualiser';
 
 
-        return {
-            ... jobTracking,
-            delai : getDelai(jobTracking),
-            link: newLink.outerHTML
-        }
-    })
+            return {
+                ...jobTracking,
+                delai: getDelai(jobTracking),
+                link: newLink.outerHTML
+            }
+        })
+    }
 
     const columns = []
 
@@ -31,24 +33,47 @@ export function generateDataTable(tableData, columnsKeys = [
         data: tableData,
         columns,
         language,
+        layout: {
+            // topStart: true,
+            // topEnd: null,
+            bottomEnd: {
+
+                paging: {
+                    numbers: false
+                }
+            }
+        },
+        pageLength: 20,
         responsive: true,
         createdRow: function (row, data, dataIndex) {
-            
+            $(row).find('td').addClass('pb-3 align-content-center');
             if (!!data.set_closed) {
                 $(row).find('td').addClass('color-grey');
             }
-        }
-        // config options...
+        },
+        lengthChange: false,
+        info: true,
+        language: {
+            "search":         "Rechercher:",
+            paginate: {
+                first: "Premier",
+                last: "Dernier",
+                next: "Suivant",
+                previous: "Précédent"
+            },
+            info: `${tableData.length} résultats`,
+        },
+        responsive: true
     });
 }
 
 function getDelai(jobTracking) {
     const isFinalAction = jobTracking.set_closed
     let date = jobTracking.maxCreatedAt
-    let startDate = isFinalAction?moment(jobTracking.createdAt):moment();
-    
+    let startDate = isFinalAction ? moment(jobTracking.createdAt) : moment();
+
     const diffStr = startDate.diff(date, 'days')
-    return  diffStr
+    return diffStr
 
 
 }

@@ -30,6 +30,7 @@ Encore
     .addEntry('register', './assets/js/register.js')
     .addEntry('mySpace', './assets/js/mySpace.js')
     .addEntry('demo', './assets/js/demo.js')
+    .addEntry('jobAlert', './assets/js/jobAlert.js')
 
     .addStyleEntry('login', './assets/styles/login.css')
     .addStyleEntry('postit', './assets/styles/postit.css')

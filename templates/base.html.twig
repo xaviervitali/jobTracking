@@ -35,6 +35,12 @@
 							</a>
 						</li>
 						<li	class="nav-item">
+					<a	class="nav-link {% if app.request.get('_route') == 'app_job_alert' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_alert') }}">
+						Liste des offres sur Adzuna
+					</a>
+				</li>
+						
+						<li	class="nav-item">
 							<a	class="nav-link {% if app.request.get('_route') == 'app_job_index' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_index') }}">
 								Tableau de bord
 							</a>

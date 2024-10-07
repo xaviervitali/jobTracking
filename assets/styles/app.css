@@ -36,7 +36,7 @@ body {
 }
 
 .color-grey {
-  /* color: grey !important; */
+  color: grey !important;
 }
 .alert { 
   position: absolute !important;

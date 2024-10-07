@@ -32,7 +32,7 @@
 			Liste des candidatures en cours
 		</h4>
 
-		{% include "home/inProgress.html.twig" %}
+		{% include "home/_dataTable.html.twig" with {'ths': ['Employeur','Intitulé', 'Dernière action', 'Délai (Jours)', 'Action']} %}
 	</div>
 
 </div>{% endblock %}

@@ -73,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?AdzunaApiSettings $adzunaApiSettings = null;
+
     public function __construct()
     {
         $this->jobTrackings = new ArrayCollection();
@@ -323,6 +326,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getAdzunaApiSettings(): ?AdzunaApiSettings
+    {
+        return $this->adzunaApiSettings;
+    }
+
+    public function setAdzunaApiSettings(?AdzunaApiSettings $adzunaApiSettings): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($adzunaApiSettings === null && $this->adzunaApiSettings !== null) {
+            $this->adzunaApiSettings->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($adzunaApiSettings !== null && $adzunaApiSettings->getUser() !== $this) {
+            $adzunaApiSettings->setUser($this);
+        }
+
+        $this->adzunaApiSettings = $adzunaApiSettings;
 
         return $this;
     }

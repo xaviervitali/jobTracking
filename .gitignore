@@ -64,3 +64,5 @@ yarn-error.log
 dump.html
 
 /public/uploads/cv/
+
+/src/DataFixtures/

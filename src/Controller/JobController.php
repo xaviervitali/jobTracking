@@ -14,6 +14,9 @@ use App\Repository\UserRepository;
 use App\Service\JobService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +27,7 @@ use Smalot\PdfParser\Parser;
 final class JobController extends AbstractController
 {
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
-    public function index(JobRepository $jobRepository,  ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
+    public function index(JobRepository $jobRepository, ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
     {
 
         $user = $security->getUser();
@@ -93,7 +96,7 @@ final class JobController extends AbstractController
 
 
     #[Route('/candidature/{id}/delete', name: 'candidature_delete')]
-    public function candidatureDelete(Job $job, EntityManagerInterface $em,  Security $security)
+    public function candidatureDelete(Job $job, EntityManagerInterface $em, Security $security)
     {
         $user = $security->getUser();
         if ($job->getUser() !== $user) {
@@ -107,7 +110,7 @@ final class JobController extends AbstractController
         return $this->redirectToRoute('app_synthese');
     }
     #[Route('/candidature/{id}/edit', name: 'candidature_edit')]
-    public function candidatureEdit(Job $job, EntityManagerInterface $entityManager,  Request $request, Security $security, JobTrackingRepository $jobTrackingRepository)
+    public function candidatureEdit(Job $job, EntityManagerInterface $entityManager, Request $request, Security $security)
     {
         $form = $this->createForm(JobFormType::class, $job);
         $form->handleRequest($request);
@@ -123,49 +126,73 @@ final class JobController extends AbstractController
     }
 
 
-    #[Route('/motivation_text', name: 'motivation_text')]
-    public function motivationText(Security $security, UserRepository $userRepository)
+    #[Route('/job_alert', name: 'app_job_alert')]
+    public function jobAlert(Security $security, UserRepository $userRepository, CacheInterface $cache): Response
     {
         $user = $security->getUser();
-        $prompt = 'Génère une lettre de motivation.';
+        $results = [];
+        $count = 0;
+        
 
-        if ($user) {
-            $user = $userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
+        // Récupération des paramètres de l'utilisateur
+        $user = $userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
+        $apiSettings = $user->getAdzunaApiSettings();
+
+        if (empty($apiSettings)) {
+            $this->addFlash("info", "Vous n'avez pas encore créé de profil de recherche.");
+            return $this->redirectToRoute('app_user_show');
         }
 
-        $parser = new Parser();
-        $pdf = $parser->parseFile('uploads/cv/' . $user->getCvs()[0]->getCVName());
-        $text = $pdf->getText();
-        $client = new \GuzzleHttp\Client();
-        $response = null;
+        // Paramètres de l'API Adzuna
+        $params = [
+            'app_id' => $_ENV['ADZUNA_API_ID'],     // ID de l'API
+            'app_key' => $_ENV['ADZUNA_API_KEY'],   // Clé de l'API
+            'results_per_page' => 20,               // Nombre de résultats par page
+            'what' => $apiSettings->getWhat(),      // Mot clé de recherche
+            'where' => $apiSettings->getCity(),     // Localisation
+            'what_exclude' => $apiSettings->getWhatExclude(), // Exclusion de certains mots-clés
+        ];
 
-        try {
-            $response = $client->post('https://api.openai.com/v1/chat/completions', [
-                'headers' => [
-                    'Authorization' => "Bearer " . $_ENV['API_KEY'],
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'model' => 'gpt-3.5-turbo',
-                    'messages' => [
-                        [
-                            'role' => 'user',
-                            'content' => "$prompt. Voici mon CV :.$text"
-                            // 'content' => "Génère une lettre de motivation pour un poste de Développeur Web. Voici mon CV : [INFORMATIONS DU CV] et voici l'offre d'emploi : [DETAILS DE L'OFFRE]."
-                        ]
-                    ],
-                    'max_tokens' => 300,
-                ],
-            ]);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
-            if ($e->getResponse()->getStatusCode() === 429) {
-                // Attendre avant de réessayer
-                sleep(10); // Ajustez ce délai selon vos besoins
-                // Réessayez la requête ici
-                
+        // Calcul du nombre de secondes jusqu'à minuit
+        $now = new \DateTime();
+        $midnight = new \DateTime('tomorrow midnight');
+        $secondsUntilMidnight = $midnight->getTimestamp() - $now->getTimestamp();
+
+        // Générer une clé de cache unique pour chaque utilisateur
+        $cacheKey = 'adzuna_api_' . $user->getId();
+
+        // Récupération des données en cache ou appel à l'API si nécessaire
+        $cachedData = $cache->get($cacheKey, function (ItemInterface $item) use ($params, $secondsUntilMidnight, $apiSettings) {
+            $item->expiresAfter($secondsUntilMidnight); // Expiration à minuit
+
+            // Si pas de cache ou paramètres différents, on fait la requête API
+            $client = new Client();
+            try {
+                $response = $client->get('https://api.adzuna.com/v1/api/jobs/' . $apiSettings->getCountry() . '/search/1', [
+                    'query' => $params,
+                ]);
+
+                $responseData = json_decode($response->getBody()->getContents(), true);
+
+                // Retourner les nouveaux paramètres et la réponse de l'API
+                return [
+                    'params' => $params,
+                    'response' => $responseData,
+                ];
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                throw new \RuntimeException('Erreur lors de l\'appel à l\'API Adzuna : ' . $e->getMessage());
             }
-        }
+        });
 
-        return $this->json($response);
+        // Récupérer la réponse des données en cache
+        $responseData = $cachedData['response'];
+        $results = json_encode($responseData['results']);
+        $count = $responseData['count'];
+
+        // Rendu du template avec les résultats
+        return $this->render('job/job_alert.html.twig', [
+            'results' => $results,
+            'count' => $count,
+        ]);
     }
 }
