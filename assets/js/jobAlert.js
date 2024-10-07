@@ -4,7 +4,6 @@ import { generateDataTable } from "./datatable";
 document.addEventListener("DOMContentLoaded", function () {
     const tableDataSelector = document.querySelector(".js-table-data");
     const tableData = JSON.parse(tableDataSelector.getAttribute("data-table-items"));
-    const totalCount = JSON.parse(tableDataSelector.getAttribute("data-table-count"));
     let data = [];
     tableData.sort((a, b) => a.created > b.created ? -1 : 1);
 

@@ -18,7 +18,7 @@ class AdzunaApiSettingsType extends AbstractType
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Intitulé de poste'
+                    'placeholder' => 'Intitulé de poste ex : Ouvrier polyvalent, Développeur, ...'
                 ]
             ])
             ->add('city', TextType::class, [
@@ -37,7 +37,6 @@ class AdzunaApiSettingsType extends AbstractType
             ->add('distance', NumberType::class, [
                 'label' => false,
                 'attr' => [
-                    'value' => 5,
                     'class' => 'form-control',
                     'aria-describedby'=>'distance',
                     'placeholder' => 'Distance'
@@ -48,7 +47,7 @@ class AdzunaApiSettingsType extends AbstractType
                 'required'=>false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Mots clés à exclure',
+                    'placeholder' => 'Mots clés à exclure ex : alternance, stage, ...',
                 ]
             ])
             // ->add('whatOr')

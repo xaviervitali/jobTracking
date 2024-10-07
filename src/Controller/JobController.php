@@ -146,11 +146,12 @@ final class JobController extends AbstractController
         $params = [
             'app_id' => $_ENV['ADZUNA_API_ID'],     // ID de l'API
             'app_key' => $_ENV['ADZUNA_API_KEY'],   // Clé de l'API
-            'results_per_page' => 100,               // Nombre de résultats par page
+            'results_per_page' => 50,               // Nombre de résultats par page
             'what' => $apiSettings->getWhat(),      // Mot clé de recherche
             'where' => $apiSettings->getCity(),     // Localisation
             'what_exclude' => $apiSettings->getWhatExclude(),
-            'sort_by' => 'date' // Exclusion de certains mots-clés
+            'sort_by' => 'date',
+            'max_days_old' => 7 // Exclusion de certains mots-clés
         ];
 
         // Calcul du nombre de secondes jusqu'à minuit

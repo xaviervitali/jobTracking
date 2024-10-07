@@ -5,8 +5,32 @@
 
 {% endblock %}
 {% block body %}
-    <div class="js-table-data"  data-table-items="{{ results }}" data-table-count="{{ count }}"></div>
+    <div class="js-table-data" data-table-items="{{ results }}"></div>
     <div class="bg-div">
+        {% set apiSettings = app.user.adzunaApiSettings %}
+        <p>
+            Annonces pour des 7 derniers jours pour
+            <strong>
+                {{ apiSettings.what }}
+            </strong>
+            à
+            <strong>
+                {{ apiSettings.distance }}
+                Km
+            </strong>
+            autour de
+            <strong>
+                {{ apiSettings.city }}
+            </strong>
+            .
+            {% if count > 50 %}
+                <span class="text-warning">
+                    Seul les 50 premiers résultats sont affichés veuillez affiner votre recherche
+                </span>
+
+            {% endif %}
+        </p>
+
         {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur', 'Publié le','Intitulé','Description','Localisation', 'Lien']} %}
     </div>
 
