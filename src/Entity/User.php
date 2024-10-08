@@ -330,24 +330,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdzunaApiSettings(): ?JobSearchSettings
+    public function getJobSearchSettings(): ?JobSearchSettings
     {
         return $this->jobSearchSettings;
     }
 
-    public function setAdzunaApiSettings(?JobSearchSettings $adzunaApiSettings): static
+    public function setJobSearchSettings(?JobSearchSettings $jobSearchSettings): static
     {
         // unset the owning side of the relation if necessary
-        if ($adzunaApiSettings === null && $this->jobSearchSettings !== null) {
+        if ($jobSearchSettings === null && $this->jobSearchSettings !== null) {
             $this->jobSearchSettings->setUser(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($adzunaApiSettings !== null && $adzunaApiSettings->getUser() !== $this) {
-            $adzunaApiSettings->setUser($this);
+        if ($jobSearchSettings !== null && $jobSearchSettings->getUser() !== $this) {
+            $jobSearchSettings->setUser($this);
         }
 
-        $this->jobSearchSettings = $adzunaApiSettings;
+        $this->jobSearchSettings = $jobSearchSettings;
 
         return $this;
     }
