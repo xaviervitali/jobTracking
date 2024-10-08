@@ -2,46 +2,43 @@
 
 namespace App\Entity;
 
-use App\Repository\AdzunaApiSettingsRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Repository\JobSearchSettingsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: AdzunaApiSettingsRepository::class)]
-class AdzunaApiSettings
+#[ORM\Entity(repositoryClass: JobSearchSettingsRepository::class)]
+class JobSearchSettings
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(groups: 'adzunaApiSettings')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(groups: 'adzunaApiSettings')]
+    #[Groups(['apiSettingsGroup'])]
     private ?string $what = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(groups: 'adzunaApiSettings')]
+    #[Groups(['apiSettingsGroup'])]
 
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(groups: 'adzunaApiSettings')]
 
     private ?string $country = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(groups: 'adzunaApiSettings')]
+    #[Groups(['apiSettingsGroup'])]
 
     private ?int $distance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(groups: 'adzunaApiSettings')]
-
+    #[Groups(['apiSettingsGroup'])]
     private ?string $whatExclude = null;
 
 
-    #[ORM\OneToOne(inversedBy: 'adzunaApiSettings', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'apiSettings', cascade: ['persist', 'remove'])]
+    
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]

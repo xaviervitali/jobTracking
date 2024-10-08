@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?AdzunaApiSettings $adzunaApiSettings = null;
+    private ?JobSearchSettings $jobSearchSettings = null;
 
     public function __construct()
     {
@@ -330,16 +330,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdzunaApiSettings(): ?AdzunaApiSettings
+    public function getAdzunaApiSettings(): ?JobSearchSettings
     {
-        return $this->adzunaApiSettings;
+        return $this->jobSearchSettings;
     }
 
-    public function setAdzunaApiSettings(?AdzunaApiSettings $adzunaApiSettings): static
+    public function setAdzunaApiSettings(?JobSearchSettings $adzunaApiSettings): static
     {
         // unset the owning side of the relation if necessary
-        if ($adzunaApiSettings === null && $this->adzunaApiSettings !== null) {
-            $this->adzunaApiSettings->setUser(null);
+        if ($adzunaApiSettings === null && $this->jobSearchSettings !== null) {
+            $this->jobSearchSettings->setUser(null);
         }
 
         // set the owning side of the relation if necessary
@@ -347,7 +347,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $adzunaApiSettings->setUser($this);
         }
 
-        $this->adzunaApiSettings = $adzunaApiSettings;
+        $this->jobSearchSettings = $adzunaApiSettings;
 
         return $this;
     }

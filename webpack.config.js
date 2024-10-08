@@ -36,6 +36,7 @@ Encore
     .addStyleEntry('postit', './assets/styles/postit.css')
     .addStyleEntry('swiper', 'swiper/css')
     .addStyleEntry('demoCss', './assets/styles/demo.css')
+    .addStyleEntry('job-alert', './assets/styles/job-alert.css')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

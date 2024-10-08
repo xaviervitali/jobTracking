@@ -15,7 +15,6 @@ use App\Service\ApiService;
 use App\Service\JobService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,6 +22,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 final class JobController extends AbstractController
 {
@@ -130,20 +132,24 @@ final class JobController extends AbstractController
     public function jobAlert(Security $security, UserRepository $userRepository, CacheInterface $cache, ApiService $apiService): Response
     {
         $user = $security->getUser();
-        $results = [];
-        $count = 0;
 
 
         // Récupération des paramètres de l'utilisateur
         $user = $userRepository->findOneBy(['email' => $user->getUserIdentifier()]);
-        $apiSettings = $user->getAdzunaApiSettings();
+        $apiSettings = $user->getJobSearchSettings();
 
         if (empty($apiSettings)) {
             $this->addFlash("info", "Vous n'avez pas encore créé de profil de recherche.");
             return $this->redirectToRoute('app_user_show');
         }
+        // Créer le serializer
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        // Sérialiser l'entité
+        $params = $serializer->normalize($apiSettings, null, ['groups' => ['apiSettingsGroup']]);
 
-        $params = [
+        $adzunaParams = [
             'app_id' => $_ENV['ADZUNA_API_ID'],     // ID de l'API
             'app_key' => $_ENV['ADZUNA_API_KEY'],   // Clé de l'API
             'results_per_page' => 50,               // Nombre de résultats par page
@@ -151,7 +157,17 @@ final class JobController extends AbstractController
             'where' => $apiSettings->getCity(),     // Localisation
             'what_exclude' => $apiSettings->getWhatExclude(),
             'sort_by' => 'date',
+            'distance' => $apiSettings->getDistance(),
             'max_days_old' => 7 // Exclusion de certains mots-clés
+        ];
+
+
+        $franceTravailParams = [
+            'motsCles' => $apiSettings->getWhat(),      // Mot clé de recherche
+            'where' => $apiSettings->getCity(),     // Localisation
+            'what_exclude' => $apiSettings->getWhatExclude(),
+            'distance' => $apiSettings->getDistance(),
+            'publieeDepuis' => 7 // Exclusion de certains mots-clés
         ];
 
         // Calcul du nombre de secondes jusqu'à minuit
@@ -163,16 +179,17 @@ final class JobController extends AbstractController
         $cacheKey = 'adzuna_api_' . $user->getId();
 
         // Récupération des données en cache ou appel à l'API si nécessaire
-        $cachedData = $cache->get($cacheKey, function (ItemInterface $item) use ($user, $secondsUntilMidnight, $apiService, $params, $apiSettings) {
+        $cachedData = $cache->get($cacheKey, function (ItemInterface $item) use ($secondsUntilMidnight, $apiService, $adzunaParams, $franceTravailParams, $apiSettings, $params) {
             $item->expiresAfter($secondsUntilMidnight); // Expiration à minuit
 
             // Appel à l'API via ApiService et retourne les données avec les paramètres actuels
-            $responseData = $apiService->getAdzunaJobs($params, $apiSettings->getCountry());
+            $adzunaJobResponseData = $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry());
 
+            $franceTravailJobResponseData = $apiService->getFranceTravailJobs($franceTravailParams);
             // Retourner les paramètres et la réponse de l'API
             return [
-                'params' => $params,
-                'response' => $responseData,
+                'params' =>  $params,
+                'response' => ['azduna' => $adzunaJobResponseData, 'franceTravail' => $franceTravailJobResponseData],
             ];
         });
 
@@ -181,21 +198,21 @@ final class JobController extends AbstractController
             // Si les paramètres ont changé, faire une nouvelle requête API
             $cachedData = [
                 'params' => $params,
-                'response' => $apiService->getAdzunaJobs($params, $apiSettings->getCountry()),
+                'response' => ['azduna' => $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry()), 'franceTravail' => $apiService->getFranceTravailJobs($franceTravailParams)]
             ];
 
             // Pas besoin de mettre à jour manuellement le cache : la prochaine requête appellera automatiquement l'API si nécessaire
         }
 
         // Récupérer la réponse des données en cache
-        $responseData = $cachedData['response'];
-        $results = json_encode($responseData['results']);
-        $count = $responseData['count'];
+        $jobResponseData = $cachedData['response'];
+        $adzunaJobResults = json_encode($jobResponseData['azduna']['results']);
+        $franceTravailJobResults = json_encode($jobResponseData['franceTravail']);
 
         // Rendu du template avec les résultats
         return $this->render('job/job_alert.html.twig', [
-            'results' => $results,
-            'count' => $count,
+            'adzunaJobResults' => $adzunaJobResults,
+            'franceTravailJobResults' => $franceTravailJobResults,
         ]);
     }
 }

@@ -6,7 +6,7 @@ export function generateDataTable(tableData, columnsKeys = [
     "name",
     "delai",
     "link"], createLink = true, selector = '#table') {
-    
+
     if (createLink) {
         tableData = tableData.map((jobTracking) => {
 
@@ -55,9 +55,9 @@ export function generateDataTable(tableData, columnsKeys = [
         lengthChange: false,
         info: true,
         language: {
-            infoEmpty: false,
-            // emptyTable: 'Aucune donnée',
-            // zeroRecords: 'Aucune donnée',
+            infoEmpty: 'Aucune donnée',
+            emptyTable: 'Aucune donnée',
+            zeroRecords: 'Aucune donnée',
             search: "Rechercher:",
             paginate: {
                 first: "Premier",

@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\AdzunaApiSettings;
 use App\Entity\CV;
+use App\Entity\JobSearchSettings;
 use App\Entity\User;
-use App\Form\AdzunaApiSettingsType;
+use App\Form\JobSearchSettingsType;
 use App\Form\CvType;
 use App\Repository\JobRepository;
 use DateTime;
@@ -55,24 +55,27 @@ class HomeController extends AbstractController
             'action' => $this->generateUrl('cv_new'), // Remplace 'nom_de_la_route' par ta route Symfony
         ]);
 
-        $adzunaApiSettings = $entityManager->getRepository(AdzunaApiSettings::class)->findOneBy(['user' => $user]);
-    
-        if (!$adzunaApiSettings) {
-            $adzunaApiSettings = new AdzunaApiSettings();
-            $adzunaApiSettings->setUser($user);  // Lier les paramètres API à l'utilisateur
+        $apiSettings = $entityManager->getRepository(JobSearchSettings::class)->findOneBy(['user' => $user]);
+
+        if (!$apiSettings) {
+            $apiSettings = new JobSearchSettings();
+            $apiSettings->setUser($user);  // Lier les paramètres API à l'utilisateur
+            // Persister la nouvelle entité
+            $entityManager->persist($apiSettings);
         }
-    
+
         // Créer le formulaire AdzunaApiSettings
-        $formApiSettings = $this->createForm(AdzunaApiSettingsType::class, $adzunaApiSettings);
-    
+        $formApiSettings = $this->createForm(JobSearchSettingsType::class, $apiSettings);
+
 
 
         $formApiSettings->handleRequest($request);
         if ($formApiSettings->isSubmitted()) {
-            $adzunaApiSettings
+
+            $apiSettings
                 ->setCountry('fr');
             $entityManager->flush();
-            return $this->redirectToRoute('app_job_alert');  
+            return $this->redirectToRoute('app_job_alert');
         }
 
         return $this->render('home/my-space.html.twig', [

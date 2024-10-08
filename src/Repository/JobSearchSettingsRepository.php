@@ -2,18 +2,18 @@
 
 namespace App\Repository;
 
-use App\Entity\AdzunaApiSettings;
+use App\Entity\JobSearchSettings;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<AdzunaApiSettings>
+ * @extends ServiceEntityRepository<JobSearchSettings>
  */
-class AdzunaApiSettingsRepository extends ServiceEntityRepository
+class JobSearchSettingsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, AdzunaApiSettings::class);
+        parent::__construct($registry, JobSearchSettings::class);
     }
 
     //    /**
