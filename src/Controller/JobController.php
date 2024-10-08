@@ -23,9 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 final class JobController extends AbstractController
 {
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
@@ -142,10 +142,9 @@ final class JobController extends AbstractController
             $this->addFlash("info", "Vous n'avez pas encore créé de profil de recherche.");
             return $this->redirectToRoute('app_user_show');
         }
-        // Créer le serializer
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
+        $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
+        $normalizers = new ObjectNormalizer($classMetadataFactory);
+        $serializer = new Serializer([$normalizers]);
         // Sérialiser l'entité
         $params = $serializer->normalize($apiSettings, null, ['groups' => ['apiSettingsGroup']]);
 
