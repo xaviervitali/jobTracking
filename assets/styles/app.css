@@ -17,9 +17,14 @@ body {
   background-color: #606468;
 }
 
+main {
+  min-width: 500px;
+  margin: 0 100px;
+  margin-bottom: 100px;
+}
 .bg-div {
   background-color: #eee !important;
-  border-radius: .5rem !important;
+  border-radius: 0.5rem !important;
   padding: 1rem !important;
 }
 
@@ -38,13 +43,17 @@ body {
 .color-grey {
   color: grey !important;
 }
-.alert { 
+.alert {
   position: absolute !important;
-  top:0 !important;
+  top: 0 !important;
   right: 0 !important;
 }
 
 .container-xxl {
   max-height: 80vh;
   overflow: auto;
+}
+
+.ui-autocomplete {
+  background-color: #eee;
 }

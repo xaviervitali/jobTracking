@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Constants\Cities;
+use App\Entity\City;
 use App\Entity\Job;
 use App\Entity\JobTracking;
 use App\Enums\ActionStatus;
@@ -22,10 +24,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+
 final class JobController extends AbstractController
 {
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
@@ -147,23 +151,20 @@ final class JobController extends AbstractController
         $serializer = new Serializer([$normalizers]);
         // Sérialiser l'entité
         $params = $serializer->normalize($apiSettings, null, ['groups' => ['apiSettingsGroup']]);
-
         $adzunaParams = [
-            'app_id' => $_ENV['ADZUNA_API_ID'],     // ID de l'API
-            'app_key' => $_ENV['ADZUNA_API_KEY'],   // Clé de l'API
+             // Clé de l'API
             'results_per_page' => 50,               // Nombre de résultats par page
             'what' => $apiSettings->getWhat(),      // Mot clé de recherche
-            'where' => $apiSettings->getCity(),     // Localisation
+            'where' => $apiSettings->getCity()->getZipCode(),     // Localisation
             'what_exclude' => $apiSettings->getWhatExclude(),
             'sort_by' => 'date',
             'distance' => $apiSettings->getDistance(),
             'max_days_old' => 7 // Exclusion de certains mots-clés
         ];
 
-
         $franceTravailParams = [
             'motsCles' => $apiSettings->getWhat(),      // Mot clé de recherche
-            'where' => $apiSettings->getCity(),     // Localisation
+            'commune' => $apiSettings->getCity()->getInseeCode(),     // Localisation
             'what_exclude' => $apiSettings->getWhatExclude(),
             'distance' => $apiSettings->getDistance(),
             'publieeDepuis' => 7 // Exclusion de certains mots-clés
@@ -197,7 +198,7 @@ final class JobController extends AbstractController
             // Si les paramètres ont changé, faire une nouvelle requête API
             $cachedData = [
                 'params' => $params,
-                'response' => ['azduna' => $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry()), 'franceTravail' => $apiService->getFranceTravailJobs($franceTravailParams)]
+                'response' => ['azduna' => $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry()),'franceTravail'=>$apiService->getFranceTravailJobs($franceTravailParams)]
             ];
 
             // Pas besoin de mettre à jour manuellement le cache : la prochaine requête appellera automatiquement l'API si nécessaire
@@ -205,13 +206,18 @@ final class JobController extends AbstractController
 
         // Récupérer la réponse des données en cache
         $jobResponseData = $cachedData['response'];
-        $adzunaJobResults = json_encode($jobResponseData['azduna']['results']);
-        $franceTravailJobResults = json_encode($jobResponseData['franceTravail']);
+        $adzunaJobResults = json_encode(
+$jobResponseData['azduna']['results']);
+        $franceTravailJobResults = json_encode($jobResponseData['franceTravail']['resultats']);
 
         // Rendu du template avec les résultats
         return $this->render('job/job_alert.html.twig', [
             'adzunaJobResults' => $adzunaJobResults,
+            'adzunaJobCount' => count($jobResponseData['azduna']['results']),
             'franceTravailJobResults' => $franceTravailJobResults,
+            'franceTravailCount'=>count($jobResponseData['franceTravail']['resultats'])
         ]);
     }
+ 
+ 
 }

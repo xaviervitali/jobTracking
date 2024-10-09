@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Entity\CV;
 use App\Entity\JobSearchSettings;
 use App\Entity\User;
 use App\Form\JobSearchSettingsType;
 use App\Form\CvType;
+use App\Repository\CityRepository;
 use App\Repository\JobRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -71,8 +73,10 @@ class HomeController extends AbstractController
 
         $formApiSettings->handleRequest($request);
         if ($formApiSettings->isSubmitted()) {
-
+            $cityId =   $formApiSettings->get('city')->getData();
+            $city = $entityManager->getRepository(City::class)->findOneBy(['id' => $cityId]);
             $apiSettings
+                ->setCity($city)
                 ->setCountry('fr');
             $entityManager->flush();
             return $this->redirectToRoute('app_job_alert');

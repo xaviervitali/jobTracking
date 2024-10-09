@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-  {{ encore_entry_link_tags('job-alert') }}
+    {{ encore_entry_link_tags('job-alert') }}
 
 {% endblock %}
 {% block javascripts %}
@@ -9,7 +9,7 @@
 
 {% endblock %}
 {% block body %}
-    <div class="js-table-data" data-table-adzuna="{{ adzunaJobResults }}"></div>
+    <div class="js-table-data" data-table-adzuna="{{ adzunaJobResults }}" data-table-france-telecom="{{ franceTravailJobResults }}"></div>
     <div class="bg-div">
         {% set apiSettings = app.user.jobSearchSettings %}
         <p>
@@ -24,56 +24,60 @@
             </strong>
             autour de
             <strong>
-                {{ apiSettings.city }}
+                {{ apiSettings.city.cityCode | title }}
             </strong>
-            .
-            {% if count > 50 %}
-                <span class="text-warning">
-                    Seul les 50 premiers résultats sont affichés veuillez affiner votre recherche
-                </span>
-
-            {% endif %}
 
         </p>
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="adzuna-tab" data-bs-toggle="tab" data-bs-target="#adzuna-tab-pane" type="button" role="tab" aria-controls="adzuna-tab-pane" aria-selected="true">
-                <img class='logo' src="{{ asset('img/adzuna.png') }}" alt="Adzuna">
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                <img class='logo' src="{{ asset('img/france_travail.webp') }}" alt="France travail">
-
-                    
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                    <img class='logo' src="{{ asset('img/adzuna.png') }}" alt="Adzuna"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                        <img class='logo' src="{{ asset('img/france_travail.webp') }}" alt="France travail"></button>
+                    </li>
+                {# <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
                     Contact
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>
+                    </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>
                     Disabled
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="adzuna-tab-pane" role="tabpanel" aria-labelledby="adzuna-tab" tabindex="0">
-                {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur', 'Publié le','Intitulé','Description','Localisation', 'Lien']} %}
-            </div>
-            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                ...
-            </div>
-            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                ...
-            </div>
-            <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                ...
-            </div>
-        </div>
-    </div>
+                    </button>
+                </li> #}
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="adzuna-tab-pane" role="tabpanel" aria-labelledby="adzuna-tab" tabindex="0">
+                        <div class="bg-white p-1  w-100 overflow-auto">
+                            {% if adzunaJobCount | length > 50 %}
+                                <p class="text-warning">
+                                    Seul les 50 premiers résultats sont affichés veuillez affiner votre recherche
+                                </p>
 
-{% endblock %}
+                            {% endif %}
+                            {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur', 'Publié le','Intitulé','Description','Localisation', 'Lien'], 'tableId':'table_adzuna'} %}
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                        <div class="bg-white p-1 w-100 overflow-auto">
+                            <p class="text-warning">
+                                France travail ne prend pas en charge les mots clés à exclure.
+                            </p>
+                            {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur','Publié le','Intitulé','Description','Type de contrat','Localisation', 'Lien'], 'tableId':'table_ft' } %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                        ...
+                    </div>
+                    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
+                        ...
+                    </div>
+                </div>
+            </div>
+
+        {% endblock %}
+        

@@ -4,7 +4,7 @@ import moment from 'moment';
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  const width = document.querySelector(".container-xxl").clientWidth
+  const width = document.querySelector("main").clientWidth
   const widthByChart = (width / 2.5 > 500 ? width / 2.5 : width*0.9).toString();
 
   const chartDataSelector = document.querySelector(".js-chart-data");

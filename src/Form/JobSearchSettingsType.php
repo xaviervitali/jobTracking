@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\JobSearchSettings;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,40 +23,34 @@ class JobSearchSettingsType extends AbstractType
                     'placeholder' => 'Intitulé de poste ex : Ouvrier polyvalent, Développeur, ...'
                 ]
             ])
-            ->add('city', TextType::class, [
+            ->add('city_autocomplete', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ville'
-                ]
+                    'placeholder' => 'Rechercher une ville'
+                ],
+                'mapped' => false
             ])
-            // ->add('', TextType::class, [
-            //     'label' => false, 
-            //     'attr' => [
-            //         'class' => 'form-control', 
-            //         'placeholder' => 'Intitulé de poste'
-            //     ])
+            ->add('city', HiddenType::class, [
+                'mapped' => false
+            ])
             ->add('distance', NumberType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'aria-describedby'=>'distance',
+                    'aria-describedby' => 'distance',
                     'placeholder' => 'Distance'
                 ]
             ])
             ->add('whatExclude', TextType::class, [
                 'label' => false,
-                'required'=>false,
+                'required' => false,
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Mots clés à exclure ex : alternance, stage, ...',
                 ]
             ])
-            // ->add('whatOr')
-            // ->add('user', EntityType::class, [utf8mb4_unicode_ci
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
+
         ;
     }
 

@@ -1,5 +1,11 @@
 import { DataTable, language, moment } from '../app';
-
+/**
+ * 
+ * @param {*} tableData : Tableau des données 
+ * @param {*} columnsKeys : clés des données
+ * @param {*} createLink : génération d'un lien vers candidature
+ * @param {*} selector : /!\ il s'agit d'un id bien le faire commencer par #
+ */
 export function generateDataTable(tableData, columnsKeys = [
     "recruiter",
     "title",
@@ -47,11 +53,23 @@ export function generateDataTable(tableData, columnsKeys = [
         pageLength: 20,
         responsive: true,
         createdRow: function (row, data, dataIndex) {
+            
             $(row).find('td').addClass('align-content-center');
             if (!!data.set_closed) {
                 $(row).find('td').addClass('color-grey');
             }
         },
+        columnDefs: [
+            {
+                targets: [3], // Indiquez les colonnes à tronquer
+                render: function(data, type, row) {
+                    if (type === 'display' && data.length > 500) { // Ajustez cette valeur selon vos besoins
+                        return data.substring(0, 500) + '...';
+                    }
+                    return data;
+                }
+            }
+        ],
         lengthChange: false,
         info: true,
         language: {

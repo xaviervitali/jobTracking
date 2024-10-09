@@ -18,10 +18,10 @@ class JobSearchSettings
     #[Groups(['apiSettingsGroup'])]
     private ?string $what = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['apiSettingsGroup'])]
+    // #[ORM\Column(length: 255)]
+    // #[Groups(['apiSettingsGroup'])]
 
-    private ?string $city = null;
+    // private ?string $city = null;
 
     #[ORM\Column(length: 255)]
 
@@ -44,6 +44,9 @@ class JobSearchSettings
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $whatOr = null;
 
+    #[ORM\ManyToOne(inversedBy: 'jobSearchSettings')]
+    private ?City $city = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,17 +64,17 @@ class JobSearchSettings
         return $this;
     }
 
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
+    // public function getCity(): ?string
+    // {
+    //     return $this->city;
+    // }
 
-    public function setCity(string $city): static
-    {
-        $this->city = $city;
+    // public function setCity(string $city): static
+    // {
+    //     $this->city = $city;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCountry(): ?string
     {
@@ -131,6 +134,18 @@ class JobSearchSettings
     public function setWhatOr(?string $whatOr): static
     {
         $this->whatOr = $whatOr;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }

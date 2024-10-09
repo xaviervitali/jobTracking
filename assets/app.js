@@ -6,6 +6,7 @@ import DataTable from 'datatables.net-dt';
 import language from 'datatables.net-plugins/i18n/fr-FR.mjs';
 
 import 'jquery';
+import 'jquery-ui/ui/widgets/autocomplete';
 
 // jQuery est nécessaire pour Bootstrap Table
 import $ from 'jquery';
@@ -13,6 +14,7 @@ global.$ = global.jQuery = $;
 
 moment.locale('fr-FR');
 import "./styles/app.css";
+import 'jquery-ui/themes/base/autocomplete.css';
 
 export { ApexCharts, moment, DataTable, language };
     
@@ -34,4 +36,5 @@ document.addEventListener('DOMContentLoaded', function() {
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
-export const noActionLabel =  'Attente réponse candidature'
+export const noActionLabel = 'Attente réponse candidature'
+

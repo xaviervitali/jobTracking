@@ -91,7 +91,7 @@
                 {{ form_widget(formApiSettings.what) }}
               </div>
               <div class="my-1">
-              {{ form_widget(formApiSettings.city) }}
+              {{ form_widget(formApiSettings.city_autocomplete) }}
             </div>
               <div class="input-group my-1">
                 {{ form_widget(formApiSettings.distance) }}
@@ -102,6 +102,7 @@
               {{ form_widget(formApiSettings.whatExclude) }}
               <div class="d-flex justify-content-end">
               <input type="submit" class="btn btn-link">
+
             </div>
               {{ form_end(formApiSettings) }}
             </div>
@@ -109,5 +110,6 @@
         </div>
 
       </div>
+      
     {% endblock %}
     

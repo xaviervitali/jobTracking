@@ -77,14 +77,14 @@
 		{% endfor %}
 		{% if app.user %}
 
-			<div	class="container-xxl">
+			<main>
 			{% endif %}
 
 			{% block body %}{% endblock %}
 			
 			{% if app.user %}
 
-			</div>
+			</main>
 		{% endif %}
 
 		{% block footer %}{% endblock %}
