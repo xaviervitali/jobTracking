@@ -6,20 +6,16 @@
 <div	class="col-auto p-3 bg-div border rounded">
 	
 	{{ form_start(form)}}
-	<div	class="d-flex align-items-center gap-3 flex-wrap">
-		<div	class="col">
+	<div	class="row">
+		<div	class="col-xl-6">
 			{{ form_label(form.recruiter) }}
 			{{ form_widget(form.recruiter) }}
 		</div>
-		<div	class="col">
+		<div	class="col-xl-6">
 			{{ form_label(form.title) }}
 			{{ form_widget(form.title) }}
 		</div>
 
-        {# <div	class="col">
-        {{ form_label(form.publicationDate) }}
-        {{ form_widget(form.publicationDate) }}
-    </div> #}
 	</div>
 		{{ form_label(form.offerDescription) }}
 		{{ form_widget(form.offerDescription) }}
@@ -29,15 +25,10 @@
 	</div>
 	<div  class='action'>
 
-		<div	class="d-flex align-items-stretch gap-3 flex-wrap">
-			<div	class="col">
 				{{ form_label(form.source) }}
 				{{ form_widget(form.source) }}
-			</div>
 	
-		</div>
-		{{ form_label(form.coverLetter) }}
-		{{ form_widget(form.coverLetter) }}
+
 	</div>
 
 

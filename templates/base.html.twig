@@ -24,6 +24,12 @@
 					{{ app.user.firstname }}
 
 				</a>
+				<a	href="{{ path('candidature_new') }}">
+
+				<h4	class="text-center ">
+					Ajouter une candidature
+				</h4>
+			</a>
 				<button	class="navbar-toggler"	type="button"	data-bs-toggle="collapse"	data-bs-target="#navbarNav"	aria-controls="navbarNav"	aria-expanded="false"	aria-label="Toggle navigation">
 					<span	class="navbar-toggler-icon"></span>
 				</button>
@@ -36,7 +42,7 @@
 						</li>
 						<li	class="nav-item">
 					<a	class="nav-link {% if app.request.get('_route') == 'app_job_alert' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_alert') }}">
-						Liste des offres sur Adzuna
+						Offres d'emploi
 					</a>
 				</li>
 						
@@ -77,7 +83,7 @@
 		{% endfor %}
 		{% if app.user %}
 
-			<main>
+			<main class="container-fluid">
 			{% endif %}
 
 			{% block body %}{% endblock %}

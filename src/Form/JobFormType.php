@@ -26,8 +26,8 @@ class JobFormType extends AbstractType
         // $sites = new EmploymentWebsites()::getWebSites();
 
         $builder
-            ->add('recruiter', TextType::class, ['label' => 'Employeur', 'attr' => ['class' => "form-control mb-3 disableable", ]])
-            ->add('title', TextType::class, ['label' => 'Intitulé de l\'offre', 'attr' => ['class' => "form-control mb-3 disableable", ]])
+            ->add('recruiter', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Employeur']])
+            ->add('title', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Intitulé de l\'offre']])
             ->add('source', EntityType::class, [
                 'class' => JobSource::class,
                 'choice_label' => 'name' , 'query_builder' => function (JobSourceRepository $er) {
@@ -36,10 +36,11 @@ class JobFormType extends AbstractType
                 },
                 'attr' => ['class' => 'form-select disableable']
             ])
-            ->add('offerDescription', TextareaType::class, ['label' => 'Description du poste', 'attr' => ['class' => "form-control mb-3 disableable",  'rows' => '15']])
+            ->add('offerDescription', TextareaType::class, ['label' => 'Description du poste', 'attr' => ['class' => "form-control mb-3 disableable", 
+             'rows' => '25'
+             ]])
             ->add('created_at', DateType::class, ['label' => 'Date de candidature', 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => false,  'max' =>  $dateMax]])
-            // ->add('publicationDate', DateType::class, ['required' => false, 'label' => 'Date de parution', 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => false,  'max' =>  $dateMax]])
-            ->add('coverLetter', TextareaType::class, ['label' => 'Lettre de motivation',  'required' => false, 'attr' => ['class' => "form-control mb-3 disableable"]])
+       
 
         ;
     }

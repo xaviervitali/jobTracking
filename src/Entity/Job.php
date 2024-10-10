@@ -36,12 +36,6 @@ class Job
     private ?\DateTimeImmutable $createdAt = null;
 
 
-    #[Groups(["job"])]
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $coverLetter = null;
-
-
-
     /**
      * @var Collection<int, JobTracking>
      */
@@ -128,18 +122,6 @@ class Job
     }
 
 
-
-    public function getCoverLetter(): ?string
-    {
-        return $this->coverLetter;
-    }
-
-    public function setCoverLetter(?string $coverLetter): static
-    {
-        $this->coverLetter = $coverLetter;
-
-        return $this;
-    }
 
 
 

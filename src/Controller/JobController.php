@@ -11,7 +11,6 @@ use App\Form\JobFormType;
 use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
-use App\Repository\JobTrackingRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService;
 use App\Service\JobService;

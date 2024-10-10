@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tableDataFranceTelecom.forEach(job => {
         
-        const link = createLink( job.contact?.urlPostulation ?? 'https://candidat.francetravail.fr/rechercheoffre/landing')
+        const link = createLink( job.contact?.urlPostulation ?? 'https://candidat.francetravail.fr/offres/recherche/detail/' + job.id)
 
         franceTelecomData.push({
             company: job.entreprise.nom ?? 'non renseigné',
