@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
-
 {% block stylesheets %}
     {{ encore_entry_link_tags('login') }}
     {{ encore_entry_link_tags('swiper') }}
     {{ encore_entry_link_tags('demoCss') }}
 {% endblock %}
-{% block header %}
-{% endblock %}
+{% block header %}{% endblock %}
 {% block body %}
 
     <div class="container d-flex flex-column justify-content-around overflow-hidden">
@@ -19,49 +17,71 @@
                         Inscrivez-vous et accédez à votre tableau de bord.
                     </p>
                     <p>
-                        <img src='assets/img/screenshots/accueil.png' alt="accueil"></p>
+                        <img src='assets/img/screenshots/1.png' alt="accueil" />
+                    </p>
+                </div>
+
+                <div class="swiper-slide">
+
+                    <p>
+                        Consultez les offres d'emplois personnalisés
+                    </p>
+                    <p>
+                        <img src='assets/img/screenshots/2.png' alt="nouvelle_candidature"></p>
                     </div>
+
                     <div class="swiper-slide">
 
                         <p>
-                            Ajoutez vos candidatures ...
+                            Consultez des statistiques sur vos candidatures.
                         </p>
                         <p>
-                            <img src='assets/img/screenshots/nouvelle_candidature.png' alt="nouvelle_candidature"></p>
+                            <img src='assets/img/screenshots/3.png' alt="fiche_candidature"></p>
                         </div>
-
                         <div class="swiper-slide">
-                       
+
                             <p>
-                                ...et suivez-les facilement.
+                                Gérer votre espace personnel
                             </p>
                             <p>
-                                <img src='assets/img/screenshots/fiche_candidature.png' alt="fiche_candidature"></p>
+                                <img src='assets/img/screenshots/4.png' alt="tableau de bord"></p>
+
                             </div>
+
                             <div class="swiper-slide">
 
                                 <p>
-                                    Consultez des statistiques sur vos candidatures.
+                                    Gérez vos candidatures
                                 </p>
                                 <p>
-                                    <img src='assets/img/screenshots/tdb.png' alt="tableau de bord"></p>
+                                    <img src='assets/img/screenshots/5.png' alt="tableau de bord"></p>
                                 </div>
+                                <div class="swiper-slide">
 
+                                    <p>
+                                        Enregistrer vos candidatures
+                                    </p>
+                                    <p>
+                                        <img src='assets/img/screenshots/6.png' alt="tableau de bord"></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                    <div>
+                        {{ include('security/_form.html.twig') }}
+                    </div>
+                    <div class="text--center">
+                        <a href="{{ path('app_forgot_password') }}">
+                            Mot de passe oublié
+                        </a>
                     </div>
                 </div>
-            </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
-        <div>
-            {{ include('security/_form.html.twig') }}
-        </div>
-        <div class="text--center"> <a href="{{ path('app_forgot_password')}}">Mot de passe oublié </a> </div>
-    </div>
-
-{% endblock %}
-{% block javascripts %}
-    {{ encore_entry_script_tags('demo') }}
-{% endblock %}
+            {% endblock %}
+            {% block javascripts %}
+                {{ encore_entry_script_tags('demo') }}
+            {% endblock %}
+            
