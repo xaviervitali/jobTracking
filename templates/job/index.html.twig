@@ -7,13 +7,13 @@
 
 {% endblock %}
 {% block body %}
-<div class="d-flex   bg-div row">
-<div id="chart-bar-jobs-per-month" class="col-xl-6 my-3 "></div>
-<div id="chart-bar-jobs-week" class="col-xl-6 my-3 " ></div>
-<div id="chart-pie-action"  class="col-xl-6 my-3 "></div>
-<div id="chart-pie-closed-action"  class="col-xl-6 my-3 "></div>
-<div id="chart-pie-source"  class="col-xl-6 my-3 "></div>
-<div id="chart-stacked-actions-by-source" class="col-xl-6 my-3 "></div>
+<div class="d-flex d-flex flex-wrap justify-content-between bg-div">
+<div id="chart-bar-jobs-per-month" class="col-xxl-6 my-3 "></div>
+<div id="chart-bar-jobs-week" class="col-xxl-6 my-3 " ></div>
+<div id="chart-pie-action"  class="col-xxl-6 my-3 "></div>
+<div id="chart-pie-closed-action"  class="col-xxl-6 my-3 "></div>
+<div id="chart-pie-source"  class="col-xxl-6 my-3 "></div>
+<div id="chart-stacked-actions-by-source" class="col-xxl-6 my-3 "></div>
 
 <div	class="js-chart-data" data-jobs-per-month="{{ jobsPerMonths | serialize }}" data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}" data-job-sources="{{ jobSources | serialize }}" data-job-actions="{{ jobActions | serialize }}"  data-actions-by-source ="{{ actionsBySourceCount | serialize }}" data-current-week ="{{ currentWeekJob | serialize }}" data-closed-actions ="{{ jobClosedActions | serialize }}"  ></div>
 
