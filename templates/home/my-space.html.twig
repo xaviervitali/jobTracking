@@ -92,6 +92,7 @@
               </div>
               <div class="my-1">
               {{ form_widget(formApiSettings.city_autocomplete) }}
+              {{ form_widget(formApiSettings.city, {"attr": {'value':user.jobSearchSettings.city.id}}) }}
             </div>
               <div class="input-group my-1">
                 {{ form_widget(formApiSettings.distance) }}

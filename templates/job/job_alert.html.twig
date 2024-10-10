@@ -9,7 +9,7 @@
 
 {% endblock %}
 {% block body %}
-    <div class="js-table-data" data-table-adzuna="{{ adzunaJobResults }}" data-table-france-telecom="{{ franceTravailJobResults }}"></div>
+    <div class="js-table-data" data-table-adzuna="{{ adzunaJobResults | json_encode }}" data-table-france-telecom="{{ franceTravailJobResults| json_encode }}"></div>
     <div class="bg-div">
         {% set apiSettings = app.user.jobSearchSettings %}
         <p>
@@ -32,52 +32,56 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="adzuna-tab" data-bs-toggle="tab" data-bs-target="#adzuna-tab-pane" type="button" role="tab" aria-controls="adzuna-tab-pane" aria-selected="true">
-                    <img class='logo' src="{{ asset('img/adzuna.png') }}" alt="Adzuna"></button>
+                    <img class='logo' src="assets/img/adzuna.png" alt="Adzuna"></button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
-                        <img class='logo' src="{{ asset('img/france_travail.webp') }}" alt="France travail"></button>
+                        <img class='logo' src="assets/img/france_travail.webp" alt="France travail"></button>
                     </li>
-                {# <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                    Contact
-                    </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>
-                    Disabled
-                    </button>
-                </li> #}
                 </ul>
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="adzuna-tab-pane" role="tabpanel" aria-labelledby="adzuna-tab" tabindex="0">
-                        <div class="bg-white p-1  w-100 overflow-auto">
-                            {% if adzunaJobCount | length > 50 %}
-                                <p class="text-warning">
-                                    Seul les 50 premiers résultats sont affichés veuillez affiner votre recherche
-                                </p>
+                <div class="tab-content bg-white" id="myTabContent">
+                    <div class="tab-pane fade show active bg-white " id="adzuna-tab-pane" role="tabpanel" aria-labelledby="adzuna-tab" tabindex="0">
+                        <div class="bg-white">
 
-                            {% endif %}
-                            {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur', 'Publié le','Intitulé','Description','Localisation', 'Lien'], 'tableId':'table_adzuna'} %}
+                            <div class="search-container p-3">
+                                <input type="text" id="search-input-adzuna" class="form-control " placeholder="Rechercher">
+                                    {% if adzunaJobResults | length  > 50 %}
+                                        <p class="text-warning">
+                                            Seul les 50 premiers résultats sont affichés veuillez affinez votre recherche
+                                        </p>
+                                    {% endif %}
+                                </div>
+                                <div id="job-list-adzuna" class='d-flex justify-content-between flex-wrap'>
+                                    {% for job in adzunaJobResults %}
+                                        {{ include('_job_alert_card.html.twig') }}
+                                    {% endfor %}
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                        <div class="bg-white p-1 w-100 overflow-auto">
-                            <p class="text-warning">
-                                France travail ne prend pas en charge les mots clés à exclure.
-                            </p>
-                            {% include "home/_dataTable.html.twig" with {'ths': [ 'Employeur','Publié le','Intitulé','Description','Type de contrat','Localisation', 'Lien'], 'tableId':'table_ft' } %}
+                        <div class="tab-pane fade  bg-white " id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                            <div class="bg-white">
+
+                                <div class="search-container p-3">
+                                    <input type="text" id="search-input-ft" class="form-control" placeholder="Rechercher">
+                                        <p class="text-warning">
+                                            France travail ne prend pas en charge les mots clés à exclure.
+                                        </p>
+                                    </div>
+                                    <div id="job-list-ft" class='d-flex justify-content-between flex-wrap'>
+                                        {% for job in franceTravailJobResults %}
+                                            {{ include('_job_alert_card.html.twig') }}
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                        ...
-                    </div>
-                    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                        ...
                     </div>
                 </div>
             </div>
-
+            <template id="cardTemplate">
+                {% include '/_job_alert_card.html.twig' with { job: {} } | raw %}
+            </template>
         {% endblock %}
         

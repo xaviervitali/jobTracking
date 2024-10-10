@@ -16,23 +16,37 @@
 
 <div	class="in-progress">
 	<div	class="d-flex justify-content-xl-between gap-3">
-		<a	href="{{ path('candidature_new') }}" class="d-block bg-div col  mb-3 d-flex flex-column justify-content-center ">
-				<h4	class="text-center ">
-					Ajouter une candidature
-				</h4>
+		<a	href="{{ path('candidature_new') }}"	class="d-block bg-div col  mb-3 d-flex flex-column justify-content-center ">
+
+			<h4	class="text-center ">
+				Ajouter une candidature
+			</h4>
 		</a>
-<div class='bg-div   col mb-3 '>
+		<div	class='bg-div   col mb-3 '>
 
-		<div	id="chart"	class='d-flex justify-content-center'></div>
+			<div	id="chart"	class='d-flex justify-content-center'></div>
+		</div>
+
 	</div>
+	<div	class='bg-div'>
 
+		<div	class="d-flex justify-content-between  p-3">
+			<h4>
+				Liste des candidatures en cours
+			</h4>
+			<div	class="search-container w-auto">
+				<input	type="text"	id="search-input"	class="form-control"	placeholder="Rechercher">
+				</div>
+			</div>
+			<div id="job-list" class=" d-flex flex-wrap justify-content-between">
+			{% for job in jobsInProgress %}
+				{% include '/_card.html.twig' %}
+
+			{% endfor %}
+			</div>
+		</div>
+		<template id="cardTemplate">
+		{% include '/_card.html.twig' with { job: {} } | raw %}
+		 </template>
 	</div>
-	<div	class='bg-div '>
-		<h4>
-			Liste des candidatures en cours
-		</h4>
-
-		{% include "home/_dataTable.html.twig" with {'ths': ['Employeur','Intitulé', 'Dernière action', 'Délai (Jours)', 'Action']} %}
-	</div>
-
-</div>{% endblock %}
+{% endblock %}

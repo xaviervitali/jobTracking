@@ -11,10 +11,10 @@ use App\Form\JobFormType;
 use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
-use App\Repository\JobTrackingRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService;
 use App\Service\JobService;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -69,6 +69,16 @@ final class JobController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security, ActionRepository $actionRepository): Response
     {
         $job = new Job();
+
+        if($request->get('job')){
+            $currentJob = $request->get('job');
+
+            $job
+                ->setRecruiter($currentJob['company'])
+                ->setTitle($currentJob['title'])
+                ->setOfferDescription($currentJob['description']);
+
+        }
         $form = $this->createForm(JobFormType::class, $job);
         $form->handleRequest($request);
 
@@ -206,16 +216,49 @@ final class JobController extends AbstractController
 
         // Récupérer la réponse des données en cache
         $jobResponseData = $cachedData['response'];
-        $adzunaJobResults = json_encode(
+        $adzunaJobResults = array_map(
+            function ($job) {
+                $created = new DateTime($job['created']);
+                return [
+                    'source'=> 'Adzuna',
+                    'company' => $job['company']['display_name'],
+                    'location' => explode(',', $job['location']['display_name'])[0],
+                    'description'=> $job['description'],
+                    'title'=> $job['title'],
+                    'link' => $job['redirect_url'],
+                    'created' => $created->format('d/m/y')
+                ];},
 $jobResponseData['azduna']['results']);
-        $franceTravailJobResults = json_encode($jobResponseData['franceTravail']['resultats']);
+        $franceTravailJobResults = array_map(function($job){
+            $created = new DateTime($job['dateCreation']);
+            $company = 'non renseigné';
+
+            if(isset($job['entreprise']['nom'])){
+                $company = $job['entreprise']['nom'];
+            }
+
+            $link = 'https://candidat.francetravail.fr/offres/recherche/detail/' . $job['id'];
+            if (isset($job['contact']['urlPostulation'])){
+                $link = $job['contact']['urlPostulation'];
+            }
+
+            return [
+            'source'=> 'Pole Emploi',
+            'company' =>   $company ,
+            'location' => substr( $job['lieuTravail']['libelle'], 4),
+            'type_contrat' => $job['typeContratLibelle'],
+            'description' => $job['description'],
+            'title' => $job['intitule'],
+            'link' => $link,
+            'created' => $created->format('d/m/y')
+        ];
+        },$jobResponseData['franceTravail']['resultats']);
 
         // Rendu du template avec les résultats
         return $this->render('job/job_alert.html.twig', [
             'adzunaJobResults' => $adzunaJobResults,
-            'adzunaJobCount' => count($jobResponseData['azduna']['results']),
             'franceTravailJobResults' => $franceTravailJobResults,
-            'franceTravailCount'=>count($jobResponseData['franceTravail']['resultats'])
+
         ]);
     }
  

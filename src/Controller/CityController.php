@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Repository\CityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,5 +25,10 @@ class CityController extends AbstractController
         }
 
         return $this->json($results);
+    }
+
+    #[Route('/city/get-name/{id}', name: 'city_get_name')]
+    public function getName( City $city){
+        return $this->json(ucwords($city->getCityCode()) . ' (' . $city->getZipCode() . ')');
     }
 }

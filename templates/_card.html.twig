@@ -1,0 +1,32 @@
+<div class="m-3 p-3 border rounded bg-white row col-xl-3 col-11">
+
+    <div class="">
+        <h3>
+            {{ job.recruiter | default('job_recruiter') }}
+        </h3>
+        {% if  job %}
+
+            <h5 class="">
+                {{ job.action_name  | default('job_action_name' ) }}
+                il y a
+                {{ job.delai  | default('job_delai') }}
+                j
+            </h5>
+        {% endif %}
+    </div>
+
+    <div class="d-flex flex-column justify-content-between">
+        <h3>
+            {{ job.title  | default('job_title') }}
+        </h3>
+        <p>
+            {{ job.description | default('job_description') | slice(0, 300) }} ...
+        </p>
+        <p class="text-end">
+        
+            <a href="{{ path('app_job_tracking',  {'id':job.id | default('job_id')}) }}">
+                Visualiser
+            </a>
+        </p>
+    </div>
+</div>

@@ -1,41 +1,27 @@
 <div class="col-auto">
-    {% set action =   '/candidature/' ~ job.id %}
+    {% set action =   path('app_job_tracking', {'id' : job.id}) %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate' , 'action': action }}
     ) }}
-    <div class="d-flex align-items-center gap-3  flex-wrap">
-        <div class="" >
-            {{ form_label(form.recruiter) }}
+    <div class="row ">
+        <div class="col-xl col-12 align-self-end" >
             {{ form_widget(form.recruiter, {attr: {'disabled': not isNew} }) }}
         </div>
-        <div class="flex-grow-1" >
-            {{ form_label(form.title) }}
+        <div class="col-xl col-12 align-self-end" >
             {{ form_widget(form.title, {attr: {'disabled': not isNew} }) }}
         </div>
-        {# <div >
-            {{ form_label(form.publicationDate) }}
-            {{ form_widget(form.publicationDate, {attr: {'disabled': not isNew} }) }}
-        </div> #}
+        <div class="col-xl col-12">
+        {{ form_widget(form.created_at, {attr: {'disabled': not isNew} }) }}
+    </div>
+
+    <div class="col-xl col-12">
+    {{ form_widget(form.source, {attr: {'disabled': not isNew} }) }}
+</div>
+  
     </div>
     {{ form_label(form.offerDescription) }}
     {{ form_widget(form.offerDescription, {attr: {'disabled': not isNew} }) }}
-    <div class='action d-none'>
-    <div class="col-auto">
-        {{ form_label(form.created_at) }}
-        {{ form_widget(form.created_at, {attr: {'disabled': not isNew} }) }}
-    </div>
-  
 
-        <div class="d-flex align-items-stretch gap-3 flex-wrap">
-            <div class="col">
-                {{ form_label(form.source) }}
-                {{ form_widget(form.source, {attr: {'disabled': not isNew} }) }}
-            </div>
-
-        </div>
-        {{ form_label(form.coverLetter) }}
-        {{ form_widget(form.coverLetter, {attr: {'disabled': not isNew} }) }}
-    </div>
 
     {% if isNew %}
         <div class="d-flex justify-content-end">

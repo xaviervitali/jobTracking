@@ -35,7 +35,10 @@
         {% include "job_tracking/_job.html.twig" %}
 
       </div>
-      <div class="flex-grow-1 d-flex flex-column gap-3 justify-content-between">
+      <div class="flex-grow-1 d-flex flex-column gap-3 justify-content-between ">
+      {% set notEditing =  true %}
+
+      {% include "job_tracking/_job_tracking.html.twig" %}
         {% if not isClosedJob %}
 
           <div class="bg-div mb-2">
@@ -45,30 +48,17 @@
             {% include "job_tracking/_actions.html.twig" %}
           </div>
         {% endif %}
+
+
         <div class="bg-div">
           <h4></h4>
           {% include "job_tracking/note/_form.html.twig" %}
         </div>
       </div>
     </div>
-    <div class="accordion" id="accordionExample">
-      <div class="accordion-item  bg-div">
-        <h2 class="accordion-header">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Historique
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            {% set notEditing =  true %}
-            {% include "job_tracking/_job_tracking.html.twig" %}
-          </div>
-        </div>
-      </div>
 
-    </div>
 
+    {% include "job_tracking/_delete_job_modal.html.twig" %}
+    {% include "job_tracking/_edit_job_tracking_modal.html.twig" %}
   </div>
-  {% include "job_tracking/_delete_job_modal.html.twig" %}
-  {% include "job_tracking/_edit_job_tracking_modal.html.twig" %}
-</div>{% endblock %}
+{% endblock %}

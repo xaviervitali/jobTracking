@@ -10,20 +10,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $(function () {
         
-        $("#job_search_settings_city_autocomplete").autocomplete({
-            source: function(request, response) {
+        $(function () {
+            const cityInput = $("#job_search_settings_city_autocomplete");
+            
+            const cityHiddenInput = $("#job_search_settings_city");
+    
+            // Initialiser le champ de saisie de la ville avec la valeur pré-enregistrée
+            const preRegisteredCityId = cityHiddenInput.val();
+            if (preRegisteredCityId) {
+                // Faire une requête AJAX pour obtenir le nom de la ville à partir de l'ID
                 $.ajax({
-                    url: "/city/autocomplete",
-                    data: { term: request.term },
-                    success: function(data) {
-                        response(data);
+                    url: "/city/get-name/"+ preRegisteredCityId,
+                    success: function (data) {
+                        
+                        cityInput.val(data.name);
+                        
                     }
                 });
-            },
-            minLength: 2,
-            select: function(event, ui) {
-                $('#job_search_settings_city').val(ui.item.id);
             }
+    
+            cityInput.autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/city/autocomplete",
+                        data: { term: request.term },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    cityHiddenInput.val(ui.item.id);
+                }
+            });
         });
     });
 })

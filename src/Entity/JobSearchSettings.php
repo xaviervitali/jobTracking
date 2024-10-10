@@ -18,10 +18,7 @@ class JobSearchSettings
     #[Groups(['apiSettingsGroup'])]
     private ?string $what = null;
 
-    // #[ORM\Column(length: 255)]
-    // #[Groups(['apiSettingsGroup'])]
 
-    // private ?string $city = null;
 
     #[ORM\Column(length: 255)]
 
