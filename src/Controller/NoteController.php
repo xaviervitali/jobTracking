@@ -17,8 +17,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Serializer;
 
 #[Route('/note')]
-final class NoteController extends AbstractController
+ class NoteController extends AbstractController
 {
+    public function __construct(){
+        date_default_timezone_set('Europe/Paris');
+    }
+
     #[Route(name: 'app_note_index', methods: ['GET'])]
     public function index(NoteRepository $noteRepository): Response
     {

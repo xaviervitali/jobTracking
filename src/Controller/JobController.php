@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Constants\Cities;
-use App\Entity\City;
+use App\Entity\Action;
 use App\Entity\Job;
+use App\Entity\JobSource;
 use App\Entity\JobTracking;
 use App\Enums\ActionStatus;
 use App\Form\JobFormType;
@@ -32,6 +32,10 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
 final class JobController extends AbstractController
 {
+    public function __construct(){
+        date_default_timezone_set('Europe/Paris');
+    }
+
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
     public function index(JobRepository $jobRepository, ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
     {
@@ -65,20 +69,48 @@ final class JobController extends AbstractController
         ]);
     }
 
+
+    #[Route('/candidature/job_alert', name: 'candidature_from_job_alert')]
+    function candidatureFromJobAlert(Request $request, EntityManagerInterface $entityManager, Security $security)
+    {
+       // Récupérer le contenu JSON de la requête
+       $data = json_decode($request->getContent(), true); // Décoder le JSON en tableau associatif
+
+       // Vérifiez ce que vous recevez
+        $jobData = $data['job'];
+        
+        if (empty($jobData['title']) || empty($jobData['company']) || empty($jobData['description'])) {
+            return $this->json(false);
+        }
+$date = new DateTimeImmutable();
+        $job = new Job();
+        $job->setTitle($jobData['title'])
+            ->setRecruiter($jobData['company'])
+            ->setOfferDescription($jobData['description'])
+            ->setCreatedAt($date)
+            ->setSource($entityManager->getRepository(JobSource::class)->findOneBy(['name' => $jobData['source']]))
+            ->setUser($security->getUser());
+        $entityManager->persist($job);
+        $jobTracking = new JobTracking();
+        $jobTracking
+        ->setJob($job)
+        ->setCreatedAt($date)
+        ->setAction($entityManager->getRepository(Action::class)->findOneBy(['name' => ActionStatus::getStartActionName()]));
+        $entityManager->persist($jobTracking);
+       
+        $entityManager->flush();
+
+        return $this->json(true);
+
+    }
+
+
+
     #[Route('/nouvelle_candidature', name: 'candidature_new')]
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security, ActionRepository $actionRepository): Response
     {
         $job = new Job();
 
-        if($request->get('job')){
-            $currentJob = $request->get('job');
-
-            $job
-                ->setRecruiter($currentJob['company'])
-                ->setTitle($currentJob['title'])
-                ->setOfferDescription($currentJob['description']);
-
-        }
         $form = $this->createForm(JobFormType::class, $job);
         $form->handleRequest($request);
 
@@ -162,7 +194,7 @@ final class JobController extends AbstractController
         // Sérialiser l'entité
         $params = $serializer->normalize($apiSettings, null, ['groups' => ['apiSettingsGroup']]);
         $adzunaParams = [
-             // Clé de l'API
+            // Clé de l'API
             'results_per_page' => 50,               // Nombre de résultats par page
             'what' => $apiSettings->getWhat(),      // Mot clé de recherche
             'where' => $apiSettings->getCity()->getZipCode(),     // Localisation
@@ -208,7 +240,7 @@ final class JobController extends AbstractController
             // Si les paramètres ont changé, faire une nouvelle requête API
             $cachedData = [
                 'params' => $params,
-                'response' => ['azduna' => $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry()),'franceTravail'=>$apiService->getFranceTravailJobs($franceTravailParams)]
+                'response' => ['azduna' => $apiService->getAdzunaJobs($adzunaParams, $apiSettings->getCountry()), 'franceTravail' => $apiService->getFranceTravailJobs($franceTravailParams)]
             ];
 
             // Pas besoin de mettre à jour manuellement le cache : la prochaine requête appellera automatiquement l'API si nécessaire
@@ -220,39 +252,43 @@ final class JobController extends AbstractController
             function ($job) {
                 $created = new DateTime($job['created']);
                 return [
-                    'source'=> 'Adzuna',
+                    'source' => 'Adzuna',
                     'company' => $job['company']['display_name'],
                     'location' => explode(',', $job['location']['display_name'])[0],
-                    'description'=> $job['description'],
-                    'title'=> $job['title'],
+                    'description' => $job['description'],
+                    'title' => $job['title'],
                     'link' => $job['redirect_url'],
-                    'created' => $created->format('d/m/y')
-                ];},
-$jobResponseData['azduna']['results']);
-        $franceTravailJobResults = array_map(function($job){
+                    'created' => $created->format('d/m/y'),
+                    'id' => $job['id']
+                ];
+            },
+            $jobResponseData['azduna']['results']
+        );
+        $franceTravailJobResults = array_map(function ($job) {
             $created = new DateTime($job['dateCreation']);
             $company = 'non renseigné';
 
-            if(isset($job['entreprise']['nom'])){
+            if (isset($job['entreprise']['nom'])) {
                 $company = $job['entreprise']['nom'];
             }
 
             $link = 'https://candidat.francetravail.fr/offres/recherche/detail/' . $job['id'];
-            if (isset($job['contact']['urlPostulation'])){
+            if (isset($job['contact']['urlPostulation'])) {
                 $link = $job['contact']['urlPostulation'];
             }
 
             return [
-            'source'=> 'Pole Emploi',
-            'company' =>   $company ,
-            'location' => substr( $job['lieuTravail']['libelle'], 4),
-            'type_contrat' => $job['typeContratLibelle'],
-            'description' => $job['description'],
-            'title' => $job['intitule'],
-            'link' => $link,
-            'created' => $created->format('d/m/y')
-        ];
-        },$jobResponseData['franceTravail']['resultats']);
+                'source' => 'France travail',
+                'company' =>   $company,
+                'location' => substr($job['lieuTravail']['libelle'], 4),
+                'type_contrat' => $job['typeContratLibelle'],
+                'description' => $job['description'],
+                'title' => $job['intitule'],
+                'link' => $link,
+                'created' => $created->format('d/m/y'),
+                'id' => $job['id']
+            ];
+        }, $jobResponseData['franceTravail']['resultats']);
 
         // Rendu du template avec les résultats
         return $this->render('job/job_alert.html.twig', [
@@ -261,6 +297,4 @@ $jobResponseData['azduna']['results']);
 
         ]);
     }
- 
- 
 }

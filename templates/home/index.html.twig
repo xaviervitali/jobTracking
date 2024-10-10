@@ -15,17 +15,13 @@
 </hr>
 
 <div	class="in-progress">
-	<div	class="d-flex justify-content-xl-between gap-3">
-		<a	href="{{ path('candidature_new') }}"	class="d-block bg-div col  mb-3 d-flex flex-column justify-content-center ">
-
-			<h4	class="text-center ">
-				Ajouter une candidature
-			</h4>
-		</a>
-		<div	class='bg-div   col mb-3 '>
+	<div	class="d-flex mb-3 justify-content-xl-around flex-wrap gap-3 bg-div align-items-center">
+		<p>
+			{{ jobsInProgress | length }}
+			candidatures en cours
+		</p>
 
 			<div	id="chart"	class='d-flex justify-content-center'></div>
-		</div>
 
 	</div>
 	<div	class='bg-div'>
@@ -35,18 +31,17 @@
 				Liste des candidatures en cours
 			</h4>
 			<div	class="search-container w-auto">
-				<input	type="text"	id="search-input"	class="form-control"	placeholder="Rechercher">
-				</div>
+				<input	type="text"	id="search-input"	class="form-control"	placeholder="Rechercher"></div>
 			</div>
-			<div id="job-list" class=" d-flex flex-wrap justify-content-between">
-			{% for job in jobsInProgress %}
-				{% include '/_card.html.twig' %}
+			<div	id="job-list"	class=" d-flex flex-wrap justify-content-between">
+				{% for job in jobsInProgress %}
+					{% include '/_card.html.twig' %}
 
-			{% endfor %}
+				{% endfor %}
 			</div>
 		</div>
-		<template id="cardTemplate">
-		{% include '/_card.html.twig' with { job: {} } | raw %}
-		 </template>
+		<template	id="cardTemplate">
+			{% include '/_card.html.twig' with { job: {} } | raw %}
+		</template>
 	</div>
 {% endblock %}

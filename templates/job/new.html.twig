@@ -1,66 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Nouvelle Candidature
+    Nouvelle Candidature
 {% endblock %}
 
 {% block body %}
-	<div	class="bg-div">
-		{{ form_start(form) }}
+    <div class="bg-div">
+        {{ form_start(form) }}
 
-		<div	class="d-lg-none d-block p-3 bg-div border rounded">
+            {{ form_label(form.recruiter) }}
+            {{ form_widget(form.recruiter) }}
 
-			<div	class="row">
-				<div	class="col-xl-6">
-					{% set recruiterField %}
-					{{ form_widget(form.recruiter) }}
-					{% endset %}
-					{{ recruiterField | raw }}
-				</div>
-				<div	class="col-xl-6">
-					{% set titleField %}
-					{{ form_widget(form.title) }}
-					{% endset %}
-					{{ titleField | raw }}
-				</div>
-			</div>
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title) }}
 
-			{% set descriptionField %}
-			{{ form_widget(form.offerDescription) }}
-			{% endset %}
-			{{ descriptionField | raw }}
-			<div	class="col-auto">
-				{% set createdAtField %}
-				{{ form_label(form.created_at) }}
-				{{ form_widget(form.created_at) }}
-				{% endset %}
-				{{ createdAtField | raw }}
-			</div>
-			<div	class='action'>
-				{% set sourceField %}
-				{{ form_label(form.source) }}
-				{{ form_widget(form.source) }}
-				{% endset %}
-				{{ sourceField|raw }}
-			</div>
-		</div>
-		<div	class="d-none d-lg-flex gap-2">
-		<div class="col">
-			{{ descriptionField | raw }}
-		</div>
-			<div class="col-auto">
-				{{ recruiterField | raw }}
-				{{ titleField | raw }}
-				{{ sourceField|raw }}
-				{{ createdAtField | raw }}
-			</div>
+            {{ form_label(form.offerDescription) }}
+            {{ form_widget(form.offerDescription) }}
 
-		</div>
-		<div	class="d-flex justify-content-end">
-			<button	type="submit"	class="btn btn-link d-block">
-				Valider
-			</button>
-		</div>
-		{{ form_end(form) }}
-	</div>
+            {{ form_label(form.created_at) }}
+            {{ form_widget(form.created_at) }}
+
+            {{ form_label(form.source) }}
+            {{ form_widget(form.source) }} 
+
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-link d-block">
+                Valider
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

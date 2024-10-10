@@ -24,6 +24,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class JobTrackingController extends AbstractController
 {
+    public function __construct(){
+        date_default_timezone_set('Europe/Paris');
+    }
 
     #[Route('/candidature/{id}', name: 'app_job_tracking')]
     public function candidature(Job $job, Security $security, EntityManagerInterface $em, Request $request, JobTrackingRepository $jobTrackingRepository, ActionRepository $actionRepository, JobRepository $jobRepository)

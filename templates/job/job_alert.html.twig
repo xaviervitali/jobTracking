@@ -83,5 +83,18 @@
             <template id="cardTemplate">
                 {% include '/_job_alert_card.html.twig' with { job: {} } | raw %}
             </template>
+            <script>
+                function newJob(job) {
+                
+            $.post({
+                url: '{{ path('candidature_from_job_alert') }}', // Route qui traite les données du job
+                data: JSON.stringify({ job: job }),
+                success: function(response) {
+                 if(response){
+                    parent.location.href = '{{ path('app_synthese') }}'
+                }
+            }
+                })}
+            </script>
         {% endblock %}
         

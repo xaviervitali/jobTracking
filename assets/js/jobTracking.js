@@ -1,6 +1,6 @@
 
 function deleteJob(id) {
-  parent.window.location.href = "/candidature/" + id + "/delete";
+  parent.window.location= "/candidature/" + id + "/delete";
 }
 
 function modifyJob() {

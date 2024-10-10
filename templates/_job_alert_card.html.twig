@@ -12,27 +12,26 @@
             Publié le
             {{ job.created | default('job_created') }}
         </p>
-   
-
-</div>
-
-<div class="d-flex flex-column justify-content-between">
-    <h3>
-        {{ job.title  | default('job_title') }}
-    </h3>
-    <p>
-        {{ job.description | default('job_description') | slice(0, 300) }}
-        ...
-    </p>
-    <div class="d-flex justify-content-end gap-2">
-
-    <a class='d-block' href="{{ path('candidature_new', {job:job}) }}">
-    Ajouter la candidature
-</a>
-        <a class='d-block' href="{{ job.link | default('job_link') }}" target="_blank">
-            Visualiser
-        </a>
-
 
     </div>
-</div></div>
+
+    <div class="d-flex flex-column justify-content-between">
+        <h3>
+            {{ job.title  | default('job_title') }}
+        </h3>
+        <p>
+            {{ job.description | default('job_description') | slice(0, 300) }}
+            ...
+        </p>
+        <div class="d-flex justify-content-end gap-2 align-items-center">
+
+            <button class='d-block btn btn-link' onclick="newJob({{job|json_encode}})">
+                Ajouter la candidature
+            </button>
+            <a class='d-block' href="{{ job.link | default('job_link') }}" target="_blank">
+                Visualiser
+            </a>
+
+        </div>
+    </div>
+</div>
