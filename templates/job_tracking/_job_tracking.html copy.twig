@@ -1,0 +1,44 @@
+{% if (jobTrackings | length) < 1 %}
+  Aucun
+{% else %}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>
+          Date
+        </th>
+        <th>
+          Action
+        </th>
+        <th></th>
+      </tr>
+
+    </thead>
+    <tbody>
+      {% for jobTracking in jobTrackings %}
+        <tr>
+          <td {% if   loop.index == 1 %} class="color-grey" {% endif %}>
+
+            {{ jobTracking.createdAt | date('d/m/Y') }}
+          </td>
+          <td {% if   loop.index == 1 %} class="color-grey"  {% endif %}>
+            {{ jobTracking.action.name }}
+          </td>
+
+          {% if notEditing %}
+            <td {% if   loop.index == 1 %} class="color-grey" {% endif %}>
+              {% if   loop.index > 1 %}
+                <button class="btn  btn-link" data-bs-toggle="modal" data-bs-target="#handleModifyModal" data-job-tracking-id="{{ jobTracking.id }}" data-job-tracking-action="{{ jobTracking.action.id }}" data-job-tracking-created-at="{{ jobTracking.createdAt | date('c') | slice(0,10) }}">
+                  Modifier
+                </button>
+              {% endif %}
+
+            </td>
+          {% endif %}
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}

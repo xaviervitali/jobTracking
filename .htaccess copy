@@ -1,0 +1,23 @@
+# Désactiver les erreurs PHP en production
+php_value display_errors On
+php_value mbstring.http_input auto
+php_value date.timezone Europe/Paris
+
+# Activer le moteur de réécriture
+RewriteEngine On
+
+
+# Forcer HTTPS (optionnel)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Si le fichier ou le dossier demandé existe, ne pas rediriger
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rediriger toutes les requêtes vers /public
+RewriteRule ^(.*)$ /public/$1 [L]
+
+# Rediriger tout vers public/index.php si fichier non trouvé
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ /public/index.php [L]

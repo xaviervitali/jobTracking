@@ -25,7 +25,7 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
                 const regex = new RegExp(`job_${key}`, 'g');
                 const value = typeof job[key] === 'string' ? job[key].slice(0, 300) : job[key]
 
-                jobElement = jobElement.replace(regex, value);
+                jobElement = jobElement.replaceAll(regex, value);
             }
         }
         jobList.innerHTML += jobElement;

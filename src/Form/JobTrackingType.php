@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Action;
 use App\Entity\JobTracking;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -35,8 +36,13 @@ class JobTrackingType extends AbstractType
             'years' => range(date('Y') - 10, date('Y')), // Limite la sélection d'années
         ])
         ->add('action', EntityType::class, [
+            
             'class' => Action::class,
-            'choice_label' => 'name', // Le label qui sera affiché
+            'choice_label' => 'name', // Assuming 'name' is the property to display
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('a')
+                          ->orderBy('a.name', 'ASC');
+            },
             'label' => 'Action',
             'attr' => ['class' => "form-select mb-3"], // Utilisé pour les "select", mais pas nécessaire ici avec les radio
             'expanded' => false, // Options sous forme de boutons radio

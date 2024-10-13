@@ -49,11 +49,16 @@ main {
   right: 0 !important;
 }
 
-.container-xxl {
+main {
   max-height: 80vh;
   overflow: auto;
 }
 
 .ui-autocomplete {
   background-color: #eee;
+}
+
+body{
+  height: 100vh;
+  overflow: hidden;
 }

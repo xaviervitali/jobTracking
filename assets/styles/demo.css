@@ -1,22 +1,19 @@
 .swiper-container img {
+  height: 50vh;
 
     width: 100%;
-    object-fit: contain;
+    object-fit:cover  ;
+    object-position: top;
     
 }
 
 .swiper-container p > img {
-  height: 40vh;
-display: flex;
+/* display: flex;
 flex-direction: column;
-justify-content: center;
+justify-content: center; */
   
 }
-.swiper-container {
-    /* margin: auto;
-    width:100%;
-    height: 60vh; */
-  }
+
 
   #modalImage{
     width: 100%;

@@ -1,8 +1,10 @@
-<div class="m-3 p-3 border rounded bg-white row col-xl-3 col-11">
-
-    <div class="">
+<div class="m-3 p-3 border rounded bg-white row col-xxl-2 col-xl-3 col-lg-4 col-12">
+<div class="d-flex flex-column">
+    <div class="h-3">
         <h3>
-            {{ job.recruiter | default('job_recruiter') }}
+            {{ (job.recruiter | default('job_recruiter') | length > 15 ) 
+            ? (job.recruiter |slice(0, 15) ~ '...') 
+            : (job.recruiter | default('job_recruiter')) }}
         </h3>
         {% if  job %}
 
@@ -13,20 +15,23 @@
                 j
             </h5>
         {% endif %}
+        <hr>
     </div>
 
-    <div class="d-flex flex-column justify-content-between">
+    <div class="d-flex flex-column justify-content-between flex-grow-1">
         <h3>
             {{ job.title  | default('job_title') }}
         </h3>
-        <p>
+        <p class="flex-grow-1">
             {{ job.description | default('job_description') | slice(0, 300) }} ...
         </p>
-        <p class="text-end">
-        
-            <a href="{{ path('app_job_tracking',  {'id':job.id | default('job_id')}) }}">
-                Visualiser
-            </a>
-        </p>
+<hr>
     </div>
-</div>
+    <div>
+        <p class="text-end flex-grow-1">
+        
+        <a href="{{ path('app_job_tracking',  {'id':job.id | default('job_id')}) }}">
+            Visualiser
+        </a>
+    </p></div>
+</div></div>

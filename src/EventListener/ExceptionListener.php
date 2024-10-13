@@ -22,8 +22,8 @@ final class ExceptionListener
         // Vérifier si l'exception est une erreur 404
         if ($exception instanceof NotFoundHttpException) {
             // Générer une réponse de redirection vers la route 'home'
-            // $response = new RedirectResponse($this->router->generate('app_synthese'));
-            // $event->setResponse($response);
+            $response = new RedirectResponse($this->router->generate('app_synthese'));
+            $event->setResponse($response);
         }
     }
 }

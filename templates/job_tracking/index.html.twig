@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
   {{ encore_entry_link_tags('postit') }}
+  {{ encore_entry_link_tags('step-process') }}
 
 {% endblock %}
 
@@ -37,8 +38,9 @@
       </div>
       <div class="flex-grow-1 d-flex flex-column gap-3 justify-content-between ">
       {% set notEditing =  true %}
-
+      <div class="bg-div mb-2">
       {% include "job_tracking/_job_tracking.html.twig" %}
+    </div>
         {% if not isClosedJob %}
 
           <div class="bg-div mb-2">
