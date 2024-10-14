@@ -6,7 +6,6 @@
             ? (job.recruiter |slice(0, 15) ~ '...') 
             : (job.recruiter | default('job_recruiter')) }}
         </h3>
-        {% if  job %}
 
             <h5 class="">
                 {{ job.action_name  | default('job_action_name' ) }}
@@ -14,7 +13,6 @@
                 {{ job.delai  | default('job_delai') }}
                 j
             </h5>
-        {% endif %}
         <hr>
     </div>
 
