@@ -21,7 +21,7 @@ enum ActionStatus: string
     case RELANCE_TELEPHONIQUE = 'Relance téléphonique';
     case RELANCE_MAIL = 'Relance mail';
     case RELANCE_PRESENTIEL = 'Relance en présentiel';
-    case ENVOI_CANDIDATURE = 'Envoi candidature';
+    case DEBUT_CANDIDATURE = 'Début candidature';
     case CONTACT_RECRUTEUR = 'Contact recruteur';
     case APPROCHE_CHASSEUR_TETE = 'Approche par un chasseur de tête';
     case SOLLICITATION_AGENCE_RECRUTEMENT = 'Sollicitation agence de recrutement';
@@ -75,7 +75,7 @@ enum ActionStatus: string
     public static function isStartAction(string $action): bool
     {
         return in_array($action, [
-            self::ENVOI_CANDIDATURE->value,
+            self::DEBUT_CANDIDATURE->value,
             self::CONTACT_RECRUTEUR->value,
             self::APPROCHE_CHASSEUR_TETE->value,
             self::SOLLICITATION_AGENCE_RECRUTEMENT->value,
@@ -85,6 +85,6 @@ enum ActionStatus: string
 
     public static function getStartActionName(): string
     {
-        return self::ENVOI_CANDIDATURE->value;
+        return self::DEBUT_CANDIDATURE->value;
     }
 }
