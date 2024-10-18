@@ -44,6 +44,10 @@ class JobSearchSettings
     #[ORM\ManyToOne(inversedBy: 'jobSearchSettings')]
     private ?City $city = null;
 
+    #[ORM\Column(nullable: true)]
+    #[ORM\ManyToOne(inversedBy: 'jobSearchSettings')]
+    private ?int $maxDaysOld = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +147,18 @@ class JobSearchSettings
     public function setCity(?City $city): static
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getMaxDaysOld(): ?int
+    {
+        return $this->maxDaysOld;
+    }
+
+    public function setMaxDaysOld(?int $maxDaysOld): static
+    {
+        $this->maxDaysOld = $maxDaysOld;
 
         return $this;
     }

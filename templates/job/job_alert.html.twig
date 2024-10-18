@@ -13,7 +13,7 @@
     <div class="bg-div">
         {% set apiSettings = app.user.jobSearchSettings %}
         <p>
-            Annonces pour des 7 derniers jours pour
+            Annonces pour des   {{ apiSettings.maxDaysOld }} derniers jours pour
             <strong>
                 {{ apiSettings.what }}
             </strong>

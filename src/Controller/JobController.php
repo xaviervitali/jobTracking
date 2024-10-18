@@ -195,6 +195,7 @@ final class JobController extends AbstractController
         $serializer = new Serializer([$normalizers]);
         // Sérialiser l'entité
         $params = $serializer->normalize($apiSettings, null, ['groups' => ['apiSettingsGroup']]);
+        $maxOldDays = intval($apiSettings->getMaxDaysOld()) ?? 8;
         $adzunaParams = [
             // Clé de l'API
             'results_per_page' => 50,               // Nombre de résultats par page
@@ -203,7 +204,7 @@ final class JobController extends AbstractController
             'what_exclude' => $apiSettings->getWhatExclude(),
             'sort_by' => 'date',
             'distance' => $apiSettings->getDistance(),
-            'max_days_old' => 7 // Exclusion de certains mots-clés
+            'max_days_old' =>   $maxOldDays  // Exclusion de certains mots-clés
         ];
 
         $franceTravailParams = [
@@ -211,12 +212,12 @@ final class JobController extends AbstractController
             'commune' => $apiSettings->getCity()->getInseeCode(),     // Localisation
             'what_exclude' => $apiSettings->getWhatExclude(),
             'distance' => $apiSettings->getDistance(),
-            'publieeDepuis' => 7 // Exclusion de certains mots-clés
+            'publieeDepuis' =>   4  // Exclusion de certains mots-clés
         ];
 
         // Calcul du nombre de secondes jusqu'à minuit
-        $now = new \DateTime();
-        $midnight = new \DateTime('tomorrow midnight');
+        $now = new DateTime();
+        $midnight = new DateTime('tomorrow midnight');
         $secondsUntilMidnight = $midnight->getTimestamp() - $now->getTimestamp();
 
         // Générer une clé de cache unique pour chaque utilisateur
