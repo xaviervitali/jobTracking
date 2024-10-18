@@ -2,12 +2,16 @@
 
 namespace App\Service;
 
-use App\Entity\User;
 use GuzzleHttp\Client;
+use SoftCreatR\MistralAI\MistralAI;
+use Psr\Http\Message\RequestFactoryInterface;
 
 
 class ApiService
 {
+    public function __construct(private MistralAiService $mistralAiService)
+    {
+    }
     public function   getAdzunaJobs(array $params, $country = 'fr'): array
     {
         $params = array_merge($params, [
@@ -81,4 +85,15 @@ class ApiService
             throw new \RuntimeException('Erreur lors de l\'appel à l\'API : ' . $e->getMessage());
         }
     }
+
+    public function generateCoverLetter(string $jobDescription, string $cvFilePath): string
+    {
+        return $this->mistralAiService->generateCoverLetter($jobDescription, $cvFilePath);
+    }
+
+    public function generateThankYouPrompt(): string
+    {
+        return $this->mistralAiService->generateThankYouPrompt();
+    }
+
 }

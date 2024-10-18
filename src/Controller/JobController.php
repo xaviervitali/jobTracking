@@ -82,7 +82,7 @@ final class JobController extends AbstractController
         if (empty($jobData['title']) || empty($jobData['company']) || empty($jobData['description'])) {
             return $this->json(false);
         }
-$date = new DateTimeImmutable();
+        $date = new DateTimeImmutable();
         $job = new Job();
         $job->setTitle($jobData['title'])
             ->setRecruiter($jobData['company'])
@@ -99,7 +99,7 @@ $date = new DateTimeImmutable();
         $entityManager->persist($jobTracking);
        
         $entityManager->flush();
-
+        
         return $this->json(true);
 
     }
@@ -110,13 +110,15 @@ $date = new DateTimeImmutable();
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security, ActionRepository $actionRepository): Response
     {
         $job = new Job();
+        $user = $security->getUser();
 
-        $form = $this->createForm(JobFormType::class, $job);
+        $form = $this->createForm(JobFormType::class, $job, [
+            'user' => $user,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $newAction = $actionRepository->findOneBy(['name' => ActionStatus::getStartActionName()]);
-            $user = $security->getUser();
 
             $job->setUser($user);
             $entityManager->persist($job);
@@ -246,19 +248,20 @@ $date = new DateTimeImmutable();
             // Pas besoin de mettre à jour manuellement le cache : la prochaine requête appellera automatiquement l'API si nécessaire
         }
 
+        $noInfoStr = 'Non renseigné';
         // Récupérer la réponse des données en cache
         $jobResponseData = $cachedData['response'];
         $adzunaJobResults = array_map(
-            function ($job) {
+            function ($job) use ($noInfoStr) {
                 $created = new DateTime($job['created']);
                 return [
                     'source' => 'Adzuna',
-                    'company' => $job['company']['display_name'],
-                    'location' => explode(',', $job['location']['display_name'])[0],
-                    'description' => $job['description'],
-                    'title' => $job['title'],
-                    'link' => $job['redirect_url'],
-                    'created' => $created->format('d/m/y'),
+                    'company' => $job['company']['display_name'] ?? $noInfoStr,
+                    'location' => explode(',', $job['location']['display_name'])[0] ?? $noInfoStr,
+                    'description' => $job['description'] ?? $noInfoStr,
+                    'title' => $job['title'] ??  $noInfoStr,
+                    'link' => $job['redirect_url'] ??  '',
+                    'created' => $created->format('d/m/y') ??  $noInfoStr,
                     'id' => $job['id']
                 ];
             },
