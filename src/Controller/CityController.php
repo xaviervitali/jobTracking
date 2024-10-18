@@ -29,6 +29,6 @@ class CityController extends AbstractController
 
     #[Route('/city/get-name/{id}', name: 'city_get_name')]
     public function getName( City $city){
-        return $this->json(ucwords($city->getCityCode()) . ' (' . $city->getZipCode() . ')');
+        return $this->json(['name'=>ucwords($city->getCityCode()) . ' (' . $city->getZipCode() . ')']);
     }
 }

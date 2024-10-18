@@ -27,6 +27,10 @@ class ApiService
     public function getFranceTravailJobs($params): array
     {
 
+        $ftMaxOlDays = [1, 3, 7, 14];
+        $params['publieeDepuis'] = $this->findClosestValue($params['publieeDepuis'],   $ftMaxOlDays);
+
+
         $url = 'https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search';
         $headers = [
             'Accept' => 'application/json',
@@ -94,6 +98,21 @@ class ApiService
     public function generateThankYouPrompt(): string
     {
         return $this->mistralAiService->generateThankYouPrompt();
+    }
+
+    private function findClosestValue($value, $array) {
+        $closest = null;
+        $minDiff = PHP_INT_MAX;
+    
+        foreach ($array as $item) {
+            $diff = abs($item - $value);
+            if ($diff < $minDiff) {
+                $minDiff = $diff;
+                $closest = $item;
+            }
+        }
+    
+        return $closest;
     }
 
 }

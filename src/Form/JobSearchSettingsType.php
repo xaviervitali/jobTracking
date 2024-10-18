@@ -3,13 +3,13 @@
 namespace App\Form;
 
 use App\Entity\JobSearchSettings;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class JobSearchSettingsType extends AbstractType
 {
@@ -50,6 +50,26 @@ class JobSearchSettingsType extends AbstractType
                     'placeholder' => 'Mots clés à exclure ex : alternance, stage, ...',
                 ]
             ])
+            ->add('maxDaysOld', NumberType::class, [
+                'label' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Visualiser les annonces ayant moins de ... ',
+                    'min' => 1,
+                    'max' => 8,
+                ],
+                'constraints' => [
+                    new Assert\Range([
+                        'min' => 1,
+                        'max' => 8,
+                        'notInRangeMessage' => 'Le nombre doit être compris entre {{ min }} et {{ max }}',
+                    ]),
+                ],
+                'html5' => true,
+                'empty_data' => 8
+            ])
+
 
         ;
     }

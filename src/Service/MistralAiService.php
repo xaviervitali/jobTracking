@@ -56,12 +56,12 @@ class MistralAiService
 
     }
 
-    public function generateThankYouPrompt(Job $job): string
-    {
-        $prompt = "Génère un message de remerciement et demande d'explication pour un refus de candidature.";
+    // public function generateThankYouPrompt(Job $job): string
+    // {
+    //     $prompt = "Génère un message de remerciement et demande d'explication pour un refus de candidature.";
 
 
-    }
+    // }
 
     private function extractTextFromPdf(string $filePath): string
     {
