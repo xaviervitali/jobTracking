@@ -20,13 +20,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
-    // #[Route(name: 'app_user_index', methods: ['GET'])]
-    // public function index(UserRepository $userRepository): Response
-    // {
-    //     return $this->render('user/index.html.twig', [
-    //         'users' => $userRepository->findAll(),
-    //     ]);
-    // }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,  UserPasswordHasherInterface $passwordHasher, Security $security, EmailService $emailService): Response

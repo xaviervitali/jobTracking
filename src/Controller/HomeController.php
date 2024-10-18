@@ -48,10 +48,10 @@ class HomeController extends AbstractController
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $security->getUser()->getUserIdentifier()]);
 
         $userJobs = $jobRepository->findByUser($user);
-        $jsonContent = $serializer->serialize($userJobs, 'json', [
-            'groups' => ['job'],
+        // $jsonContent = $serializer->serialize($userJobs, 'json', [
+        //     'groups' => ['job'],
 
-        ]);
+        // ]);
 
         $cv = new CV();
         $formCV = $this->createForm(CvType::class, $cv, [
@@ -84,7 +84,7 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/my-space.html.twig', [
-            'jobs' => $jsonContent,
+            'jobs' => $userJobs,
             'user' => $user,
             'formCV' => $formCV,
             'formApiSettings' => $formApiSettings,
