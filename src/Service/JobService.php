@@ -34,6 +34,8 @@ class JobService
         return  $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user, false));
     }
 
+    
+
     public function  getJobsPerMonth()
     {
         $jobsPerMonth = $this->jobRepository->getJobsPerMonth($this->user);

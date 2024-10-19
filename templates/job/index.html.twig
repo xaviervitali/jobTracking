@@ -1,22 +1,70 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vos candidatures{% endblock %}
+{% block title %}
+	Vos candidatures
+{% endblock %}
 {% block javascripts %}
 
 	{{ encore_entry_script_tags('board') }}
 
 {% endblock %}
 {% block body %}
-<div class="d-flex d-flex flex-wrap justify-content-between bg-div">
-<div id="chart-bar-jobs-per-month" class="col-xxl-6 my-3 "></div>
-<div id="chart-bar-jobs-week" class="col-xxl-6 my-3 " ></div>
-<div id="chart-pie-action"  class="col-xxl-6 my-3 "></div>
-<div id="chart-pie-closed-action"  class="col-xxl-6 my-3 "></div>
-<div id="chart-pie-source"  class="col-xxl-6 my-3 "></div>
-<div id="chart-stacked-actions-by-source" class="col-xxl-6 my-3 "></div>
+	<div	class="bg-div">
+		<div	class="d-flex d-flex flex-wrap justify-content-between">
+			<div	id="chart-bar-jobs-per-month"	class="col-xxl-6 my-3 "></div>
+			<div	id="chart-bar-jobs-week"	class="col-xxl-6 my-3 "></div>
+			<div	id="chart-pie-action"	class="col-xxl-6 my-3 "></div>
+			<div	id="chart-pie-closed-action"	class="col-xxl-6 my-3 "></div>
+			<div	id="chart-pie-source"	class="col-xxl-6 my-3 "></div>
+			<div	id="chart-stacked-actions-by-source"	class="col-xxl-6 my-3 "></div>
 
-<div	class="js-chart-data" data-jobs-per-month="{{ jobsPerMonths | serialize }}" data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}" data-job-sources="{{ jobSources | serialize }}" data-job-actions="{{ jobActions | serialize }}"  data-actions-by-source ="{{ actionsBySourceCount | serialize }}" data-current-week ="{{ currentWeekJob | serialize }}" data-closed-actions ="{{ jobClosedActions | serialize }}"  ></div>
+			<div	class="js-chart-data"	data-jobs-per-month="{{ jobsPerMonths | serialize }}"	data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}"	data-job-sources="{{ jobSources | serialize }}"	data-job-actions="{{ jobActions | serialize }}"	data-actions-by-source="{{ actionsBySourceCount | serialize }}"	data-current-week="{{ currentWeekJob | serialize }}"	data-closed-actions="{{ jobClosedActions | serialize }}"></div>
 
+		</div>
+		<hr>
+		<p>
+			<strong>
+				Quelques chiffres
+			</strong>
+		</p>
+		<ul>
+			<li>
+				Delai moyen d'une candidature:
+				<strong>
+					{{ closedAvgDelai |round(2) }}
+				</strong>
+				jours
+			</li>
+			<li>
+				Candidature le plus longue :
+				<strong>
+					{{ longuestDelai.delai }}
+				</strong>
+				jours
+				<a	href="{{ path('app_job_tracking',  {'id':longuestDelai.id | default('job_id')}) }}">
+					Visualiser
+				</a>
+			</li>
+			<li>
+				{% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+				Jour de la semaine où le plus de candidatures ont été envoyées, toutes semaines confondues
+				<strong>
+					{{ jours[ mostProlificWeekDay.jour] }}
+					:
+					{{ mostProlificWeekDay.day_count }}
+				</strong>
+			</li>
+			<li>
+				{% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+				Jour record de candidature
+				<strong>
+					{{ mostProlificDay.created_at | date('d/m/y') }}
+					:
+					{{ mostProlificDay.job_count }}
+				</strong>
+			</li>
+		</ul>
 
+	</div>
 
-{% endblock %}
+</div>{% endblock %}

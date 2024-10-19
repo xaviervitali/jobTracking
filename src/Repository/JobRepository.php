@@ -30,7 +30,7 @@ class JobRepository extends ServiceEntityRepository
     public function findByUser(User $user): ?array
     {
 
-        $sql = "SELECT j.id, j.title, j.created_at, j.recruiter, a.name, a.set_closed, MAX(jt.created_at) AS maxCreatedAt FROM job j inner JOIN job_tracking jt ON jt.job_id = j.id inner JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) )  GROUP BY j.id, a.name, a.set_closed, j.title, j.created_at, j.recruiter ORDER BY maxCreatedAt DESC;";
+        $sql = "SELECT j.id, j.title, j.created_at, j.recruiter, a.name, a.set_closed, MAX(jt.created_at) AS maxCreatedAt FROM job j inner JOIN job_tracking jt ON jt.job_id = j.id inner JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) )  GROUP BY j.id ORDER BY maxCreatedAt DESC;";
 
 
 
@@ -105,4 +105,32 @@ ORDER BY
 
         return $stmt->fetchAllAssociative();
     }
+
+    public function getClosedAvgDelai(User $user){
+        $sql = "SELECT AVG(delai) AS average_delai FROM ( SELECT DATEDIFF(MAX(jt.created_at), j.created_at) AS delai FROM job j INNER JOIN job_tracking jt ON jt.job_id = j.id INNER JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user and a.set_closed =1 GROUP BY j.id ) AS subquery;";
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+
+        return $stmt->fetchOne();
+    }
+
+    public function getLonguestDelai(User $user){
+        $sql = 'SELECT id, recruiter,title, count_action, MAX(delai) AS delai , set_closed FROM ( SELECT j.id, j.recruiter, j.title, count(jt.action_id) as count_action,a.set_closed ,DATEDIFF(MAX(jt.created_at), j.created_at) AS delai FROM job j INNER JOIN job_tracking jt ON jt.job_id = j.id INNER JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user GROUP BY j.id) AS subquery;';
+
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAssociative();
+    }
+
+    public function getMostProlificWeekDay(User $user)
+    {
+        $sql = 'SELECT jour, max(day_count) day_count from (select Weekday(j.created_at) jour, count(Weekday(j.created_at)) day_count from job j WHERE user_id = :user GROUP by jour) as subquery;';
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAssociative();
+    }
+
+    public function getMostProlificDay(User $user){
+        $sql = 'Select  created_at, count(created_at) job_count FROM job where user_id = :user GROUP by created_at order by job_count desc LIMIT 1; ';
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAssociative();
+    }
+
 }

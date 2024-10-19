@@ -24,7 +24,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -56,6 +55,10 @@ final class JobController extends AbstractController
         $jobActions = $actionRepository->getActionCountAndRatioByUser($user);
         $jobClosedActions = $actionRepository->getActionCountAndRatioByUser($user, true);
         $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
+        $closedAvgDelai = $jobRepository->getClosedAvgDelai($user);
+        $longuestDelai = $jobRepository->getLonguestDelai($user);
+        $mostProlificWeekDay = $jobRepository->getMostProlificWeekDay($user);
+        $mostProlificDay = $jobRepository->getMostProlificDay($user);
 
 
         return $this->render('job/index.html.twig', [
@@ -66,6 +69,10 @@ final class JobController extends AbstractController
             'actionsBySourceCount' => $actionsBySourceCount,
             'currentWeekJob' => $currentWeekJob,
             'jobClosedActions' => $jobClosedActions,
+            'closedAvgDelai' => $closedAvgDelai,
+            'longuestDelai' => $longuestDelai,
+            'mostProlificDay' => $mostProlificDay,
+            'mostProlificWeekDay' => $mostProlificWeekDay,
         ]);
     }
 
