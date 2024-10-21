@@ -1,17 +1,29 @@
 <div class="m-3 p-3 border rounded bg-white row col-xxl-2 col-xl-3 col-lg-4 col-12">
+
 <div class="d-flex flex-column">
     <div class="h-3">
+    <div class="d-flex">
         <h3>
             {{ (job.recruiter | default('job_recruiter') | length > 15 ) 
             ? (job.recruiter |slice(0, 15) ~ '...') 
             : (job.recruiter | default('job_recruiter')) }}
         </h3>
+        <h6>
+            {% if job.note_count | default(0) %}
+                
+
+              
+        <span class="badge text-bg-secondary">{{job.note_count}} postits </span>
+    {% endif %}</h6>
+    </div>
 
             <h5 class="">
                 {{ job.action_name  | default('job_action_name' ) }}
                 il y a
                 {{ job.delai  | default('job_delai') }}
+                
                 j
+
             </h5>
         <hr>
     </div>

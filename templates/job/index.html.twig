@@ -29,7 +29,7 @@
 		</p>
 		<ul>
 			<li>
-				Delai moyen d'une candidature:
+				Durée de vie moyenne d'une candidature:
 				<strong>
 					{{ closedAvgDelai |round(2) }}
 				</strong>
@@ -47,20 +47,17 @@
 			</li>
 			<li>
 				{% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
-				Jour de la semaine où le plus de candidatures ont été envoyées, toutes semaines confondues
+				Votre jour préféré pour candidater est le 
 				<strong>
-					{{ jours[ mostProlificWeekDay.jour] }}
-					:
-					{{ mostProlificWeekDay.day_count }}
-				</strong>
+					{{ jours[ mostProlificWeekDay.jour] | lower }}	</strong>
+		
 			</li>
 			<li>
-				{% set jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
 				Jour record de candidature
 				<strong>
-					{{ mostProlificDay.created_at | date('d/m/y') }}
-					:
-					{{ mostProlificDay.job_count }}
+					{{ mostProlificDay.created_at | date('d/m/y') }}</strong>
+					avec 
+					<strong>{{ mostProlificDay.job_count }} candidatures
 				</strong>
 			</li>
 		</ul>

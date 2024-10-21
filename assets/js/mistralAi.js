@@ -18,6 +18,7 @@ document.querySelector('#cover-letter').addEventListener('click', function (even
         }).then(response =>
             response.json())
             .then(data => {
+                coverLetter = true
                 selector.classList.remove("text-center")
                 selector.innerHTML = nl2br(data.coverLetter)
             })

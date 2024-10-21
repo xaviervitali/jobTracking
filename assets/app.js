@@ -1,5 +1,4 @@
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ApexCharts from 'apexcharts';
 import moment from 'moment';
 import DataTable from 'datatables.net-dt';
@@ -10,11 +9,12 @@ import 'jquery-ui/ui/widgets/autocomplete';
 
 // jQuery est nécessaire pour Bootstrap Table
 import $ from 'jquery';
+import 'jquery-ui/themes/base/autocomplete.css';
 global.$ = global.jQuery = $;
 
 moment.locale('fr-FR');
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./styles/app.css";
-import 'jquery-ui/themes/base/autocomplete.css';
 
 export { ApexCharts, moment, DataTable, language };
     
