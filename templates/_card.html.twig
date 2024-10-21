@@ -2,7 +2,7 @@
 
 <div class="d-flex flex-column">
     <div class="h-3">
-    <div class="d-flex">
+    <div class="d-flex gap-3 justify-content-between">
         <h3>
             {{ (job.recruiter | default('job_recruiter') | length > 15 ) 
             ? (job.recruiter |slice(0, 15) ~ '...') 
