@@ -12,16 +12,32 @@
 
 {% block body %}
 
-  {{ include('user/show.html.twig') }}
-  <div class="js-table-data" data-table-items="{{ jobs | json_encode}}"></div>
+  <div class="js-table-data" data-table-items="{{ jobs | json_encode }}"></div>
   <div class="my-3 bg-div">
 
     <div class="accordion" id="mySpaceAccordion">
+    <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#userData" aria-expanded="false" aria-controls="userData">
+        Vos coordonnées
+
+      </button>
+    </h2>
+    <div id="userData" class="accordion-collapse collapse  " data-bs-parent="#mySpaceAccordion">
+      <div class="accordion-body">
+      {{ include('user/show.html.twig') }}
+
+
+      </div>
+    </div>
+  </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#allJobs" aria-expanded="false" aria-controls="allJobs">
-            Toutes les candidatures 
-    <div class="badge text-bg-secondary">{{ jobs| length }}</div>
+            Toutes les candidatures
+            <div class="badge text-bg-secondary">
+              {{ jobs| length }}
+            </div>
 
           </button>
         </h2>
@@ -36,8 +52,10 @@
         <h2 class="accordion-header">
           <button class="accordion-button collapsed d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#cv" aria-expanded="false" aria-controls="cv">
             CVthèque
-
-    <div class="badge text-bg-secondary">{{ user.cvs | length }}/5</div>
+            <div class="badge text-bg-secondary">
+              {{ user.cvs | length }}
+              /5
+            </div>
           </button>
 
         </h2>
@@ -94,9 +112,13 @@
           <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#criterias" aria-expanded="false" aria-controls="criterias">
             Citères de recherche
             {% if user.jobSearchSettings.city and user.jobSearchSettings.what %}
-            
-          <div class="badge text-bg-secondary"> {{ user.jobSearchSettings.what }} à {{ user.jobSearchSettings.city.cityCode }}</div>
-        {% endif %}
+
+              <div class="badge text-bg-secondary">
+                {{ user.jobSearchSettings.what }}
+                à
+                {{ user.jobSearchSettings.city.cityCode }}
+              </div>
+            {% endif %}
           </button>
         </h2>
         <div id="criterias" class="accordion-collapse collapse" data-bs-parent="#mySpaceAccordion">
@@ -110,22 +132,21 @@
               à
               {{ form_widget(formApiSettings.city, {"attr": {'value':user.jobSearchSettings.city.id | default('') }}
               ) }}
-            <div class="input-group my-1">
-              {{ form_widget(formApiSettings.distance) }}
-              <span class="input-group-text" id="distance">
-                Kms alentours
-              </span>
+              <div class="input-group my-1">
+                {{ form_widget(formApiSettings.distance) }}
+                <span class="input-group-text" id="distance">
+                  Kms alentours
+                </span>
+              </div>
             </div>
-          </div>
 
             {{ form_widget(formApiSettings.whatExclude) }}
             <div class="input-group my-1">
-            {{ form_widget(formApiSettings.maxDaysOld) }}
-            <span class="input-group-text" id="maxDaysOld">
-            Jours
-          </span>
-          </div>
-            
+              {{ form_widget(formApiSettings.maxDaysOld) }}
+              <span class="input-group-text" id="maxDaysOld">
+                Jours
+              </span>
+            </div>
 
             <div class="d-flex justify-content-end">
               <input type="submit" class="btn btn-link"></div>

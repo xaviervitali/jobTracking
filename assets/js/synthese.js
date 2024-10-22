@@ -1,6 +1,6 @@
 import { noActionLabel } from "../app.js";
 import "../styles/synthese.css";
-import { generatePieChart } from './chart.js';
+import { generateColumnChart, generatePieChart } from './chart.js';
 import { generateDataTable } from './datatable.js';
 import { performSearch } from "./search.js";
 
@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
+
+
+  const jobsCountPerDelay = JSON.parse(tableDataSelector.getAttribute("data-job-count-per-delay"));
+  const categories = jobsCountPerDelay.map(e => e.delay_in_days + ' jours')
+  const data =  jobsCountPerDelay.map(e => e.delay_count)
+  generateColumnChart([{name:"Candidatures",data}], categories, 'Canditatures en cours', "#jobs-count-per-delay",500)
 
   generatePieChart(labels, series)
 

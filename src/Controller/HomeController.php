@@ -32,12 +32,14 @@ class HomeController extends AbstractController
         $date->modify('-1 year');
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobsInProgressByUser = $jobRepository->findJobsInProgressOrClosedByUser($user);
 
+        $jobsInProgressByUser = $jobRepository->findJobsInProgressOrClosedByUser($user);
+        $jobsCountPerDelay = $jobRepository->getJobsCountPerDelay($user);
 
         return $this->render('home/index.html.twig', [
             'jobsInProgressJson' => json_encode($jobsInProgressByUser),
             'jobsInProgress' => $jobsInProgressByUser,
+            'jobsCountPerDelay' => $jobsCountPerDelay,
         ]);
     }
 

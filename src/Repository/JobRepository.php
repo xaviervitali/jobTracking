@@ -133,4 +133,10 @@ ORDER BY
         return $stmt->fetchAssociative();
     }
 
+    public function getJobsCountPerDelay(User $user){
+        $sql = "SELECT TIMESTAMPDIFF(DAY, jt.last_action_date, NOW()) AS delay_in_days, COUNT(*) AS delay_count FROM (SELECT j.id, MAX(jt.created_at) AS last_action_date FROM job j inner JOIN job_tracking jt ON jt.job_id = j.id inner JOIN action a ON a.id = jt.action_id left join note on note.job_id = j.id WHERE j.user_id = :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) ) AND (jt.id IS NOT NULL AND a.set_closed = 0) GROUP BY j.id, a.name, a.set_closed, j.title, j.created_at, j.recruiter ) AS jt GROUP BY delay_in_days ORDER BY delay_in_days DESC;";
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAllAssociative();
+    }
+
 }

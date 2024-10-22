@@ -11,15 +11,12 @@
 {% endblock %}
 
 {% block body %}
-	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"></div>
+	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}" data-job-count-per-delay={{jobsCountPerDelay | json_encode}}></div>
 </hr>
 
 <div	class="in-progress">
 	<div	class="d-flex mb-3 justify-content-xl-around flex-wrap gap-3 bg-div align-items-center">
-		<p>
-			{{ jobsInProgress | length }}
-			candidatures en cours
-		</p>
+			<div	id="jobs-count-per-delay"	></div>
 
 			<div	id="chart"	class='d-flex justify-content-center'></div>
 

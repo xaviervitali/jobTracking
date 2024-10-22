@@ -75,7 +75,7 @@ export function generatePieChart(labels, series, title = "Synthèse graphique", 
  * 
  * @url https://apexcharts.com/javascript-chart-demos/column-charts/basic/
  */
-export function generateColumnChart(series, categories, title = '', selector = "#chart", width = 500) {
+export function generateColumnChart(series, categories, title = '', selector = "#chart", width = 500, formatter=(val=>val)) {
 
   var options = {
     title: {
@@ -93,6 +93,11 @@ export function generateColumnChart(series, categories, title = '', selector = "
     dataLabels: {
       enabled: false
     },
+    tooltip: {
+      y: {
+        formatter
+        }
+      },
 
     xaxis: {
       categories,

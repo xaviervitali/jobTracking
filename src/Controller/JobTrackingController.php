@@ -85,7 +85,6 @@ class JobTrackingController extends AbstractController
 
 
         $actionId = $entityManager->getRepository(Action::class)->find($request->request->all()['action']['name']);
-        // $formAction->handleRequest($request);
         if (!$actionId) {
             throw $this->createNotFoundException('Action ID not found in request');
         }
@@ -103,7 +102,6 @@ class JobTrackingController extends AbstractController
             $entityManager->flush();
         }
 
-        // return $this->redirectToRoute('app_job_tracking', ['id' => $job->getId()], Response::HTTP_SEE_OTHER);
         return $this->redirectToRoute('app_synthese',  [], Response::HTTP_SEE_OTHER);
     }
 
