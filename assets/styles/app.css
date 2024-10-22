@@ -78,7 +78,7 @@ body{
 }
 
 
-.btn-primary  {
+.btn-primary , .badge.text-bg-secondary {
   border-color: var(--bs-primary) !important;
   background-color:  var(--bs-primary) !important;
 

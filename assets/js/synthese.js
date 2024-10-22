@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const jobsCountPerDelay = JSON.parse(tableDataSelector.getAttribute("data-job-count-per-delay"));
   const categories = jobsCountPerDelay.map(e => e.delay_in_days + ' jours')
   const data =  jobsCountPerDelay.map(e => e.delay_count)
-  generateColumnChart([{name:"Candidatures",data}], categories, 'Canditatures en cours', "#jobs-count-per-delay",500)
+  generateColumnChart([{name:"Candidatures",data}], categories, 'Candidatures en cours', "#jobs-count-per-delay")
 
   generatePieChart(labels, series)
 

@@ -59,6 +59,7 @@ final class JobController extends AbstractController
         $longuestDelai = $jobRepository->getLonguestDelai($user);
         $mostProlificWeekDay = $jobRepository->getMostProlificWeekDay($user);
         $mostProlificDay = $jobRepository->getMostProlificDay($user);
+        $avgDelay = $jobRepository->getAvgDelay($user);
 
 
         return $this->render('job/index.html.twig', [
@@ -73,6 +74,7 @@ final class JobController extends AbstractController
             'longuestDelai' => $longuestDelai,
             'mostProlificDay' => $mostProlificDay,
             'mostProlificWeekDay' => $mostProlificWeekDay,
+            'avgDelay' => $avgDelay,
         ]);
     }
 

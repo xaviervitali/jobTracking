@@ -93,6 +93,13 @@ export function generateColumnChart(series, categories, title = '', selector = "
     dataLabels: {
       enabled: false
     },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'
+      },
+    },
     tooltip: {
       y: {
         formatter

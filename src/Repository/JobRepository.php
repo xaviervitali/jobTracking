@@ -99,21 +99,24 @@ ORDER BY
         return $stmt->fetchAllAssociative();
     }
 
-    public function getCurrentWeekJob(User $user){
+    public function getCurrentWeekJob(User $user)
+    {
         $sql = "SELECT job.created_at,  count(*) as count FROM `job` WHERE job.user_id = :user and DATEDIFF( NOW(), job.created_at) < 7 group by job.created_at;";
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
 
         return $stmt->fetchAllAssociative();
     }
 
-    public function getClosedAvgDelai(User $user){
+    public function getClosedAvgDelai(User $user)
+    {
         $sql = "SELECT AVG(delai) AS average_delai FROM ( SELECT DATEDIFF(MAX(jt.created_at), j.created_at) AS delai FROM job j INNER JOIN job_tracking jt ON jt.job_id = j.id INNER JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user and a.set_closed =1 GROUP BY j.id ) AS subquery;";
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
 
         return $stmt->fetchOne();
     }
 
-    public function getLonguestDelai(User $user){
+    public function getLonguestDelai(User $user)
+    {
         $sql = 'SELECT id, recruiter,title, count_action, MAX(delai) AS delai , set_closed FROM ( SELECT j.id, j.recruiter, j.title, count(jt.action_id) as count_action,a.set_closed ,DATEDIFF(MAX(jt.created_at), j.created_at) AS delai FROM job j INNER JOIN job_tracking jt ON jt.job_id = j.id INNER JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user GROUP BY j.id) AS subquery;';
 
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
@@ -127,16 +130,39 @@ ORDER BY
         return $stmt->fetchAssociative();
     }
 
-    public function getMostProlificDay(User $user){
+    public function getMostProlificDay(User $user)
+    {
         $sql = 'Select  created_at, count(created_at) job_count FROM job where user_id = :user GROUP by created_at order by job_count desc LIMIT 1; ';
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
         return $stmt->fetchAssociative();
     }
 
-    public function getJobsCountPerDelay(User $user){
+    public function getJobsCountPerDelay(User $user)
+    {
         $sql = "SELECT TIMESTAMPDIFF(DAY, jt.last_action_date, NOW()) AS delay_in_days, COUNT(*) AS delay_count FROM (SELECT j.id, MAX(jt.created_at) AS last_action_date FROM job j inner JOIN job_tracking jt ON jt.job_id = j.id inner JOIN action a ON a.id = jt.action_id left join note on note.job_id = j.id WHERE j.user_id = :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) ) AND (jt.id IS NOT NULL AND a.set_closed = 0) GROUP BY j.id, a.name, a.set_closed, j.title, j.created_at, j.recruiter ) AS jt GROUP BY delay_in_days ORDER BY delay_in_days DESC;";
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
         return $stmt->fetchAllAssociative();
     }
 
+    public function getAvgDelay(User $user)
+    {
+        $sql = "SELECT 
+                    AVG(TIMESTAMPDIFF(DAY, t1.created_at, t2.created_at)) AS avg_delay_days
+                FROM
+                    job_tracking t1
+                JOIN
+                    job_tracking t2
+                ON
+                    t1.job_id = t2.job_id
+                AND
+                    t1.created_at < t2.created_at
+                AND
+                    NOT EXISTS (SELECT 1 
+                                FROM job_tracking t3
+                                WHERE t3.job_id = t1.job_id 
+                                AND t3.created_at > t1.created_at 
+                                AND t3.created_at < t2.created_at and t1.user_id = :user);";
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAssociative();
+    }
 }
