@@ -1,7 +1,5 @@
-import { noActionLabel } from "../app.js";
 import "../styles/synthese.css";
 import { generateColumnChart, generatePieChart } from './chart.js';
-import { generateDataTable } from './datatable.js';
 import { performSearch } from "./search.js";
 
 document.addEventListener("DOMContentLoaded", function () {

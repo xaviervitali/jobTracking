@@ -11,18 +11,17 @@
 {% endblock %}
 
 {% block body %}
-	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}" data-job-count-per-delay={{jobsCountPerDelay | json_encode}}></div>
+	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"	data-job-count-per-delay="{{ jobsCountPerDelay | json_encode }}"></div>
 </hr>
 
 <div	class="in-progress">
 	<div	class="d-flex mb-3 justify-content-xl-around flex-wrap gap-3 bg-div align-items-center">
-			<div	id="jobs-count-per-delay"	></div>
+		<div	id="jobs-count-per-delay"></div>
 
-			<div	id="chart"	class='d-flex justify-content-center'></div>
+		<div	id="chart"	class='d-flex justify-content-center'></div>
 
 	</div>
 	<div	class='bg-div'>
-
 		<div	class="d-flex justify-content-between  p-3">
 			<h4>
 				Liste des candidatures en cours
@@ -30,15 +29,14 @@
 			<div	class="search-container w-auto">
 				<input	type="text"	id="search-input"	class="form-control"	placeholder="Rechercher"></div>
 			</div>
-			<div	id="job-list"	class=" d-flex flex-wrap">
+			<div	id="job-list"	class="d-flex flex-wrap justify-content-between">
 				{% for job in jobsInProgress %}
 					{% include '/_card.html.twig' %}
-
 				{% endfor %}
 			</div>
+
+			<template	id="cardTemplate">
+				{% include '/_card.html.twig' with { job: {} } | raw %}
+			</template>
 		</div>
-		<template	id="cardTemplate">
-			{% include '/_card.html.twig' with { job: {} } | raw %}
-		</template>
-	</div>
 {% endblock %}

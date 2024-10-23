@@ -52,7 +52,7 @@
 /.web-server-pid
 
 .env
-.env.*
+.env.local
 
 
 ###> symfony/webpack-encore-bundle ###

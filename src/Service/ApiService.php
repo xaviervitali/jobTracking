@@ -3,19 +3,15 @@
 namespace App\Service;
 
 use GuzzleHttp\Client;
-use SoftCreatR\MistralAI\MistralAI;
-use Psr\Http\Message\RequestFactoryInterface;
 
 
 class ApiService
 {
-    public function __construct(private MistralAiService $mistralAiService)
-    {
-    }
+    public function __construct(private MistralAiService $mistralAiService) {}
     public function   getAdzunaJobs(array $params, $country = 'fr'): array
     {
         $params = array_merge($params, [
-            'app_id' => $_ENV['ADZUNA_API_ID'],     
+            'app_id' => $_ENV['ADZUNA_API_ID'],
             'app_key' => $_ENV['ADZUNA_API_KEY'],
         ]);
 
@@ -41,14 +37,15 @@ class ApiService
         return $this->sendRequest($url, $params, $headers);
     }
 
-    private function sendRequest(string $url, array $params = [], array $headers = []): array
+    private function sendRequest(string $url, array $params = [], array $headers = [], $method = 'get'): array
     {
         $client = new Client();
 
         try {
-            $response = $client->get($url, [
-                'query' => $params,
-                'headers' => $headers
+            $response = $client->$method($url, [
+                'query' => $method === 'get' ? $params : '',
+                'headers' => $headers,
+                'json' => $method === 'post' ? $params: []
             ]);
 
             $responseData = json_decode($response->getBody()->getContents(), true);
@@ -95,15 +92,12 @@ class ApiService
         return $this->mistralAiService->generateCoverLetter($jobDescription, $cvFilePath);
     }
 
-    public function generateThankYouPrompt(): string
-    {
-        return $this->mistralAiService->generateThankYouPrompt();
-    }
 
-    private function findClosestValue($value, $array) {
+    private function findClosestValue($value, $array)
+    {
         $closest = null;
         $minDiff = PHP_INT_MAX;
-    
+
         foreach ($array as $item) {
             $diff = abs($item - $value);
             if ($diff < $minDiff) {
@@ -111,8 +105,16 @@ class ApiService
                 $closest = $item;
             }
         }
-    
+
         return $closest;
     }
 
+    public function getJoobleJobs($params)
+    {
+        $url = 'https://fr.jooble.org/api/' . $_ENV['JOOBLE_API'];
+        return $this->sendRequest($url, $params, [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ], 'post');
+    }
 }

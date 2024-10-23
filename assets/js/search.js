@@ -21,11 +21,12 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
     filteredJobs.forEach(job => {
         let jobElement = jobCardTemplate;
         for (const key in job) {
+            
             if (job.hasOwnProperty(key)) {
                 const regex = new RegExp(`job_${key}`, 'g');
                 const value = typeof job[key] === 'string' ? job[key].slice(0, 300) : job[key]
-
-                jobElement = jobElement.replaceAll(regex, value);
+          
+                jobElement = jobElement.replaceAll(regex, value.toString());
             }
         }
         jobList.innerHTML += jobElement;
