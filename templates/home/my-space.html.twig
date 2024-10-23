@@ -16,21 +16,19 @@
   <div class="my-3 bg-div">
 
     <div class="accordion" id="mySpaceAccordion">
-    <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#userData" aria-expanded="false" aria-controls="userData">
-        Vos coordonnées
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#userData" aria-expanded="false" aria-controls="userData">
+            Vos coordonnées
+          </button>
+        </h2>
+        <div id="userData" class="accordion-collapse collapse  " data-bs-parent="#mySpaceAccordion">
+          <div class="accordion-body">
+            {{ include('user/show.html.twig') }}
 
-      </button>
-    </h2>
-    <div id="userData" class="accordion-collapse collapse  " data-bs-parent="#mySpaceAccordion">
-      <div class="accordion-body">
-      {{ include('user/show.html.twig') }}
-
-
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
           <button class="accordion-button collapsed  d-flex gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#allJobs" aria-expanded="false" aria-controls="allJobs">
@@ -151,6 +149,20 @@
             <div class="d-flex justify-content-end">
               <input type="submit" class="btn btn-link"></div>
               {{ form_end(formApiSettings) }}
+              <div>
+                <span class="text-info">
+                  Attention certains site ne prennent pas en compte :
+                </span>
+                <ul class="text-info">
+                  <li>
+                    les mots clés à exclure.
+                  </li>
+                  <li>
+                    L'ancienneté des annonces
+                  </li>
+
+                </ul>
+              </div>
             </div>
           </div>
         </div>

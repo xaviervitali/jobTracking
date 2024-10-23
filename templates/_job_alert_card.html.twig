@@ -20,7 +20,7 @@
             {{ job.title  | default('job_title') }}
         </h3>
         <p>
-            {{ job.description | default('job_description') | slice(0, 300) }}
+            {{ job.description | default('job_description') | slice(0, 300) | raw}}
             ...
         </p>
         <div class="d-flex justify-content-end gap-2 align-items-center">
