@@ -45,7 +45,7 @@ class ApiService
             $response = $client->$method($url, [
                 'query' => $method === 'get' ? $params : '',
                 'headers' => $headers,
-                'json' => $method === 'post' ? $params: []
+                'json' => $method === 'post' ? $params : []
             ]);
 
             $responseData = json_decode($response->getBody()->getContents(), true);
@@ -112,9 +112,15 @@ class ApiService
     public function getJoobleJobs($params)
     {
         $url = 'https://fr.jooble.org/api/' . $_ENV['JOOBLE_API'];
-        return $this->sendRequest($url, $params, [
+        $data =  $this->sendRequest($url, $params, [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ], 'post');
+        
+        usort($data['jobs'], function ($a, $b) {
+            return strtotime($b['updated']) - strtotime($a['updated']);
+        });
+
+        return $data;
     }
 }
