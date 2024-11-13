@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,6 +32,7 @@ class JobFormType extends AbstractType
         $builder
             ->add('recruiter', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Employeur']])
             ->add('title', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Intitulé de l\'offre']])
+            ->add('url', UrlType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Page web de l\'offre']])
             ->add('source', EntityType::class, [
                 'class' => JobSource::class,
                 'choice_label' => 'name',
@@ -44,7 +46,7 @@ class JobFormType extends AbstractType
                 'label' => 'Description du poste',
                 'attr' => [
                     'class' => "form-control mb-3 disableable",
-                    'rows' => '25'
+                    'rows' => '15'
                 ]
             ])
             ->add('created_at', DateType::class, ['label' => 'Date de candidature', 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => false, 'max' => $dateMax]])

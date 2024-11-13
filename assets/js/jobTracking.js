@@ -11,6 +11,8 @@ function modifyJob() {
   document.querySelectorAll(".action").forEach((div) => {
     div.classList.toggle("d-none");
   });
+document.querySelector('.url').classList.toggle('d-none')
+
 }
 
 function handleJobModify() {

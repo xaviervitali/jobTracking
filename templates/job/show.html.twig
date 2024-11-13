@@ -4,6 +4,10 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate' , 'action': action }}
     ) }}
     <div class="row ">
+
+        <div class="col-12 d-none url">
+        {{ form_widget(form.url, {attr: {'disabled': not isNew}}) }}
+        </div>
         <div class="col-xl col-12 align-self-end" >
             {{ form_widget(form.recruiter, {attr: {'disabled': not isNew} }) }}
         </div>
@@ -21,10 +25,16 @@
     </div>
     {{ form_label(form.offerDescription) }}
     {{ form_widget(form.offerDescription, {attr: {'disabled': not isNew} }) }}
-
-
+<div class="d-none">
+    {{ form(form.cv) }}
+</div>
+    {% if form.url.vars.value is defined %}
+    <div class="text-end me-2 fst-italic">
+        <a href="{{ form.url.vars.value }}"  target="_blank">Consulter le site</a>
+        </div>
+        {% endif %}
     {% if isNew %}
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end ">
             <button type="submit" class="btn btn-success  d-block">
                 Valider
             </button>

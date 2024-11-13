@@ -58,6 +58,9 @@ class Job
     #[ORM\ManyToOne(inversedBy: 'jobs')]
     private ?JobSource $source = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $url = null;
+
 
 
 
@@ -188,6 +191,18 @@ class Job
     public function setSource(?JobSource $source): static
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }
