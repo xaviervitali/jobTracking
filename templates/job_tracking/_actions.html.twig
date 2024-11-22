@@ -2,10 +2,18 @@
 {% set  action= path('app_new_job_tracking', {'id': job.id})  %}
 
 
-{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"true"}}) }}
-{{ form_widget(formAction) }}
-<div class="d-flex justify-content-end gap-3 mt-3">
-  <button type="submit" class="btn  d-block">Valider</button>
+{{ form_start(formAction, {attr: {'novalidate': 'novalidate', 'action': action, 'data-turbo':"true" }} ) }}
+
+<div class="d-flex  flex-wrap justify-content-between align-items-center">
+<div class="col-xxl-6 col-12">
+  {{ form(formAction.name) }}
+</div>
+<div  class="col-xxl-5 col-12">
+  {{ form_widget(formAction.createdAt) }}
+</div>
+<div  class="ms-auto text-align-end">
+  <button type="submit" class="btn  ">Valider</button>
+</div>
 </div>
 {{ form_end(formAction) }}
   

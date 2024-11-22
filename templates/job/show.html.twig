@@ -28,7 +28,7 @@
 <div class="d-none">
     {{ form(form.cv) }}
 </div>
-    {% if form.url.vars.value is defined %}
+    {% if not form.url.vars.value  == "" %}
     <div class="text-end me-2 fst-italic">
         <a href="{{ form.url.vars.value }}"  target="_blank">Consulter le site</a>
         </div>

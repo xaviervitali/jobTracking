@@ -14,7 +14,7 @@
 {% block body %}
   {% if job.notes | length  > 0 %}
 
-    <div class="d-flex gap-2 flex-wrap my-3 justify-content-between">
+    <div class="d-flex gap-2 flex-wrap my-3">
       {% for note in job.notes %}
         {% include "_postit.html.twig" with {
     createdAt :note.createdAt,
@@ -45,7 +45,7 @@
 
           <div class="bg-div mb-2">
             <h4>
-              Action du jour
+              Nouvelle action
             </h4>
             {% include "job_tracking/_actions.html.twig" %}
           </div>

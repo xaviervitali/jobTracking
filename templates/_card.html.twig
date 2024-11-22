@@ -8,9 +8,9 @@
         </h6>
         <p class="card-text">
             {{ job.action_name  | default('job_action_name' ) }}
-            il y a
-            {{ job.delai  | default('job_delai') }}
-            j
+       
+            {{ job.delai  | default('job_delai') | formatDelay }}
+        
         </p>
         <p>
             {{ job.note_count | default('job_note_count') }}

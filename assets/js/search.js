@@ -26,8 +26,10 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
             
             if (job.hasOwnProperty(key)) {
                 const regex = new RegExp(`job_${key}`, 'gi');
-                const value = typeof job[key] === 'string' ? job[key].slice(0, 300) : job[key]
-          
+                let value = typeof job[key] === 'string' ? job[key].slice(0, 300) : job[key]
+                if (key === 'delai') {
+                    value = formatDelay(value);
+                }
            
                 
                 jobElement = jobElement.replaceAll(regex, titlelize(value.toString()));
@@ -37,4 +39,26 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
         
         jobList.innerHTML += jobElement;
     });
+}
+
+function formatDelay(delay) {
+
+
+    let sentence = "aujourd'hui";
+    const absDelay = Math.abs(delay);
+    let jourStr = "jour";
+
+    if (absDelay >= 1) {
+        jourStr += "s";
+    }
+
+    if (delay > 0) {
+        sentence = `il y a ${absDelay} ${jourStr}`;
+    }
+
+    if (delay < 0) {
+        sentence = `dans ${absDelay} ${jourStr}`;
+    }
+
+    return sentence;
 }

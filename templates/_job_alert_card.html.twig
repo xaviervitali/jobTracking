@@ -31,8 +31,8 @@
         </p>
         <div class="d-flex justify-content-end gap-2 align-items-center">
 
-            <button class='d-block btn btn-link' onclick="newJob({{job|json_encode}})">
-                Ajouter la candidature
+            {# <button class='d-block btn btn-link' onclick="newJob({{job|json_encode}})">
+                Ajouter la candidature #}
             </button>
             <a class='d-block' href="{{ job.link | default('job_link') }}" target="_blank">
                 Visualiser

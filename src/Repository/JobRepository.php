@@ -117,7 +117,32 @@ ORDER BY
 
     public function getLonguestDelai(User $user)
     {
-        $sql = 'SELECT id, recruiter,title, count_action, MAX(delai) AS delai , set_closed FROM ( SELECT j.id, j.recruiter, j.title, count(jt.action_id) as count_action,a.set_closed ,DATEDIFF(MAX(jt.created_at), j.created_at) AS delai FROM job j INNER JOIN job_tracking jt ON jt.job_id = j.id INNER JOIN action a ON a.id = jt.action_id WHERE j.user_id = :user GROUP BY j.id) AS subquery;';
+        $sql = "SELECT
+    j.id,
+    j.recruiter,
+    j.title,
+    COUNT(jt.action_id) AS count_action,
+    a.set_closed,
+    CONVERT(
+                IF(a.set_closed = 1,
+                UNIX_TIMESTAMP(MAX(jt.created_at)),
+                DATEDIFF(MAX(jt.created_at), j.created_at)
+                ),
+                SIGNED INTEGER
+            ) AS delai
+        FROM
+            `job` j
+        INNER JOIN
+            `job_tracking` jt ON jt.job_id = j.id
+        INNER JOIN
+            `action` a ON a.id = jt.action_id
+        WHERE
+            j.user_id = :user
+        GROUP BY
+            j.id
+        ORDER BY
+            delai DESC
+            LIMIT 1;";
 
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
         return $stmt->fetchAssociative();
