@@ -33,6 +33,6 @@ export function createGoogleCalendarLink(event) {
     const { maxCreatedAt, recruiter, jobUrl, action_name } = event;
     const dlName = `${action_name} ${recruiter}`;
     const day = maxCreatedAt.split(" ").join('T').replace(/\W/g, '');
-    const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(dlName)}&dates=${day}/${day}&details=${encodeURIComponent(jobUrl)}}`;
+    const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(dlName)}&dates=${day}/${day}&details=${encodeURIComponent(jobUrl)}`;
     window.open(googleCalendarLink) 
 }

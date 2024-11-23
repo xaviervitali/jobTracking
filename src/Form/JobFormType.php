@@ -32,7 +32,7 @@ class JobFormType extends AbstractType
         $builder
             ->add('recruiter', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Employeur']])
             ->add('title', TextType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Intitulé de l\'offre']])
-            ->add('url', UrlType::class, ['label' => false, 'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Page web de l\'offre']])
+            ->add('url', UrlType::class, ['label' => false, 'required'=>false ,'attr' => ['class' => "form-control mb-3 disableable", 'placeholder' => 'Page web de l\'offre']])
             ->add('source', EntityType::class, [
                 'class' => JobSource::class,
                 'choice_label' => 'name',
