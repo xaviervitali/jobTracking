@@ -1,6 +1,5 @@
 export function createIcsFile(event) {
     const {  maxCreatedAt, recruiter, jobUrl, action_name } = event;
-    debugger
     const day =  maxCreatedAt.split(" ").join('T').replace(/\W/g, '');
     const dlName = `${action_name} ${recruiter}`;
 
@@ -31,10 +30,9 @@ export function createIcsFile(event) {
 }
 
 export function createGoogleCalendarLink(event) {
-    const { title, start, end, description, location } = event;
-    debugger
-    const startTime = start.toISOString().replace(/-|:|\.\d+/g, "");
-    const endTime = end.toISOString().replace(/-|:|\.\d+/g, "");
-    const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}`;
-    return googleCalendarLink;
+    const { maxCreatedAt, recruiter, jobUrl, action_name } = event;
+    const dlName = `${action_name} ${recruiter}`;
+    const day = maxCreatedAt.split(" ").join('T').replace(/\W/g, '');
+    const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(dlName)}&dates=${day}/${day}&details=${encodeURIComponent(jobUrl)}}`;
+    window.open(googleCalendarLink) 
 }

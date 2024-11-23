@@ -1,0 +1,9 @@
+<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+    <div class="bg-{{ type }} toast-div" style="height: 1rem; width: 1rem; margin-right: 1rem;"></div>
+    <strong class="me-auto">{{ title|default('Information') }}</strong>
+    <small>{{ subtitle|default('') }}</small>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">{{ message }}</div>
+</div>

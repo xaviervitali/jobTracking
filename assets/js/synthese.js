@@ -6,21 +6,25 @@ import { performSearch } from "./search.js";
 document.addEventListener("DOMContentLoaded", function () {
 
 
+
   document.querySelectorAll(".btn.cal").forEach(btn => btn.addEventListener('click', function (event) {
     const button = event.target;
+
     const job = JSON.parse(button.getAttribute("data-job"))
     job.jobUrl = window.location.origin + button.getAttribute("data-job-url")
+   
     switch (button.getAttribute("data-target")) {
       case "google":
         createGoogleCalendarLink(job)
         break;
-        case "apple":
-          createIcsFile(job)
-          break;
+      case "apple":
+        createIcsFile(job)
+        break;
       default:
         break;
     }
   }))
+  
   const tableDataSelector = document.querySelector(".js-table-data");
   const tableData = JSON.parse(tableDataSelector.getAttribute("data-table-items"));
 
@@ -41,7 +45,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   generatePieChart(labels, series, "Synthèse graphique", "#chart", widthByChart)
 
-  document.getElementById('search-input').addEventListener('keyup', e => performSearch(e.target.value, tableData, 'job-list', ['recruiter', 'title']))
+  document.getElementById('search-input').addEventListener('keyup', e => {
+    performSearch(e.target.value, tableData, 'job-list', ['recruiter', 'title'])
+
+  })
 
 });
+
 

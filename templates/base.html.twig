@@ -1,164 +1,131 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta	charset="UTF-8">
-		<title>
-			{% block title %}
-				Job tracking
-			{% endblock %}
-		</title>
-		<link	rel="icon"	type="image/jpg"	href="{{ asset('img/logo.jpg') }}" />
-		{{ encore_entry_link_tags('app') }}
-		<link	rel="stylesheet"	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"	integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="	crossorigin="anonymous"	referrerpolicy="no-referrer" />
-		{% block stylesheets %}{% endblock %}
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      {% block title %}
+        Job tracking
+      {% endblock %}
+    </title>
+    <link rel="icon" type="image/jpg" href="{{ asset('img/logo.jpg') }}" />
+    {{ encore_entry_link_tags('app') }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% block stylesheets %}
 
-	</head>
+    {% endblock %}
+  </head>
 
-	<body>
+  <body>
+    {% block header %}
+      {% if app.user %}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+          <a class="navbar-brand" href="{{ url('app_synthese') }}">
+            <img src="/assets/img/logo.jpg" class="brand-logo" alt="brand logo" />
+            Bienvenue
+            {{ app.user.firstname }}
+          </a>
+          <a href="{{ path('candidature_new') }}"><strong class="text-center">Ajouter une candidature</strong></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link {% if app.request.get('_route') == 'app_synthese' %}{% endif %}" aria-current="page" href="{{ url('app_synthese') }}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if app.request.get('_route') == 'app_job_alert' %}{% endif %}" aria-current="page" href="{{ url('app_job_alert') }}">Offres d'emploi</a>
+              </li>
 
-		{% block header %}
-			{% if app.user %}
+              <li class="nav-item">
+                <a class="nav-link {% if app.request.get('_route') == 'app_job_index' %}{% endif %}" aria-current="page" href="{{ url('app_job_index') }}">Tableau de bord</a>
+              </li>
 
-				<nav	class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
-					<a	class="navbar-brand"	href="{{ url( 'app_synthese') }}">
-						<img	src="/assets/img/logo.jpg"	class="brand-logo"	alt="brand logo">
-						Bienvenue
-						{{ app.user.firstname }}
+              <li class="nav-item">
+                <a class="nav-link {% if app.request.get('_route') == 'app_user_show' %}{% endif %}" aria-current="page" href="{{ url('app_user_show') }}">Mon espace</a>
+              </li>
+              {% if 'ROLE_ADMIN' in app.user.roles %}
+                <li class="nav-item">
+                  <a class="nav-link {% if app.request.get('_route') == 'app_admin_index' %}{% endif %}" aria-current="page" href="{{ url('app_admin_index') }}">Admin</a>
+                </li>
+              {% endif %}
 
-					</a>
-					<a	href="{{ path('candidature_new') }}">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url('app_logout') }}">Se deconnecter</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      {% endif %}
+    {% endblock %}
 
-						<strong	class="text-center ">
-							Ajouter une candidature
-						</strong>
-					</a>
-					<button	class="navbar-toggler"	type="button"	data-bs-toggle="collapse"	data-bs-target="#navbarNav"	aria-controls="navbarNav"	aria-expanded="false"	aria-label="Toggle navigation">
-						<span	class="navbar-toggler-icon"></span>
-					</button>
-					<div	class="collapse navbar-collapse justify-content-end"	id="navbarNav">
-						<ul	class="navbar-nav">
-							<li	class="nav-item">
-								<a	class="nav-link {% if app.request.get('_route') == 'app_synthese' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_synthese') }}">
-									Accueil
-								</a>
-							</li>
-							<li	class="nav-item">
-								<a	class="nav-link {% if app.request.get('_route') == 'app_job_alert' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_alert') }}">
-									Offres d'emploi
-								</a>
-							</li>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for type, messages in app.session.flashBag.all %}
+          {% for message in messages %}
+            {% if type == 'error' %}
+              {% set type = 'danger' %}
+            {% endif %}
+            {% if type == 'message' %}
+              {% set type = 'info' %}
+            {% endif %}
+            {% include '_toast.html.twig' %}
+          {% endfor %}
+        {% endfor %}
+        {% block toasts %}{% endblock %}
+      </div>
+    {% if app.user %}
 
-							<li	class="nav-item">
-								<a	class="nav-link {% if app.request.get('_route') == 'app_job_index' %}active{% endif %}"	aria-current="page"	href="{{ url( 'app_job_index') }}">
-									Tableau de bord
-								</a>
-							</li>
+      <main class="container-fluid">
+        {% block body %}
 
-							<li	class="nav-item">
+        {% endblock %}
+      </main>
+    {% else %}
+      {% block guest_content %}
 
-								<a	class="nav-link {% if app.request.get('_route') ==	'app_user_show' %}active{% endif %}"	aria-current="page"	href="{{ url( 	'app_user_show') }}">
-									Mon espace
-								</a>
-							</li>
-							{% if 'ROLE_ADMIN' in app.user.roles %}
+      {% endblock %}
+    {% endif %}
 
-								<li	class="nav-item">
+    {% block footer %}
+      <footer>
+        <nav class="navbar bg-body-tertiary fixed-bottom">
+          <div class="container-fluid d-flex justify-content-center gap-3 justify-content-lg-start">
+            {% if app.user %}
+              <div class="navbar-text">
+                <i class="fa-regular fa-copyright"></i>
+                Xavier Vitali 2024
+              </div>
+            {% endif %}
+            <div>
+              <a class=" {% if app.request.get('_route') == 'app_about' %}{% endif %}" href="{{ url('app_about') }}">À propos</a>
+            </div>
+            <div>
+              <a href="{{ url('app_rgpd') }}" class=" {% if app.request.get('_route') == 'app_rgpd' %}{% endif %}">Mentions légales</a>
+            </div>
+            <div>
+              <a href="https://github.com/xaviervitali/jobTracking" target="_blank">
+                <i class="fa-brands fa-github"></i>
+                Github
+              </a>
+            </div>
 
-									<a	class="nav-link {% if app.request.get('_route') ==	'app_admin_index' %}active{% endif %}"	aria-current="page"	href="{{ url( 	'app_admin_index') }}">
-										Admin
-									</a>
-								</li>
-							{% endif %}
+            <div>
+              <a href="https://www.linkedin.com/in/xavier-vitali" target="_blank">
+                <i class="fa-brands fa-linkedin-in"></i>
+                Linkedin
+              </a>
+            </div>
+          </div>
+        </nav>
+      </footer>
+    {% endblock %}
 
-							<li	class="nav-item">
-								<a	class="nav-link"	href="{{ url( 'app_logout') }}">
-									Se deconnecter
-								</a>
-							</li>
-						</ul>
-					</div>
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    {% block cookies %}
+      {% include 'cookies.html.twig' %}
+    {% endblock %}
 
-				</nav>
-			{% endif %}
-		{% endblock %}
-		{% for type, messages in app.session.flashBag.all %}
-			{% for message in messages %}
-				{% if type == 'error' %}
-					{% set type = 'danger' %}
-				{% endif %}
-				{% if type == 'message' %}
-					{% set type = 'info' %}
-				{% endif %}
-				<div	class="alert alert-{{ type }} alert-dismissible fade show"	role="alert">
-					{{ message|raw }}
-					<button	type="button"	class="btn-close"	data-bs-dismiss="alert"	aria-label="Close"></button>
-				</div>
-			{% endfor %}
-		{% endfor %}
-		{% if app.user %}
+    {% block javascripts %}
 
-			<main	class="container-fluid ">
-			{% endif %}
-
-			{% block body %}{% endblock %}
-
-			{% if app.user %}
-
-			</main>
-
-		{% endif %}
-
-		{% block footer %}
-			<footer>
-				<nav	class="navbar bg-body-tertiary fixed-bottom">
-					<div	class="container-fluid d-flex justify-content-center gap-3 justify-content-lg-start">
-						{% if app.user %}
-							<div	class="navbar-text ">
-								<i	class="fa-regular fa-copyright"></i>
-								Xavier Vitali 2024
-							</div>
-						{% endif %}
-						<div>
-							<a	class=" {% if app.request.get('_route') == 'app_about' %}fw-bold{% endif %}"	href="{{ url( 'app_about') }}">
-								À propos
-							</a>
-
-						</div>
-						<div>
-							<a	href="{{ url( 'app_rgpd') }}"	class=" {% if app.request.get('_route') == 'app_rgpd' %}fw-bold{% endif %}">
-								Mentions légales
-							</a>
-
-						</div>
-						<div>
-							<a	href="https://github.com/xaviervitali/jobTracking"	target="_blank">
-								<i	class="fa-brands fa-github"></i>
-								Github
-							</a>
-
-						</div>
-
-						<div>
-							<a	href="https://www.linkedin.com/in/xavier-vitali"	target="_blank">
-								<i	class="fa-brands fa-linkedin-in"></i>
-								Linkedin
-							</a>
-
-						</div>
-					</div>
-				</nav>
-
-			</footer>
-		{% endblock %}
-		
-		{{ encore_entry_script_tags('app') }}
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-		{% block cookies %}
-		{% include 'cookies.html.twig' %}
-
-		{% endblock %}
-
-		{% block javascripts %}{% endblock %}
-
-	</body>
+    {% endblock %}
+  </body>
 </html>
