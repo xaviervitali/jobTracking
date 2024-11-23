@@ -28,10 +28,12 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
                 const regex = new RegExp(`job_${key}`, 'gi');
                 let value = typeof job[key] === 'string' ? job[key].slice(0, 300) : job[key]
                 if (key === 'delai') {
+                    if (value < 0) {
+                        jobElement = jobElement.replace('d-none', '').replace('data-job="[]"', `data-job="${JSON.stringify(job).replace(/"/g, "&quot;")}"`);
+                    }
                     value = formatDelay(value);
+              
                 }
-           
-                
                 jobElement = jobElement.replaceAll(regex, titlelize(value.toString()));
             }
         }
@@ -44,21 +46,20 @@ export function performSearch(query, jobsArray, selectorId = 'job-list', fields 
 function formatDelay(delay) {
 
 
-    let sentence = "aujourd'hui";
-    const absDelay = Math.abs(delay);
-    let jourStr = "jour";
+    
+    if (delay === 0) {
+        return "aujourd'hui"
+    }
 
-    if (absDelay >= 1) {
+    const absDelay = Math.abs(delay);
+    
+    let jourStr = "jour";
+    
+    if (absDelay > 1) {
         jourStr += "s";
     }
 
-    if (delay > 0) {
-        sentence = `il y a ${absDelay} ${jourStr}`;
-    }
-
-    if (delay < 0) {
-        sentence = `dans ${absDelay} ${jourStr}`;
-    }
-
-    return sentence;
+    const delayStr = ` ${absDelay} ${jourStr}`
+    return (delay > 0 ? `il y a` : `dans`) + delayStr
+    
 }

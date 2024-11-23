@@ -16,28 +16,25 @@ class DelaiFilter extends AbstractExtension
 
     public function formatDelay($delay)
     {
-        
+
 
         if (gettype($delay) === "string") {
             return $delay;
-            
+
         }
         
-        $sentence = "aujourd'hui";
+        if ($delay === 0) {
+            return "aujourd'hui";
+        }
+
         $absDelay = abs($delay);
         $jourStr = "jour";
 
-        if ($absDelay >= 1) {
+        if ($absDelay > 1) {
             $jourStr .= "s";
         }
 
-        if ($delay > 0) {
-            $sentence = "il y a $absDelay $jourStr";
-        }
-
-        if ($delay < 0) {
-            $sentence = "dans $absDelay $jourStr";
-        }
+        $sentence = ($delay > 0 ? "il y a " : "dans") . " $absDelay $jourStr";
 
         return $sentence;
     }

@@ -1,26 +1,32 @@
-<div class=" card m-3 border rounded bg-white  col-xxl-2 col-xl-3 col-lg-4 col-md-5 col-11">
-    <div class="card-body">
-        <h5 class="card-title">
-            {{ (job.recruiter | default('job_recruiter') |title  ) }}
-        </h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">
-            {{ job.title  | default('job_title') |title }}
-        </h6>
-        <p class="card-text">
-            {{ job.action_name  | default('job_action_name' ) }}
+<div class="card m-3 border rounded bg-white col-xxl-2 col-xl-3 col-lg-4 col-md-5 col-11">
+  <div class="card-body d-flex flex-column justify-content-between">
+    <h5 class="card-title">{{ job.recruiter|default('job_recruiter')|title }}</h5>
+    <h6 class="card-subtitle mb-2 text-body-secondary">{{ job.title|default('job_title')|title }}</h6>
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="card-text">{{ job.action_name|default('job_action_name') }}
+        {{ job.delai|default('job_delai')|formatDelay }}</div>
+      <div class="calendar  {% if job.delai is defined and job.delai < 0 %}  d-block  {%else%}   d-none  {% endif %}" >
        
-            {{ job.delai  | default('job_delai') | formatDelay }}
-        
-        </p>
-        <p>
-            {{ job.note_count | default('job_note_count') }}
-            {{   job.note_count | default('job_note_count') |plural('postit', 'postits')}}
-        </p>
-        <p class="text-end">
-        <a href="{{ path('app_job_tracking',  {'id':job.id | default('job_id')}) }}" >
-            Visualiser
-        </a>
-    </p>
-
+          <div class="dropdown" data-bs-toggle="tooltip" data-bs-title="Ajouter à votre calendrier">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-calendar-plus"></i></button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="btn cal" data-target="google" data-job="{{ job|json_encode }}" data-job-url="{{ path('app_job_tracking', { id: job.id|default('job_id') }) }}" ><i class="fa-brands fa-google" ></i> Google</button>
+              </li>
+              <li>
+                <button class="btn cal" data-job="{{ job|json_encode }}" data-job-url="{{ path('app_job_tracking', { id: job.id|default('job_id') }) }}" data-target="apple"><i class="fa-brands fa-apple"></i> iCalc</button>
+              </li>
+            </ul>
+          </div>
+  
+      </div>
     </div>
+
+    <p>{{ job.note_count|default('job_note_count') }}
+      {{ job.note_count|default('job_note_count')|plural('postit', 'postits') }}</p>
+
+    <p class="text-end">
+      <a href="{{ path('app_job_tracking', { id: job.id|default('job_id') }) }}">Visualiser</a>
+    </p>
+  </div>
 </div>
