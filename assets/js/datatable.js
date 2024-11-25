@@ -61,8 +61,7 @@ export function generateDataTable(
         createdRow: function (row, data, dataIndex) {
 
             $(row).find('td').addClass('align-content-center');
-
-            if ('set_closed' in data && !!data.set_closed) {
+            if ('set_closed' in data && data.set_closed === '1') {
                 $(row).find('td').addClass('color-grey');
             }
         },

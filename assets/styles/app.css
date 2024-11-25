@@ -22,6 +22,7 @@ body {
   background-color: #eee !important;
   border-radius: 0.5rem !important;
   padding: 1rem !important;
+  overflow: auto;
   /* word-wrap: break-word;
   word-break: break-all; */
 }
@@ -102,4 +103,7 @@ a, .btn-link{
 
 .text-info {
   color: var(--bs-info) !important;
+}
+div.dt-container{
+  overflow: auto !important;
 }
