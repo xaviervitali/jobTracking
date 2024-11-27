@@ -11,6 +11,7 @@ use App\Form\JobSourceType;
 use App\Repository\ActionRepository;
 use App\Repository\JobApiServicesRepository;
 use App\Repository\JobSourceRepository;
+use App\Repository\UserRepository;
 use App\Service\JobService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +26,7 @@ class AdminController extends AbstractController
 {
 
     #[Route('/index', name: 'index')]
-    public function index(Request $request, EntityManagerInterface $entityManager, JobSourceRepository $jobSourceRepository,  SerializerInterface $serializer,JobApiServicesRepository $jobApiServicesRepository, ActionRepository $actionRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, JobSourceRepository $jobSourceRepository,  SerializerInterface $serializer,JobApiServicesRepository $jobApiServicesRepository, ActionRepository $actionRepository, UserRepository $userRepository): Response
     {
         $jobApi = new JobApiServices();
         $form = $this->createForm(JobApiServicesType::class, $jobApi);
@@ -33,6 +34,9 @@ class AdminController extends AbstractController
 
         $allJobApiServices = $jobApiServicesRepository->findAll();
         $allJobApiServicesJson = $serializer->serialize($allJobApiServices, 'json', ['groups' => ['api_service']] );
+
+        $allUsers = $userRepository->findAll();
+        $allUsersJson = $serializer->serialize($allUsers, 'json', ['groups' => ['user_show']] );
 
         $jobSources = $jobSourceRepository->findAll();
         foreach ($jobSources as $jobSource) {
@@ -57,6 +61,7 @@ class AdminController extends AbstractController
             'allJobApiServicesJson'=>$allJobApiServicesJson,
             'allJobSourcesJson'=>$allJobSourcesJson,
             'allActionsJson'=>$allActionsJson,
+            'allUsersJson'=>$allUsersJson,
 
         ]);
 

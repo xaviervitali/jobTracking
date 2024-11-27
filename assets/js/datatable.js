@@ -15,6 +15,7 @@ export function generateDataTable(
     createLink,
     path) {
 
+    
     tableData = tableData.map(item => {
         let newItem = {};
         for (const key in item) {
@@ -30,7 +31,6 @@ export function generateDataTable(
             newLink.textContent = 'Visualiser';
             newItem = {
                 ...newItem,
-                delai: getDelai(item),
                 link: newLink.outerHTML
             }
         }
@@ -61,7 +61,8 @@ export function generateDataTable(
         createdRow: function (row, data, dataIndex) {
 
             $(row).find('td').addClass('align-content-center');
-            if ('set_closed' in data && data.set_closed === '1') {
+            if ('set_closed' in data && data.set_closed === 'true') {
+
                 $(row).find('td').addClass('color-grey');
             }
         },

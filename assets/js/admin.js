@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const tableDatajobApi = JSON.parse(tableDataSelector.getAttribute("data-table-job-api"));
     const tableDataJobSource = JSON.parse(tableDataSelector.getAttribute("data-table-job-source"));
     const tableDataAction = JSON.parse(tableDataSelector.getAttribute("data-table-action"));
-
+    const tableUsers = JSON.parse(tableDataSelector.getAttribute("data-table-users"));
 
     generateDataTable(
         tableDatajobApi,
@@ -50,6 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
+generateDataTable(tableUsers, ['email', 'roles'],            '#users-table',)
 
 })

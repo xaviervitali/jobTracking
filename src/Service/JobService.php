@@ -9,56 +9,75 @@ use DateTimeImmutable;
 
 class JobService
 {
-    private array $delays  = [];
+    private array $delays = [];
     private DateTimeImmutable $minDate;
 
 
-    public function __construct(private User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository,)
+    public function __construct(private User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository, )
     {
         $this->minDate = $minDate;
     }
 
 
-
-
-
-    public function getJobsInProgress()
+    public function getJobsByUser()
     {
- 
-        return     $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user));
+        $userJobs = [];
+        $userJobsRepo = $this->jobRepository->findBy(['user' => $this->user]);
+
+        foreach ($userJobsRepo as $userJob) {
+            $job = [];
+
+            $jobTrackingsArray = $userJob->getJobTracking()->toArray();
+            usort($jobTrackingsArray, function ($a, $b) {
+                return $b->getCreatedAt() <=> $a->getCreatedAt();
+            });
+            $lastJobTracking = $jobTrackingsArray[0];
+
+            $action = $lastJobTracking->getAction();
+            $maxCreatedAt = $lastJobTracking->getCreatedAt();
+            
+            if ($action->isSetClosed()) {
+                $origin = $userJob->getCreatedAt();
+                $interval = $origin->diff($maxCreatedAt);
+            } else {
+                $target = new DateTimeImmutable();
+                $interval = $maxCreatedAt->diff($target);
+            }
+
+            $job['id'] = $userJob->getId();
+            $job['recruiter'] = $userJob->getRecruiter();
+            $job['title'] = $userJob->getTitle();
+            $job['name'] = $action->getName();
+            $job['set_closed'] = boolval($action->isSetClosed());
+            $job['created_at'] = $maxCreatedAt;
+            $job['delai'] = $interval->format('%a');
+            $job['note_count'] = count($userJob->getNotes());
+            $userJobs[] = $job;
+        }
+        return $userJobs;
+
     }
 
-    public function getClosedJob()
-    {
-        
-        return  $this->mapFindJobsInProgressOrClosedByUserRepo($this->jobRepository->findJobsInProgressOrClosedByUser($this->user, false));
-    }
 
-    
-
-    public function  getJobsPerMonth()
+    public function getJobsPerMonth()
     {
         $jobsPerMonth = $this->jobRepository->getJobsPerMonth($this->user);
         return $this->fillJobsPerMonth($jobsPerMonth);
     }
 
-    public function  getClosedJobsPerMonth()
+    public function getClosedJobsPerMonth()
     {
         $jobsPerMonth = $this->jobRepository->getClosedJobsPerMonth($this->user);
         return $this->fillJobsPerMonth($jobsPerMonth);
     }
 
-    public function  getCurrentWeekJobs()
+    public function getCurrentWeekJobs()
     {
         $jobsPerMonth = $this->jobRepository->getCurrentWeekJob($this->user);
         return $this->fillJobsWeek($jobsPerMonth);
     }
 
 
-    public function getDelays()
-    {
-        return $this->delays;
-    }
 
     private function getDateBetween()
     {
@@ -74,38 +93,39 @@ class JobService
         return $completeDates;
     }
 
-    
+
     private function fillJobsPerMonth($jobs)
     {
 
- 
+
 
         $jobsPerMonth = [];
 
         foreach ($this->getDateBetween() as $month) {
 
             $count = 0;
-        
-          $currentMonth =  array_filter(
-                 $jobs,
-                function ( $job) use ($month) {
+
+            $currentMonth = array_filter(
+                $jobs,
+                function ($job) use ($month) {
                     return $job['yearmonth'] === $month;
                 }
             );
 
-            if(count( $currentMonth )>0){
+            if (count($currentMonth) > 0) {
                 $count = $currentMonth[array_key_first($currentMonth)]['count'];
             }
             $jobsPerMonth[$month] = $count;
 
-         
+
         }
         return $jobsPerMonth;
     }
 
-    private function fillJobsWeek($jobs){
+    private function fillJobsWeek($jobs)
+    {
 
-        $jobsPerWeek =[];
+        $jobsPerWeek = [];
         $weekDates = [];
         $start = new DateTime();
         $start->modify('-1 week');
@@ -116,32 +136,24 @@ class JobService
             $start->modify('+1 day'); // Ajoute un mois
         }
 
-        foreach($weekDates as $weekDate){
+        foreach ($weekDates as $weekDate) {
             $currentDay = array_filter(
                 $jobs,
                 function ($job) use ($weekDate) {
-                    $createdAt = New DateTime($job['created_at']);
-                   return  $createdAt->format('Y-m-d') === $weekDate;
-               });
+                    $createdAt = new DateTime($job['created_at']);
+                    return $createdAt->format('Y-m-d') === $weekDate;
+                }
+            );
             $count = 0;
-               if(count( $currentDay )>0){
+            if (count($currentDay) > 0) {
                 $count = $currentDay[array_key_first($currentDay)]['count'];
             }
             $jobsPerWeek[$weekDate] = $count;
-           ;
+            ;
         }
 
         return $jobsPerWeek;
 
     }
 
-    private function mapFindJobsInProgressOrClosedByUserRepo($repo)
-    {
-        $jobs = [];
-        foreach ($repo as $job) {
-            $jobs[] = $job[0];
-        }
-
-        return $jobs;
-    }
 }

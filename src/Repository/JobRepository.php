@@ -12,7 +12,6 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<Job>
  */
 class JobRepository extends ServiceEntityRepository
-
 {
 
     private $connection;
@@ -43,7 +42,12 @@ class JobRepository extends ServiceEntityRepository
     {
 
 
-        $sql = "SELECT j.id, j.title, j.created_at, j.recruiter, a.name as action_name, a.set_closed, MAX(jt.created_at) AS maxCreatedAt, j.offer_description AS description, DATEDIFF( CURRENT_DATE, MAX(jt.created_at) ) AS delai ,   COALESCE(COUNT(note.id), 0) as note_count  FROM job j inner JOIN job_tracking jt ON jt.job_id = j.id inner JOIN action a ON a.id = jt.action_id left join note on note.job_id = j.id WHERE j.user_id =  :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) ) AND ( (:inProgress = 1 AND (jt.id IS NULL OR a.set_closed = 0 OR a.set_closed IS NULL)) OR (:inProgress = 0 AND (jt.id IS NOT NULL AND a.set_closed = 1)) ) GROUP BY j.id, a.name, a.set_closed, j.title, j.created_at, j.recruiter ORDER BY delai DESC;";
+        $sql = "SELECT j.id, j.title, j.created_at, j.recruiter, a.name as action_name, a.set_closed, MAX(jt.created_at) AS maxCreatedAt, j.offer_description AS description, 
+        DATEDIFF( CURRENT_DATE, MAX(jt.created_at) ) AS delai ,   
+        COALESCE(COUNT(note.id), 0) as note_count  
+        FROM job j 
+        inner JOIN job_tracking jt ON jt.job_id = j.id 
+        inner JOIN action a ON a.id = jt.action_id left join note on note.job_id = j.id WHERE j.user_id =  :user AND ( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) ) AND ( (:inProgress = 1 AND (jt.id IS NULL OR a.set_closed = 0 OR a.set_closed IS NULL)) OR (:inProgress = 0 AND (jt.id IS NOT NULL AND a.set_closed = 1)) ) GROUP BY j.id, a.name, a.set_closed, j.title, j.created_at, j.recruiter ORDER BY delai DESC;";
 
 
 
@@ -52,6 +56,12 @@ class JobRepository extends ServiceEntityRepository
         return $stmt->fetchAllAssociative();
     }
 
+    public function findJobsInProgressByUser(User $user)
+    {
+
+
+        return $this->getUserJobsDelays($user, ['( jt.created_at = ( SELECT MAX(jt2.created_at) FROM job_tracking jt2 WHERE jt2.job_id = j.id ) ) AND ( (1 = 1 AND (jt.id IS NULL OR a.set_closed = 0 OR a.set_closed IS NULL)) OR (1 = 0 AND (jt.id IS NOT NULL AND a.set_closed = 1)) ) '], 'delai DESC');
+    }
 
 
     public function getJobsPerMonth(User $user)
@@ -87,7 +97,7 @@ ORDER BY
         $sql = "select sum(action.set_closed) as sum from job_tracking INNER join action on action.id = job_tracking.action_id where job_tracking.job_id = :job;";
         $stmt = $this->connection->executeQuery($sql, params: ['job' => $job->getId()]);
 
-        $queryArr =  $stmt->fetchAllAssociative()[0];
+        $queryArr = $stmt->fetchAllAssociative()[0];
         return !!$queryArr['sum'];
     }
 
@@ -117,35 +127,7 @@ ORDER BY
 
     public function getLonguestDelai(User $user)
     {
-        $sql = "SELECT
-    j.id,
-    j.recruiter,
-    j.title,
-    COUNT(jt.action_id) AS count_action,
-    a.set_closed,
-    CONVERT(
-                IF(a.set_closed = 1,
-                UNIX_TIMESTAMP(MAX(jt.created_at)),
-                DATEDIFF(MAX(jt.created_at), j.created_at)
-                ),
-                SIGNED INTEGER
-            ) AS delai
-        FROM
-            `job` j
-        INNER JOIN
-            `job_tracking` jt ON jt.job_id = j.id
-        INNER JOIN
-            `action` a ON a.id = jt.action_id
-        WHERE
-            j.user_id = :user
-        GROUP BY
-            j.id
-        ORDER BY
-            delai DESC
-            LIMIT 1;";
-
-        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
-        return $stmt->fetchAssociative();
+        return $this->getUserJobsDelays($user, [],'delai DESC', 1)[0];
     }
 
     public function getMostProlificWeekDay(User $user)
@@ -189,5 +171,67 @@ ORDER BY
                                 AND t3.created_at < t2.created_at and t1.user_id = :user);";
         $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
         return $stmt->fetchAssociative();
+    }
+
+
+
+    /**
+     * Summary of getUserJobsDelays
+     * @name tables action : a, job : j, job_tracking : jt
+     * @param \App\Entity\User $user
+     * @param array $andWhere
+     * @param string $order
+     * @param integer $limit
+     * @return \Doctrine\DBAL\Result
+     * 
+     *      
+     */
+    public function getUserJobsDelays(User $user, $andWhere=[], $order = null, $limit = null):array
+    {
+        $where = implode( ' AND ', array_merge(["j.user_id = :user"], $andWhere) );
+
+        
+        $sql = "SELECT
+    j.id,
+    j.recruiter,
+    j.title,
+    a.name,
+    a.set_closed,
+    jt.created_at,
+    CONVERT(
+                IF(
+                    a.set_closed = 1,
+                DATEDIFF(MAX(jt.created_at), MIN(jt.created_at)),
+                DATEDIFF(NOW(), MAX(jt.created_at))
+                ),
+                SIGNED INTEGER
+            ) AS delai,
+
+            count(DISTINCT(n.id)) note_count
+        FROM
+            `job` j
+        INNER JOIN
+            `job_tracking` jt ON jt.job_id = j.id
+        INNER JOIN
+            `action` a ON a.id = jt.action_id
+                 LEFT join `note` n on n.job_id = j.id
+        WHERE
+            $where
+        GROUP BY
+            j.id
+       ";
+
+        if ($order) {
+            $sql .= " ORDER BY " . $order;
+        }
+
+
+        // Ajouter la clause LIMIT si $limit est fourni
+        if ($limit) {
+            $sql .= " LIMIT " . (int) $limit;
+        }
+
+        $stmt = $this->connection->executeQuery($sql, ['user' => $user->getId()]);
+        return $stmt->fetchAllAssociative();
     }
 }

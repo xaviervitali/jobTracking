@@ -12,6 +12,7 @@ use App\Form\CvType;
 use App\Repository\AddressBookRepository;
 use App\Repository\CityRepository;
 use App\Repository\JobRepository;
+use App\Service\JobService;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,13 +36,11 @@ class HomeController extends AbstractController
         $date = DateTimeImmutable::createFromMutable($date);
 
 
-        $jobsInProgressByUser = $jobRepository->findJobsInProgressOrClosedByUser($user);
-        $jobsCountPerDelay = $jobRepository->getJobsCountPerDelay($user);
+        $jobsInProgressByUser = $jobRepository->findJobsInProgressByUser($user);
 
         return $this->render('home/index.html.twig', [
             'jobsInProgressJson' => json_encode($jobsInProgressByUser),
             'jobsInProgress' => $jobsInProgressByUser,
-            'jobsCountPerDelay' => $jobsCountPerDelay,
         ]);
     }
 
@@ -49,13 +48,14 @@ class HomeController extends AbstractController
     #[Route('/mon_espace', name: 'app_user_show')]
     public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security, EntityManagerInterface $entityManager, Request $request, AddressBookRepository $addressBookRepository,): Response
     {
+        
+
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $security->getUser()->getUserIdentifier()]);
 
-        $userJobs = $jobRepository->findByUser($user);
-        // $jsonContent = $serializer->serialize($userJobs, 'json', [
-        //     'groups' => ['job'],
 
-        // ]);
+        $jobService = new JobService($user, new DateTimeImmutable(), $jobRepository);
+
+        $userJobs =   $jobService->getJobsByUser();
 
         $cv = new CV();
         $formCV = $this->createForm(CvType::class, $cv, [

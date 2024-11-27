@@ -7,3 +7,7 @@ export function titlelize(str) {
 
     return str
 }
+
+export function plural(count, singular, plural) {
+    return Math.abs(count) > 1 ? plural : singular;
+}

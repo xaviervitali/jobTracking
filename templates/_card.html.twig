@@ -3,7 +3,7 @@
     <h5 class="card-title">{{ job.recruiter|default('job_recruiter')|title }}</h5>
     <h6 class="card-subtitle mb-2 text-body-secondary">{{ job.title|default('job_title')|title }}</h6>
     <div class="d-flex align-items-center justify-content-between">
-      <div class="card-text">{{ job.action_name|default('job_action_name') }}
+      <div class="card-text">{{ job.name|default('job_name') }}
         {{ job.delai|default('job_delai')|formatDelay }}</div>
       <div class="calendar  {% if job.delai is defined and job.delai < 0 %}  d-block  {%else%}   d-none  {% endif %}" >
        
