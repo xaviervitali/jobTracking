@@ -28,11 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const tableDataSelector = document.querySelector(".js-table-data");
   const tableData = JSON.parse(tableDataSelector.getAttribute("data-table-items"));
+  let labels = [...new Set(tableData.map(job => job.action_name))];
 
-  let labels = [...new Set(tableData.map(job => job.name))];
   const series = []
   labels.forEach(actionName => {
-    series.push(tableData.filter(job => job.name === actionName).length)
+    series.push(tableData.filter(job => job.action_name === actionName).length)
 
   });
   const width = document.querySelector("main").clientWidth
@@ -44,14 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const data = []
 
   delays.forEach(delai => {
-    const jobs = tableData.filter(job => job.delai === delai);
+    const jobs = tableData.filter(job => +job.delai === delai);
     data.push(jobs.length)
     categories.push(delai + plural(delai, ' jour', ' jours'))
   })
-
-
-  
-
   
   generateColumnChart([{ name: "Candidatures", data }], categories, 'Ancienneté des candidatures', "#jobs-count-per-delay", widthByChart)
 

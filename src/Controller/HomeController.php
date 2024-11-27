@@ -31,31 +31,34 @@ class HomeController extends AbstractController
         Security $security,
     ): Response {
         $user = $security->getUser();
-        $date = new DateTime();
-        $date->modify('-1 year');
-        $date = DateTimeImmutable::createFromMutable($date);
+     
+        $jobService = new JobService($user, $jobRepository);
 
 
-        $jobsInProgressByUser = $jobRepository->findJobsInProgressByUser($user);
+        $jobsInProgressByUser =  $jobService->getJobsInProgressByUser();
+
 
         return $this->render('home/index.html.twig', [
-            'jobsInProgressJson' => json_encode($jobsInProgressByUser),
             'jobsInProgress' => $jobsInProgressByUser,
         ]);
     }
 
 
     #[Route('/mon_espace', name: 'app_user_show')]
-    public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security, EntityManagerInterface $entityManager, Request $request, AddressBookRepository $addressBookRepository,): Response
+    public function show(JobRepository $jobRepository, SerializerInterface $serializer, Security $security, EntityManagerInterface $entityManager, Request $request, AddressBookRepository $addressBookRepository, ): Response
     {
-        
+
 
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $security->getUser()->getUserIdentifier()]);
 
 
-        $jobService = new JobService($user, new DateTimeImmutable(), $jobRepository);
+        $jobService = new JobService($user,  $jobRepository);
+           $date = new DateTime();
+        $date->modify('-1 year');
+        $date = DateTimeImmutable::createFromMutable($date);
 
-        $userJobs =   $jobService->getJobsByUser();
+        $jobService->setMinDate($date);
+        $userJobs = $jobService->getJobsByUser();
 
         $cv = new CV();
         $formCV = $this->createForm(CvType::class, $cv, [
@@ -79,14 +82,14 @@ class HomeController extends AbstractController
         $formApiSettings->handleRequest($request);
 
         if ($formApiSettings->isSubmitted()) {
-            $cityId =   $formApiSettings->get('city')->getData();
+            $cityId = $formApiSettings->get('city')->getData();
             $city = $entityManager->getRepository(City::class)->findOneBy(['id' => $cityId]);
 
             $jobApis = [...$formApiSettings->get('jobApiServices')->getData()];
-            
+
             $allApiServices = $entityManager->getRepository(JobApiServices::class)->findAll();
 
-            foreach( $allApiServices as  $jobApi){
+            foreach ($allApiServices as $jobApi) {
                 $apiSettings->removeJobApiService($jobApi);
             }
 

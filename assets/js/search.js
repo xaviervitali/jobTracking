@@ -53,11 +53,10 @@ function formatDelay(delay) {
 
     const absDelay = Math.abs(delay);
     
-    let jourStr = "jour";
-    
-    if (absDelay > 1) {
-        jourStr += "s";
+    if (absDelay === 1) {
+        return delay === 1 ? 'hier' : 'demain';
     }
+    const jourStr = "jours";
 
     const delayStr = ` ${absDelay} ${jourStr}`
     return (delay > 0 ? `il y a` : `dans`) + delayStr

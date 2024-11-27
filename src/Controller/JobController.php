@@ -12,6 +12,7 @@ use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
 use App\Service\JobService;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,8 +38,10 @@ final class JobController extends AbstractController
 
         $date = DateTimeImmutable::createFromMutable($date);
 
-        $jobService = new JobService($user, $date, $jobRepository);
+        $jobService = new JobService($user,  $jobRepository);
 
+        $jobService->setMinDate($date);
+        
         $jobsPerMonths = $jobService->getJobsPerMonth();
         $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
         $jobSources = $jobRepository->getJobSourceCountByUser($user);
@@ -82,7 +85,11 @@ final class JobController extends AbstractController
         if (empty($jobData['title']) || empty($jobData['company']) || empty($jobData['description'])) {
             return $this->json(false);
         }
-        $date = new DateTimeImmutable();
+        $date = new DateTime();
+        $date->setTime(0, 0, 0);
+        $date =  DateTimeImmutable::createFromMutable($date);
+
+        
         $job = new Job();
         $job->setTitle($jobData['title'])
             ->setRecruiter($jobData['company'])

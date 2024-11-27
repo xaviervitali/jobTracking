@@ -13,7 +13,7 @@
 
 			{% set today_actions = (jobsInProgress |  filter(currentJob => (currentJob.delai == 0)))%}
 			{% for today_action in today_actions %}
-				{% include "_toast.html.twig" with { type: 'danger', title: 'Action à réaliser', subtitle:"Aujourd'hui",  message : today_action.recruiter ~ ' - '~ today_action.name}%}
+				{% include "_toast.html.twig" with { type: 'danger', title: 'Action à réaliser', subtitle:"Aujourd'hui",  message : today_action.recruiter ~ ' - '~ today_action.action_name}%}
 			{% endfor %}
 		{% endblock %}
 
@@ -21,7 +21,7 @@
 	{% if jobsInProgress | length > 0  %}
 
 
-	<div	class="js-table-data"	data-table-items="{{ jobsInProgressJson }}"	></div>
+	<div	class="js-table-data"	data-table-items="{{ jobsInProgress | json_encode}}"	></div>
 </hr>
 
 <div	class="in-progress">

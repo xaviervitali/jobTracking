@@ -1,6 +1,6 @@
 export function createIcsFile(event) {
-    const {  maxCreatedAt, recruiter, jobUrl, action_name } = event;
-    const day =  maxCreatedAt.split(" ").join('T').replace(/\W/g, '');
+    const {  created_at, recruiter, jobUrl, action_name } = event;
+    const day =  created_at.split(" ").join('T').replace(/\W/g, '');
     const dlName = `${action_name} ${recruiter}`;
 
     const encodeIcsField = (field) => field.replace(/[\\,;]/g, '\\$&').replace(/\n/g, '\\n');
@@ -30,9 +30,9 @@ export function createIcsFile(event) {
 }
 
 export function createGoogleCalendarLink(event) {
-    const { maxCreatedAt, recruiter, jobUrl, action_name } = event;
+    const { created_at, recruiter, jobUrl, action_name } = event;
     const dlName = `${action_name} ${recruiter}`;
-    const day = maxCreatedAt.split(" ").join('T').replace(/\W/g, '');
+    const day = created_at.split(" ").join('T').replace(/\W/g, '');
     const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(dlName)}&dates=${day}/${day}&details=${encodeURIComponent(jobUrl)}`;
     window.open(googleCalendarLink) 
 }

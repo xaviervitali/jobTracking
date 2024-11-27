@@ -13,9 +13,14 @@ class JobService
     private DateTimeImmutable $minDate;
 
 
-    public function __construct(private User $user, DateTimeImmutable $minDate, private JobRepository $jobRepository, )
+    public function __construct(private User $user, private JobRepository $jobRepository, )
+    {
+
+    }
+    public function setMinDate(DateTimeImmutable $minDate)
     {
         $this->minDate = $minDate;
+        return $this;
     }
 
 
@@ -28,36 +33,79 @@ class JobService
             $job = [];
 
             $jobTrackingsArray = $userJob->getJobTracking()->toArray();
-            usort($jobTrackingsArray, function ($a, $b) {
-                return $b->getCreatedAt() <=> $a->getCreatedAt();
-            });
-            $lastJobTracking = $jobTrackingsArray[0];
 
-            $action = $lastJobTracking->getAction();
-            $maxCreatedAt = $lastJobTracking->getCreatedAt();
-            
-            if ($action->isSetClosed()) {
-                $origin = $userJob->getCreatedAt();
-                $interval = $origin->diff($maxCreatedAt);
+
+            $isFuture = false;
+            $isClosedJob = array_values(array_filter($jobTrackingsArray, function ($jobTracking) {
+                return $jobTracking->getAction()->isSetClosed();
+            }));
+            if (!empty($isClosedJob)) {
+                $target = $userJob->getCreatedAt();
+                $maxCreatedAt = $isClosedJob[0]->getCreatedAt();
+                $maxCreatedAt = $maxCreatedAt->setTime(0, 0);
+                $action = $isClosedJob[0]->getAction();
+
             } else {
-                $target = new DateTimeImmutable();
-                $interval = $maxCreatedAt->diff($target);
+
+                usort($jobTrackingsArray, function ($a, $b) {
+                    return $b->getCreatedAt() <=> $a->getCreatedAt();
+                });
+                $lastJobTracking = $jobTrackingsArray[0];
+
+                $action = $lastJobTracking->getAction();
+                $maxCreatedAt = $lastJobTracking->getCreatedAt();
+                $maxCreatedAt = $maxCreatedAt->setTime(0, 0);
+
+                $date = new DateTimeImmutable();
+                $date = $date->setTime(0, 0);
+                $target = $date;
+                $isFuture = $maxCreatedAt > $target;
             }
+
+            $interval = $maxCreatedAt->diff($target);
+            $daysDiff = $interval->days;
+
+            if ($interval->h > 0 || $interval->i > 0 || $interval->s > 0) {
+                $daysDiff++;
+            }
+            
+            // Ajuster la différence pour les dates dans le futur
+            if ($isFuture) {
+                $daysDiff = -$daysDiff;
+            }
+
+
 
             $job['id'] = $userJob->getId();
             $job['recruiter'] = $userJob->getRecruiter();
+            $job['created_at'] = $userJob->getCreatedAt();
             $job['title'] = $userJob->getTitle();
-            $job['name'] = $action->getName();
+            $job['action_name'] = $action->getName();
             $job['set_closed'] = boolval($action->isSetClosed());
-            $job['created_at'] = $maxCreatedAt;
-            $job['delai'] = $interval->format('%a');
+            $job['max_created_at'] = $maxCreatedAt;
+            $job['delai'] = $daysDiff;
             $job['note_count'] = count($userJob->getNotes());
+            $job['source_name'] = $userJob->getSource()->getName();
+
             $userJobs[] = $job;
         }
         return $userJobs;
 
     }
 
+    public function getJobsInProgressByUser()
+    {
+        $allJobs = $this->getJobsByUser();
+        $inProgress = array_values(array_filter($allJobs, function ($job) {
+            return !$job['set_closed'];
+        }));
+
+        usort($inProgress, function ($a, $b) {
+            return $a['max_created_at'] <=> $b['max_created_at'];
+        });
+
+        return $inProgress;
+    }
 
     public function getJobsPerMonth()
     {

@@ -99,12 +99,13 @@ class JobTrackingController extends AbstractController
         if ($job->getUser() == $security->getUser()) {
             $createdAt = new DateTimeImmutable($request->request->all()['action']['createdAt']);
             
+
             $jobTrackingsDate =max(array_map(function($currentJobTracking){
                 return $currentJobTracking->getCreatedAt();
             }, $job->getJobTracking()->toArray()));
 
            
-            if($jobTrackingsDate === $jobTrackingsDate){
+            if($jobTrackingsDate === $jobTrackingsDate && $action->isSetClosed()){
                 $createdAt->add(new DateInterval('PT1S'));
             }
 
