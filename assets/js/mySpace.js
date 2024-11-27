@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         [
             "recruiter",
             "title",
-            "name",
+            "action_name",
             "delai",
             "link"
         ],
