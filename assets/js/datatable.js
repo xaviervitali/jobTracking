@@ -17,10 +17,13 @@ export function generateDataTable(
 
     
     tableData = tableData.map(item => {
+
         let newItem = {};
+        
         for (const key in item) {
             newItem[key] = item[key] === null ? '' : nl2br(item[key]);
         }
+
         if (createLink) {
             const newLink = document.createElement('a');
             newLink.href = path + item.id;
@@ -29,6 +32,7 @@ export function generateDataTable(
             }
 
             newLink.textContent = 'Visualiser';
+
             newItem = {
                 ...newItem,
                 link: newLink.outerHTML

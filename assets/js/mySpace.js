@@ -22,13 +22,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const tableDataAddress = JSON.parse(tableDataSelector.getAttribute("data-address-book"))
         .map(contact => {
+            const shareButton = document.createElement('button');
+            shareButton.setAttribute('data-contact', JSON.stringify(contact));
+            shareButton.classList.add('share-contact', 'btn', 'btn-sm');
+            shareButton.innerHTML = `<i class="fa-solid fa-arrow-up-from-bracket"></i>`
+
             const note = contact.note?.length > 100 ? contact.note.slice(0, 100) + '...' : contact.note
+
             return {
                 ...contact,
                 lastName: contact.lastName.toUpperCase(),
                 firstName: titlelize(contact.firstName),
                 createdAt: moment(contact.createdAt).format('D/M/Y'),
-                note
+                note,
+                button: shareButton.outerHTML
             }
         });
 
@@ -40,12 +47,19 @@ document.addEventListener("DOMContentLoaded", function () {
             'company',
             'note',
             'phone',
+            'button',
             'link'
         ],
         '#address-book-table',
         true,
         '/address/book/#id/edit');
 
+    document.querySelectorAll('.share-contact').forEach(button => button.addEventListener('click', function (event) {
+        const contact =  JSON.parse(event.currentTarget.getAttribute("data-contact"))
+        
+        createVCard(contact)
+
+    }))
 
     $(function () {
 
@@ -86,3 +100,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 })
+
+function createVCard(contact) {
+    const vcard = `BEGIN:VCARD
+VERSION:4.0
+FN:${contact.firstName} ${contact.lastName}
+N:${contact.lastName};${contact.firstName}
+ORG:${contact.company}
+TEL:${contact.phone}
+EMAIL:${contact.email}
+NOTE:${contact.note}
+END:VCARD`;
+
+    const blob = new Blob([vcard], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${contact.firstName}_${contact.lastName}.vcf`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
