@@ -11,7 +11,10 @@ use App\Form\JobFormType;
 use App\Repository\ActionRepository;
 use App\Repository\JobRepository;
 use App\Repository\JobSourceRepository;
+use App\Repository\JobTrackingRepository;
 use App\Service\JobService;
+use App\Service\JobTrackingService;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,36 +25,40 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class JobController extends AbstractController
 {
-    public function __construct(){
+    public function __construct()
+    {
         date_default_timezone_set('Europe/Paris');
     }
 
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
-    public function index(JobRepository $jobRepository, ActionRepository $actionRepository, Security $security, JobSourceRepository $jobSourceRepository): Response
+    public function index(JobRepository $jobRepository,  Security $security, JobSourceRepository $jobSourceRepository, JobTrackingRepository $jobTrackingRepository): Response
     {
 
         $user = $security->getUser();
 
-        $date = new \DateTime();
-        $date->modify('-1 year');
 
-        $date = DateTimeImmutable::createFromMutable($date);
+        $jobService = new JobService($user, $jobRepository);
 
-        $jobService = new JobService($user, $date, $jobRepository);
-
+        // jobService
+        $jobService->setMinDate($jobService->findOldestJob()['created_at']);
+        
         $jobsPerMonths = $jobService->getJobsPerMonth();
-        $closedJobsPerMonth = $jobService->getClosedJobsPerMonth();
-        $jobSources = $jobRepository->getJobSourceCountByUser($user);
+        $closedJobsPerMonth = $jobService->getClosedJobsPerMonth(); // ok
+        $jobSources = $jobService->getJobSourceCountByUser(); // ok 
         $currentWeekJob = $jobService->getCurrentWeekJobs();
-        $jobActions = $actionRepository->getActionCountAndRatioByUser($user);
-        $jobClosedActions = $actionRepository->getActionCountAndRatioByUser($user, true);
-        $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
-        $closedAvgDelai = $jobRepository->getClosedAvgDelai($user);
-        $longuestDelai = $jobRepository->getLonguestDelai($user);
-        $mostProlificWeekDay = $jobRepository->getMostProlificWeekDay($user);
-        $mostProlificDay = $jobRepository->getMostProlificDay($user);
-        $avgDelay = $jobRepository->getAvgDelay($user);
+        $closedAvgDelai = $jobService->getClosedAvgDelai();
+        $longuestDelai = $jobService->getLonguestDelai();
+        $mostProlificWeekDay = $jobService->getMostProlificWeekDay();
+        $mostProlificDay = $jobService->getMostProlificDay();
 
+        // action
+        $jobTrackingService = new JobTrackingService($user,$jobTrackingRepository );
+        $jobActions =    $jobTrackingService->getActionCount();
+        $jobClosedActions = $jobTrackingService->getJobClosedActions();
+
+        // Repo
+        $avgDelay = $jobRepository->getAvgDelay($user);
+        $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
 
         return $this->render('job/index.html.twig', [
             'jobsPerMonths' => $jobsPerMonths,
@@ -73,16 +80,20 @@ final class JobController extends AbstractController
     #[Route('/candidature/job_alert', name: 'candidature_from_job_alert')]
     function candidatureFromJobAlert(Request $request, EntityManagerInterface $entityManager, Security $security)
     {
-       // Récupérer le contenu JSON de la requête
-       $data = json_decode($request->getContent(), true); // Décoder le JSON en tableau associatif
+        // Récupérer le contenu JSON de la requête
+        $data = json_decode($request->getContent(), true); // Décoder le JSON en tableau associatif
 
-       // Vérifiez ce que vous recevez
+        // Vérifiez ce que vous recevez
         $jobData = $data['job'];
-        
+
         if (empty($jobData['title']) || empty($jobData['company']) || empty($jobData['description'])) {
             return $this->json(false);
         }
-        $date = new DateTimeImmutable();
+        $date = new DateTime();
+        $date->setTime(0, 0, 0);
+        $date = DateTimeImmutable::createFromMutable($date);
+
+
         $job = new Job();
         $job->setTitle($jobData['title'])
             ->setRecruiter($jobData['company'])
@@ -93,13 +104,13 @@ final class JobController extends AbstractController
         $entityManager->persist($job);
         $jobTracking = new JobTracking();
         $jobTracking
-        ->setJob($job)
-        ->setCreatedAt($date)
-        ->setAction($entityManager->getRepository(Action::class)->findOneBy(['name' => ActionStatus::getStartActionName()]));
+            ->setJob($job)
+            ->setCreatedAt($date)
+            ->setAction($entityManager->getRepository(Action::class)->findOneBy(['name' => ActionStatus::getStartActionName()]));
         $entityManager->persist($jobTracking);
-       
+
         $entityManager->flush();
-        
+
         return $this->json(true);
 
     }
