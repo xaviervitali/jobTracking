@@ -17,30 +17,20 @@ body {
   background-color: #606468;
 }
 
-.bg-div::before {
-  content: '';
-  z-index: -1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 
-              background-size: 300px 300px;
-  background-repeat: repeat;
-  opacity: 0.5;
-} 
 
 .bg-div {
-  background-color: #fff !important;
+  background-color: #eee !important;
   padding: 1rem !important;
   /* overflow: auto; */
 
   border-radius: 1rem;
 position: relative;
-  background-image: url(../img/bg-div2.webp);
+  background-image: url(../img/bg-div.webp);
   background-size: cover;
   background-repeat: no-repeat;
+  background-blend-mode: overlay;
+  
   /* background-position: -80% -80%; */
 }
 .dt-layout-row select,
