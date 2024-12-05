@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('login') }}
+  {{ encore_entry_link_tags('demoCss') }}
+{% endblock %}
+{% block header %}
+
+{% endblock %}
+{% block guest_content %}
+
+  
+  <div class="mx-lg-5 bg-div m-auto my-3">
+    
+    <div class="m-auto">
+      <div class="d-lg-flex gap-3">
+        <div>
+          {# <img src="/assets/img/logo.webp" alt="brand logo" style="width: 300px; " /> #}
+          <img src="{{ asset('img/logo.webp') }}" alt="brand logo" style="width: 300px; " />
+        </div>
+        <div class="d-flex flex-column justify-content-around">
+          <section>
+            <h1>Job Tracking</h1>
+
+            <p>Simplifiez votre recherche d'emploi avec notre application de suivi des candidatures.</p>
+          </section>
+
+          <section class="hero">
+            <h2>Pourquoi choisir Job Tracking ?</h2>
+            <p>Imaginez-vous en pleine recherche d'emploi, jonglant entre plusieurs candidatures, entretiens et suivis. C'est épuisant, n'est-ce pas ? C'est là que Job Tracking entre en jeu. Notre application est conçue pour vous aider à organiser et optimiser votre recherche d'emploi, afin que vous puissiez vous concentrer sur ce qui compte vraiment : décrocher le job de vos rêves.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+            </div>
+
+              <div class="mx-lg-5 my-3 bg-div m-auto">
+    <section class="d-flex justify-content-center align-items-center mb-3 gap-3">
+      <div>
+        {{ include('security/_form.html.twig') }}
+      </div>
+
+   
+      <div>
+        Pas encore membre ?
+        <a href="{{ url('app_user_new') }}">S'inscrire</a>
+      </div>
+    </section>
+    </div>
+    <div class="mx-lg-5 my-3 bg-div m-auto">
+    <section class="features">
+      <h2 class="mb-3">Fonctionnalités principales</h2>
+      <div class="container" style="height: 500px;">
+      {% include "security/swipper.html.twig" %}
+      </div>
+
+    </section>
+    </div>
+      <div class="mx-lg-5 bg-div m-auto my-3">
+    <section class="story">
+      <h2>Mon histoire</h2>
+      J'ai développé l'application
+      <em>Job-Tracking</em>
+      dans le but de faciliter la gestion des candidatures pour les chercheurs d'emploi. Face aux nombreux défis du suivi des candidatures, des actions en cours, et de la préparation aux entretiens, j'ai voulu créer un outil centralisé et intuitif.
+      <em>Job-Tracking</em>
+      permet aux utilisateurs de suivre l'évolution de leurs candidatures, de planifier des actions (comme les relances ou les entretiens), et d'analyser leur parcours à travers des statistiques personnalisées. Le but est de proposer un assistant numérique qui aide à mieux organiser et optimiser la recherche d'emploi.
+    </section>
+    <section class="get-started">
+      <h2>Commencez dès maintenant</h2>
+      <p>Rejoignez notre communauté et simplifiez votre recherche d'emploi. Inscrivez-vous gratuitement et découvrez toutes les fonctionnalités de Job Tracking.</p>
+              <a href="{{ url('app_user_new') }}">S'inscrire maintenant</a>
+    </section>
+    <section class="additional-info">
+      <h2>Informations supplémentaires</h2>
+      <p>
+        Le code source de cette application est disponible sur <a href="https://github.com/xaviervitali/jobTracking" target="_blank">GitHub</a>. Vous pouvez également me suivre sur <a href="https://www.linkedin.com/in/votre-profil-linkedin/" target="_blank">LinkedIn</a> pour plus d'informations et de mises à jour.
+      </p>
+    </section>
+      </div>
+      <div class="mx-lg-5 bg-div m-auto my-3">
+      <p>&copy;Xavier Vitali 2024 Job Tracking. Tous droits réservés.</p>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+
+
+{% endblock %}

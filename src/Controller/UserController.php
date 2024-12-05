@@ -37,6 +37,7 @@ final class UserController extends AbstractController
 
                 return $this->redirectToRoute('app_forgot_password');
             }
+            
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
                 $user->getPassword()
@@ -99,7 +100,7 @@ final class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
     }
 
   

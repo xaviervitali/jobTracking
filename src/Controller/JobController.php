@@ -31,49 +31,51 @@ final class JobController extends AbstractController
     }
 
     #[Route('/tableau_de_bord', name: 'app_job_index', methods: ['GET'])]
-    public function index(JobRepository $jobRepository,  Security $security, JobSourceRepository $jobSourceRepository, JobTrackingRepository $jobTrackingRepository): Response
+    public function index(JobRepository $jobRepository, Security $security, JobSourceRepository $jobSourceRepository, JobTrackingRepository $jobTrackingRepository): Response
     {
 
         $user = $security->getUser();
+        $userJobCount = count($jobRepository->findBy(['user'=>$user]));
+        $parameters = ['userJobCount' => $userJobCount];
+        if ($userJobCount > 0) {
+            $jobService = new JobService($user, $jobRepository);
 
+            // jobService
+            $jobService->setMinDate($jobService->findOldestJob()['created_at']);
 
-        $jobService = new JobService($user, $jobRepository);
+            $jobsPerMonths = $jobService->getJobsPerMonth();
+            $closedJobsPerMonth = $jobService->getClosedJobsPerMonth(); // ok
+            $jobSources = $jobService->getJobSourceCountByUser(); // ok 
+            $currentWeekJob = $jobService->getCurrentWeekJobs();
+            $closedAvgDelai = $jobService->getClosedAvgDelai();
+            $longuestDelai = $jobService->getLonguestDelai();
+            $mostProlificWeekDay = $jobService->getMostProlificWeekDay();
+            $mostProlificDay = $jobService->getMostProlificDay();
 
-        // jobService
-        $jobService->setMinDate($jobService->findOldestJob()['created_at']);
-        
-        $jobsPerMonths = $jobService->getJobsPerMonth();
-        $closedJobsPerMonth = $jobService->getClosedJobsPerMonth(); // ok
-        $jobSources = $jobService->getJobSourceCountByUser(); // ok 
-        $currentWeekJob = $jobService->getCurrentWeekJobs();
-        $closedAvgDelai = $jobService->getClosedAvgDelai();
-        $longuestDelai = $jobService->getLonguestDelai();
-        $mostProlificWeekDay = $jobService->getMostProlificWeekDay();
-        $mostProlificDay = $jobService->getMostProlificDay();
+            // action
+            $jobTrackingService = new JobTrackingService($user, $jobTrackingRepository);
+            $jobActions = $jobTrackingService->getActionCount();
+            $jobClosedActions = $jobTrackingService->getJobClosedActions();
 
-        // action
-        $jobTrackingService = new JobTrackingService($user,$jobTrackingRepository );
-        $jobActions =    $jobTrackingService->getActionCount();
-        $jobClosedActions = $jobTrackingService->getJobClosedActions();
+            // Repo
+            $avgDelay = $jobRepository->getAvgDelay($user);
+            $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
 
-        // Repo
-        $avgDelay = $jobRepository->getAvgDelay($user);
-        $actionsBySourceCount = $jobSourceRepository->getActionsNameAndCountByJobSource($user);
-
-        return $this->render('job/index.html.twig', [
-            'jobsPerMonths' => $jobsPerMonths,
-            'closedJobsPerMonth' => $closedJobsPerMonth,
-            'jobSources' => $jobSources,
-            'jobActions' => $jobActions,
-            'actionsBySourceCount' => $actionsBySourceCount,
-            'currentWeekJob' => $currentWeekJob,
-            'jobClosedActions' => $jobClosedActions,
-            'closedAvgDelai' => $closedAvgDelai,
-            'longuestDelai' => $longuestDelai,
-            'mostProlificDay' => $mostProlificDay,
-            'mostProlificWeekDay' => $mostProlificWeekDay,
-            'avgDelay' => $avgDelay,
-        ]);
+            $parameters['jobsPerMonths'] = $jobsPerMonths;
+                $parameters['closedJobsPerMonth'] = $closedJobsPerMonth;
+                $parameters['jobSources'] = $jobSources;
+                $parameters['jobActions'] = $jobActions;
+                $parameters['actionsBySourceCount'] = $actionsBySourceCount;
+                $parameters['currentWeekJob'] = $currentWeekJob;
+                $parameters['jobClosedActions'] = $jobClosedActions;
+                $parameters['closedAvgDelai'] = $closedAvgDelai;
+                $parameters['longuestDelai'] = $longuestDelai;
+                $parameters['mostProlificDay'] = $mostProlificDay;
+                $parameters['mostProlificWeekDay'] = $mostProlificWeekDay;
+                $parameters['avgDelay'] = $avgDelay;
+            
+        }
+        return $this->render('job/index.html.twig', $parameters);
     }
 
 

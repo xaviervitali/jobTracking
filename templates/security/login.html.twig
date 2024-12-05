@@ -1,87 +1,100 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('login') }}
-    {{ encore_entry_link_tags('swiper') }}
-    {{ encore_entry_link_tags('demoCss') }}
+  {{ encore_entry_link_tags('login') }}
+  {# {{ encore_entry_link_tags('demoCss') }} #}
+  {{ encore_entry_link_tags('postit') }}
 {% endblock %}
-{% block header %}{% endblock %}
+{% block header %}
+
+{% endblock %}
 {% block guest_content %}
 
-    <div class="container d-flex flex-column justify-content-around overflow-hidden">
-        <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
+  
+  <div class="mx-lg-5 bg-div m-auto my-3">
+    
+    <div class="m-auto">
+      <div class="d-lg-flex gap-3">
+        <div class="d-flex justify-content-center">
+          {# <img src="/assets/img/logo.webp" alt="brand logo" style="width: 300px; " /> #}
+          <img src="{{ asset('img/logo.webp') }}" alt="brand logo"  style="width: 300px; object-fit: cover;" />
+        </div>
+        <div class="d-flex flex-column justify-content-around">
+          <section>
+            <h1>Job Tracking</h1>
 
-                    <p>
-                        Inscrivez-vous et accédez à votre tableau de bord.
-                    </p>
-                    <p>
-                        <img src='/assets/img/screenshots/1.webp' alt="accueil" />
-                    </p>
-                </div>
+            <p>Simplifiez votre recherche d'emploi avec notre application de suivi des candidatures.</p>
+          </section>
 
-                <div class="swiper-slide">
+          <section class="hero">
+            <h2>Pourquoi choisir Job Tracking ?</h2>
+            <p>Imaginez-vous en pleine recherche d'emploi, jonglant entre plusieurs candidatures, entretiens et suivis. C'est épuisant, n'est-ce pas ? C'est là que Job Tracking entre en jeu. Notre application est conçue pour vous aider à organiser et optimiser votre recherche d'emploi, afin que vous puissiez vous concentrer sur ce qui compte vraiment : décrocher le job de vos rêves.</p>
+          </section>
 
-                    <p>
-                        Consultez les offres d'emplois personnalisés
-                    </p>
-                    <p>
-                        <img src='/assets/img/screenshots/2.webp' alt="nouvelle_candidature"></p>
-                    </div>
+              <section class="story">
+      <h2>Mon histoire</h2>
+      J'ai développé l'application
+      <em>Job-Tracking</em>
+      dans le but de faciliter la gestion des candidatures pour les chercheurs d'emploi. Face aux nombreux défis du suivi des candidatures, des actions en cours, et de la préparation aux entretiens, j'ai voulu créer un outil centralisé et intuitif.
+      <em>Job-Tracking</em>
+      permet aux utilisateurs de suivre l'évolution de leurs candidatures, de planifier des actions (comme les relances ou les entretiens), et d'analyser leur parcours à travers des statistiques personnalisées. Le but est de proposer un assistant numérique qui aide à mieux organiser et optimiser la recherche d'emploi.
+    </section>
+        </div>
+      </div>
+    </div>
+   <hr>
+    <section class="d-flex justify-content-start align-items-center mb-3 gap-3">
+      <div>
+        {{ include('security/_form.html.twig') }}
+        {# <a href="login.html" class="btn secondary">Se connecter</a> #}
+      </div>
+         <div>  <a href="{{ url('app_forgot_password') }}">Mot de passe oublié ?</a></div>
+      <div>
+        Pas encore membre ?
+        <a href="{{ url('app_user_new') }}">S'inscrire</a>
+      </div>
+    </section>
+    </div>
+    <div class="mx-lg-5 my-3 bg-div m-auto">
+    <section class="features">
+      <h2 class="mb-3">Fonctionnalités principales</h2>
+  
+  {% set colors = ['#ff7eb9', '#ff65a3', '#7afcff', '#feff9c', '#fff740'] %}
+  {% set features = [
+    { content: '<h3><i class="fas fa-briefcase"></i> Suivi des candidatures</h3><p>Gérez toutes vos candidatures en un seul endroit. Suivez l\'état de chaque candidature et ne manquez aucune opportunité. Plus besoin de feuilles volantes ou de tableaux Excel compliqués !</p>'},
+    { content: '<h3><i class="fas fa-calendar-alt"></i> Gestion des événements</h3><p>Planifiez et suivez vos entretiens et relances diverses facilement. Recevez des rappels pour ne jamais manquer un rendez-vous important. Fini les oublis et les retards !</p>'},
+    { content: '<h3><i class="fas fa-tachometer-alt"></i> Tableau de bord personnalisé</h3><p>Accédez à un tableau de bord personnalisé pour suivre votre progression. Visualisez vos statistiques et ajustez votre stratégie en conséquence. Vous saurez toujours où vous en êtes dans votre recherche.</p>'},
+    { content: '<h3><i class="fas fa-bell"></i> Notifications et rappels</h3><p>Recevez des notifications et des rappels pour ne rien manquer. Restez toujours informé des prochaines étapes de votre processus de candidature. Plus de stress, plus de surprises !</p>'},
+    { content: '<h3><i class="fas fa-search"></i> API de recherche d\'emploi</h3><p>Accédez à des offres d\'emploi personnalisées grâce à nos API intégrées (France Travail, Jobble, Adzuna). Trouvez des opportunités adaptées à votre profil sans quitter l\'application.</p>'},
+    { content: '<h3><i class="fas fa-address-book"></i> Carnet d\'adresses</h3><p>Gérez vos contacts professionnels avec notre carnet d\'adresses intégré. Ajoutez, modifiez et consultez facilement les informations de vos contacts.</p>'},
+    { content: '<h3><i class="fas fa-file-upload"></i> Upload de CV</h3><p>Téléchargez et stockez vos CV directement dans l\'application et accédez-y facilement.</p>'},
+    { content: '<h3><i class="fas fa-robot"></i> Lettres de motivation personnalisées par IA</h3><p>Créez des lettres de motivation personnalisées pour chaque offre d\'emploi grâce à notre intelligence artificielle. Gagnez du temps et augmentez vos chances de succès.</p>'},
+    { content: '<h3><i class="fas fa-sticky-note"></i> Écran de contrôle pour chaque candidature</h3><p>Suivez chaque candidature en détail avec un écran de contrôle dédié. Ajoutez des notes, des commentaires et des rappels pour chaque candidature.</p>'}
+  ] %}
 
-                    <div class="swiper-slide">
+<div class="d-flex gap-3 flex-wrap justify-content-around">
+  {% for feature in features %}
+    {% set color = random(colors) %}
+    <div class="my-1">
+    {% include "_postit.html.twig" with { content : feature.content, color :color} %}
+    </div>
+  {% endfor %}
+  </div>
+    </section>
+    </div>
+      
+      <div class="mx-lg-5 bg-div m-auto my-3">
 
-                        <p>
-                            Consultez des statistiques sur vos candidatures.
-                        </p>
-                        <p>
-                            <img src='/assets/img/screenshots/3.webp' alt="fiche_candidature"></p>
-                        </div>
-                        <div class="swiper-slide">
-
-                            <p>
-                                Gérer votre espace personnel
-                            </p>
-                            <p>
-                                <img src='/assets/img/screenshots/4.webp'alt="tableau de bord"></p>
-
-                            </div>
-
-                            <div class="swiper-slide">
-
-                                <p>
-                                    Gérez vos candidatures
-                                </p>
-                                <p>
-                                    <img src='/assets/img/screenshots/5.webp' alt="tableau de bord"></p>
-                                </div>
-                                <div class="swiper-slide">
-
-                                    <p>
-                                        Enregistrer vos candidatures
-                                    </p>
-                                    <p>
-                                        <img src='/assets/img/screenshots/6.webp' alt="tableau de bord"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
-                    <div>
-                        {{ include('security/_form.html.twig') }}
-                    </div>
-                    <div class="text--center">
-                        <a href="{{ path('app_forgot_password') }}" style="color: white !important;">
-                            Mot de passe oublié
-                        </a>
-                    </div>
-                </div>
-            {% endblock %}
-            {% block javascripts %}
-                {{ encore_entry_script_tags('demo') }}
-            {% endblock %}
-            
+    <section class="additional-info">
+      <h2>Informations supplémentaires</h2>
+      <p>
+        Le code source de cette application est disponible sur <a href="https://github.com/xaviervitali/jobTracking" target="_blank">GitHub</a>. Vous pouvez également me suivre sur <a href="https://www.linkedin.com/in/votre-profil-linkedin/" target="_blank">LinkedIn</a> pour plus d'informations et de mises à jour.
+      </p>
+    </section>
+ 
+      <p>&copy;Xavier Vitali 2024 Job Tracking. Tous droits réservés.</p>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

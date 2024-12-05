@@ -23,9 +23,11 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, Security $security): Response
     {
+        
         if(!!$security->getUser()){
             return $this->redirectToRoute('app_synthese');
         }
+        
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -49,7 +51,18 @@ class SecurityController extends AbstractController
     {
         $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
-    
+        
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $IP = $_SERVER['HTTP_CLIENT_IP'];
+        } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $IP = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $IP = $_SERVER['REMOTE_ADDR']; 
+        }
+
+        $location =file_get_contents("http://ipinfo.io/$IP/json");
+        $location= json_decode($location);
+
         if ($form->isSubmitted() && $form->isValid()) {
             
             $email = $form->get('email')->getData();
@@ -64,11 +77,13 @@ class SecurityController extends AbstractController
                 $resetLink = $this->generateUrl('app_reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
                 $htmlContent = $this->renderView('security/reset_password_email.html.twig', [
                     'resetLink' => $resetLink,
+                    'ip'=> $location->ip,
                 ]);
+                
                 $emailService->sendHtmlEmail($user->getEmail(), 'Réinitialisation de votre mot de passe', $htmlContent);
 
             } 
-            $this->addFlash('success', "Un e-mail à l\'adresse $email de réinitialisation a été envoyé.");
+            $this->addFlash('success', "Un e-mail à l'adresse $email de réinitialisation a été envoyé.");
     
             return $this->redirectToRoute('app_login');
         }

@@ -1,13 +1,18 @@
 <div class="post-it">
     <div class="sticky taped" style='background-color: {{color|default('#feff9c')}};'>
         <p class="d-flex justify-content-between">
+        {% if createdAt is defined and  noteId is defined  %}
+        
             <strong>
                 {{ createdAt | date('d/m/Y') }}
             </strong>
+        
+            
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="deleteNote({{noteId}})"></button>
+                {% endif %}
         </p>
         <p>
-            {{ content | nl2br }}
+            {{ content | raw | nl2br }}
         </p>
     </div>
 </div>

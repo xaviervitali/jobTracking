@@ -9,9 +9,10 @@
 
 {% endblock %}
 {% block body %}
+{% if userJobCount > 0 %}
+
 <div	class="js-chart-data"	data-jobs-per-month="{{ jobsPerMonths | serialize }}"	data-closed-jobs-per-month="{{ closedJobsPerMonth | serialize }}"	data-job-sources="{{ jobSources | serialize }}"	data-job-actions="{{ jobActions | serialize }}"	data-actions-by-source="{{ actionsBySourceCount | serialize }}"	data-current-week="{{ currentWeekJob | serialize }}"	data-closed-actions="{{ jobClosedActions | serialize }}"></div>
 	<div	class="bg-div">
-{% if closedAvgDelai is not null%}
 
 		<div	class="d-flex d-flex flex-wrap justify-content-between">
 			<div	id="chart-bar-jobs-per-month"	class="col-xxl-6 my-3 "></div>

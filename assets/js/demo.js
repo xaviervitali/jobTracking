@@ -1,16 +1,21 @@
 import Swiper from 'swiper/bundle';
-
-document.addEventListener('DOMContentLoaded', function() {
-    var swiper = new Swiper('.swiper-container', {
-        loop: true,
+import 'swiper/css/bundle';
+// document.addEventListener('DOMContentLoaded', function () {
+    debugger
+    var swiper = new Swiper('.mySwiper', {
+        //   direction: 'vertical',
+        // loop: true,
         pagination: {
             el: '.swiper-pagination',
-            clickable: true,
         },
+        // navigation: {
+        //     nextEl: '.swiper-button-next',
+        //     prevEl: '.swiper-button-prev',
+        //   },
         autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
+            // delay: 5000,
+            // disableOnInteraction: false,
         },
     });
 
-});
+// });

@@ -20,7 +20,7 @@ class ResetPasswordType extends AbstractType
             'first_options' => [
                 'label' => false,
                 'attr' => [
-                    'class' => 'form__input ',
+                    'class' => 'form_input ',
             
                     'placeholder' => 'Mot de passe'
                 ],

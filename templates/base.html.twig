@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simplifiez votre recherche d'emploi avec Job Tracking, une application de suivi des candidatures qui vous aide à organiser et optimiser votre processus de recherche d'emploi.">
+  <meta name="keywords" content="recherche d'emploi, suivi des candidatures, gestion des entretiens, tableau de bord, notifications, API de recherche d'emploi, carnet d'adresses, lettres de motivation, IA">
+  <meta name="author" content="Votre Nom">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Job Tracking - Simplifiez votre recherche d'emploi">
+  <meta property="og:description" content="Simplifiez votre recherche d'emploi avec Job Tracking, une application de suivi des candidatures qui vous aide à organiser et optimiser votre processus de recherche d'emploi.">
+  <meta property="og:image" content="{{ asset('img/logo.webp') }}">
+  <meta property="og:url" content="https://votre-site.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Job Tracking - Simplifiez votre recherche d'emploi">
+  <meta name="twitter:description" content="Simplifiez votre recherche d'emploi avec Job Tracking, une application de suivi des candidatures qui vous aide à organiser et optimiser votre processus de recherche d'emploi.">
+  <meta name="twitter:image" content="{{ asset('img/logo.webp') }}">
+  <meta name="twitter:site" content="@votre_compte_twitter">
+  <title>Job Tracking - Simplifiez votre recherche d'emploi</title>
+  <link rel="icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
     <title>
       {% block title %}
         Job tracking
@@ -72,31 +89,34 @@
         {% block toasts %}{% endblock %}
       </div>
     {% if app.user %}
-
       <main class="container-fluid">
+
         {% block body %}
 
         {% endblock %}
       </main>
+
     {% else %}
+      <div class="container-fluid guest_content">
+
       {% block guest_content %}
 
       {% endblock %}
+      </div>
     {% endif %}
 
     {% block footer %}
+            {% if app.user %}
       <footer>
         <nav class="navbar bg-body-tertiary fixed-bottom">
           <div class="container-fluid d-flex justify-content-center gap-3 justify-content-lg-start">
-            {% if app.user %}
               <div class="navbar-text">
                 <i class="fa-regular fa-copyright"></i>
                 Xavier Vitali 2024
               </div>
-            {% endif %}
-            <div>
+            {# <div>
               <a class=" {% if app.request.get('_route') == 'app_about' %}{% endif %}" href="{{ url('app_about') }}">À propos</a>
-            </div>
+            </div> #}
             <div>
               <a href="{{ url('app_rgpd') }}" class=" {% if app.request.get('_route') == 'app_rgpd' %}{% endif %}">Mentions légales</a>
             </div>
@@ -116,6 +136,8 @@
           </div>
         </nav>
       </footer>
+            {% endif %}
+
     {% endblock %}
 
     {{ encore_entry_script_tags('app') }}

@@ -2,16 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Réinitialisation de votre mot de passe</title>
+    <title>Tentative de piratage détectée</title>
 </head>
 <body>
-    <h1>Réinitialisation de votre mot de passe</h1>
+    <h1>Tentative de piratage détectée</h1>
     <p>Bonjour,</p>
-    <p>Une demande de réinitialisation votre mot de passe, à été demandé depuis l'adresse ip suivante : {{ip}}.<p>
-    <p>Si vous êtes à l'origine de cette demande, 
-    veuillez cliquer sur le lien suivant :</p>
-    <a  class="btn btn-primary" href="{{ resetLink }}">Réinitialiser mon mot de passe</a>
-    <p>Sinon ne tenez pas compte de cet email.</p>
+    <p>Cette ip : {{ip}} à tentée de se connecter à votre compte, nous l'avons bloquée pour le moment.<p>
+    <p>Nous vous invitons à sécuriser votre mot de passe via votre espace.</p>
+    <p>Si toutefois vous êtes à l'origine de cette alerte merci de réinitialiser votre mot passe grâce au lien <a href=" {{ url('app_forgot_password') }}" >Mot de passe oublié</a></p>
 </body>
 <style>
     .btn {

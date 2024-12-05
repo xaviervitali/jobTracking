@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{# <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -34,6 +34,33 @@
             {{ include('user/_form.html.twig') }}
         </div>
     </body>
-    <script src="{{ asset('/js/register.js') }}"></script>
 </html>
+ #}
 
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+  {{ encore_entry_link_tags('login') }}
+{% endblock %}
+{% block guest_content %}
+  <div class="mx-lg-5 bg-div m-auto my-3">
+    {% for type, messages in app.session.flashBag.all %}
+      {% for message in messages %}
+        {% if type == 'error' %}
+          {% set type = 'danger' %}
+        {% endif %}
+        {% if type == 'message' %}
+          {% set type = 'info' %}
+        {% endif %}
+        <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+          {{ message|raw }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    <h1>Inscription</h1>
+    <div class="grid">{{ include('user/_form.html.twig') }}</div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+  <script src="{{ asset('/js/register.js') }}"></script>
+{% endblock %}

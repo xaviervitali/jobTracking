@@ -19,7 +19,7 @@ class ForgotPasswordType extends AbstractType
                 ],
                 'label' => false,
                 'attr' => [
-                    'class' => 'form__input ',
+                    'class' => 'form-control',
                     'placeholder' => 'Adresse Email',
                 ]
             ]);

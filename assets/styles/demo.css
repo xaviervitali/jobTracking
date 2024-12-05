@@ -1,29 +1,41 @@
-.swiper-container img {
-  height: 50vh;
-
-    width: 100%;
-    object-fit:cover  ;
-    object-position: top;
-    
+/* .swiper-container {
+  position: relative;
+  height: 100%;
 }
 
-.swiper-container p > img {
-/* display: flex;
-flex-direction: column;
-justify-content: center; */
-  
+.swiper-container {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+.swiper {
+  width: 100%;
+  height: 100%;
 }
 
-
-  #modalImage{
-    width: 100%;
-    object-fit: contain;
-  }
-
-
-  .swiper-slide {
-    margin: 10px; /* Ajouter 10px de marge autour de chaque slide */
-    box-sizing: border-box; /* Assurez-vous que la marge est incluse dans les dimensions */
-
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */
+
+
+img{ 
+  /* width: 100%; */
+  height: 400px;
+  object-fit: cover;
+  object-position: top;
+}

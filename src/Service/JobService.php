@@ -143,7 +143,8 @@ class JobService
             return $a['max_created_at'] <=> $b['max_created_at'];
         });
 
-        return $allJobs[0];
+
+        return $allJobs[0] ?? [];
     }
 
     public function getClosedJobsPerMonth()

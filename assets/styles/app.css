@@ -17,16 +17,32 @@ body {
   background-color: #606468;
 }
 
+.bg-div::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+              background-size: 300px 300px;
+  background-repeat: repeat;
+  opacity: 0.5;
+} 
 
 .bg-div {
-  background-color: #eee !important;
-  border-radius: 0.5rem !important;
+  background-color: #fff !important;
   padding: 1rem !important;
-  overflow: auto;
-  /* word-wrap: break-word;
-  word-break: break-all; */
-}
+  /* overflow: auto; */
 
+  border-radius: 1rem;
+position: relative;
+  background-image: url(../img/bg-div2.webp);
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-position: -80% -80%; */
+}
 .dt-layout-row select,
 .dt-layout-row input,
 .dt-paging-button {
@@ -43,17 +59,21 @@ body {
   color: grey !important;
 }
 
+.guest_content, main{
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
 
 main {
   top:10rem;
   
  min-height: calc(100vh - 10rem) !important;
  padding-bottom: 10rem;
-  overflow: auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+
 }
 
 .ui-autocomplete {
@@ -80,6 +100,11 @@ main {
   border-color: var(--bs-primary) !important;
   background-color:  var(--bs-primary) !important;
 
+}
+
+.text-primary {
+  color: var(--bs-danger) !important;
+  text-shadow: ;
 }
 .btn-primary:hover {
   background-color: #82beb0 !important; /* Ajuste la couleur lors du hover */

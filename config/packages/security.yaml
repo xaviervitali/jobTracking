@@ -14,6 +14,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            custom_authenticator: App\Security\GrantedAuthenticator
+            stateless: false
             lazy: true
             provider: app_user_provider
             form_login:
@@ -25,6 +27,7 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 target: app_login
+    
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
