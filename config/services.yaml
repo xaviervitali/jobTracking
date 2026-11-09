@@ -19,3 +19,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\State\UserStateProcessor:
+        bind:
+            $innerProcessor: '@api_platform.doctrine.orm.state.persist_processor'

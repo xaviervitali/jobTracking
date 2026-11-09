@@ -2,49 +2,67 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\AddressBookRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AddressBookRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['address_book:read']],
+    denormalizationContext: ['groups' => ['address_book:write']],
+    security: "is_granted('ROLE_USER')",
+    operations: [
+        new GetCollection(),
+        new Get(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+        new Post(),
+        new Patch(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+        new Delete(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+    ]
+)]
 class AddressBook
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     private ?string $lastName = null;
 
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     private ?string $company = null;
 
     #[ORM\Column]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     private ?string $note = null;
 
     #[ORM\ManyToOne(inversedBy: 'user')]
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['address_book'])]
+    #[Groups(['address_book:read', 'address_book:write'])]
     private ?string $phone = null;
 
     public function getId(): ?int

@@ -55,16 +55,11 @@
 .env.local
 .env.prod
 .env.dev
-
-
-###> symfony/webpack-encore-bundle ###
-/node_modules/
-/public/build/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-bundle ###
 dump.html
 
 /public/uploads/cv/
 
 /src/DataFixtures/
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

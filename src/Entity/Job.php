@@ -2,36 +2,56 @@
 
 namespace App\Entity;
 
-
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\JobRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['job:read']],
+    denormalizationContext: ['groups' => ['job:write']],
+    security: "is_granted('ROLE_USER')",
+    operations: [
+        new GetCollection(),
+        new Get(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+        new Post(),
+        new Patch(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+        new Delete(security: "is_granted('ROLE_USER') and object.getUser() == user"),
+    ]
+)]
 class Job
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["job"])]
+    #[Groups(["job:read"])]
     private ?int $id = null;
 
-    #[Groups(["job"])]
+    #[Groups(["job:read", "job:write"])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $recruiter = null;
 
-    #[Groups(["job"])]
+    #[Groups(["job:read", "job:write"])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
-    #[Groups(["job"])]
+    #[Groups(["job:read", "job:write"])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $offerDescription = null;
 
-    #[Groups(["job"])]
+    #[Groups(["job:read"])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -56,9 +76,11 @@ class Job
   
 
     #[ORM\ManyToOne(inversedBy: 'jobs')]
+    #[Groups(["job:read", "job:write"])]
     private ?JobSource $source = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["job:read", "job:write"])]
     private ?string $url = null;
 
 
