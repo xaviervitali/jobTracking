@@ -12,7 +12,7 @@ framework:
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
-            failed: 'doctrine://default?queue_name=failed'
+            failed: 'doctrine://default?queue_name=failed&table_name=jt_messenger_messages'
             # sync: 'sync://'
 
         default_bus: messenger.bus.default

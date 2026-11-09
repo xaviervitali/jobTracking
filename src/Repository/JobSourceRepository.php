@@ -47,7 +47,13 @@ class JobSourceRepository extends ServiceEntityRepository
     {
 
 
-        $sql = "SELECT  action.name, job_source.name as source, COUNT(*) as count FROM `job` inner join job_source on job_source.id = job.source_id inner join job_tracking on job_tracking.job_id = job.id INNER join action on action.id = job_tracking.action_id WHERE job.user_id = :userId and not action.name = :notActionName group by action.name, job_source.name";
+        $sql = "SELECT a.name, js.name as source, COUNT(*) as count
+                FROM jt_job j
+                INNER JOIN jt_job_source js ON js.id = j.source_id
+                INNER JOIN jt_job_tracking jt ON jt.job_id = j.id
+                INNER JOIN jt_action a ON a.id = jt.action_id
+                WHERE j.user_id = :userId AND a.name != :notActionName
+                GROUP BY a.name, js.name";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->executeQuery($sql, ['userId' => $user->getId(), 'notActionName' => ActionStatus::getStartActionName()]);
