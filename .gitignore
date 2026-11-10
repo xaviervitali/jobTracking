@@ -62,4 +62,8 @@ dump.html
 /src/DataFixtures/
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+###< lexik/jwt-authentication-bundle ###;
+
+.vscode
+.claude
+.vscode/sftp.json
