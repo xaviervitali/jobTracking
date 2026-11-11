@@ -3,7 +3,9 @@
 namespace App\EventListener;
 
 use App\Entity\AddressBook;
+use App\Entity\CV;
 use App\Entity\Job;
+use App\Entity\JobSearchSettings;
 use App\Entity\JobTracking;
 use App\Entity\Note;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -28,7 +30,7 @@ final class SetUserAndDateListener
 
         // Set user if the entity belongs to a user
         if ($user !== null && method_exists($entity, 'getUser') && method_exists($entity, 'setUser') && $entity->getUser() === null) {
-            if ($entity instanceof Job || $entity instanceof JobTracking || $entity instanceof Note || $entity instanceof AddressBook) {
+            if ($entity instanceof Job || $entity instanceof JobTracking || $entity instanceof Note || $entity instanceof AddressBook || $entity instanceof CV || $entity instanceof JobSearchSettings) {
                 $entity->setUser($user);
             }
         }

@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Operation;
 use App\Entity\AddressBook;
 use App\Entity\CV;
 use App\Entity\Job;
+use App\Entity\JobSearchSettings;
 use App\Entity\JobTracking;
 use App\Entity\Note;
 use Doctrine\ORM\QueryBuilder;
@@ -19,7 +20,7 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-    private const USER_ENTITIES = [Job::class, JobTracking::class, Note::class, AddressBook::class, CV::class];
+    private const USER_ENTITIES = [Job::class, JobTracking::class, Note::class, AddressBook::class, CV::class, JobSearchSettings::class];
 
     public function __construct(private Security $security) {}
 

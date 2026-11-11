@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\JobSearchSettingsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,30 +14,45 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: JobSearchSettingsRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(normalizationContext: ['groups' => ['settings:read']]),
+        new Get(normalizationContext: ['groups' => ['settings:read']]),
+        new Post(
+            normalizationContext: ['groups' => ['settings:read']],
+            denormalizationContext: ['groups' => ['settings:write']]
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['settings:read']],
+            denormalizationContext: ['groups' => ['settings:write']]
+        ),
+    ]
+)]
 class JobSearchSettings
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['settings:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['apiSettingsGroup'])]
+    #[Groups(['apiSettingsGroup', 'settings:read', 'settings:write'])]
     private ?string $what = null;
 
 
 
     #[ORM\Column(length: 255)]
-
+    #[Groups(['settings:read', 'settings:write'])]
     private ?string $country = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['apiSettingsGroup'])]
+    #[Groups(['apiSettingsGroup', 'settings:read', 'settings:write'])]
 
     private ?int $distance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['apiSettingsGroup'])]
+    #[Groups(['apiSettingsGroup', 'settings:read', 'settings:write'])]
     private ?string $whatExclude = null;
 
 
@@ -48,6 +68,7 @@ class JobSearchSettings
 
     #[ORM\Column(nullable: true)]
     #[ORM\ManyToOne(inversedBy: 'jobSearchSettings')]
+    #[Groups(['settings:read', 'settings:write'])]
     private ?int $maxDaysOld = null;
 
     /**

@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\CV;
 use App\Repository\CVRepository;
 use App\Repository\UserRepository;
 use App\Service\ApiService;
 use App\Service\MistralAiService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -17,6 +19,57 @@ use Symfony\Contracts\Cache\CacheInterface;
 #[Route('/api')]
 final class ApiController extends AbstractController
 {
+    #[Route('/cv', name: 'api_cv_list', methods: ['GET'])]
+    public function getCvList(CVRepository $cvRepository, Security $security): JsonResponse
+    {
+        $cvs = $cvRepository->findBy(['user' => $security->getUser()]);
+        $data = array_map(fn(CV $cv) => [
+            'id'      => $cv->getId(),
+            'title'   => $cv->getTitle(),
+            'cvName'  => $cv->getCVName(),
+            'cvSize'  => $cv->getCVSize(),
+        ], $cvs);
+        return $this->json($data);
+    }
+
+    #[Route('/cv', name: 'api_cv_upload', methods: ['POST'])]
+    public function uploadCv(Request $request, Security $security, EntityManagerInterface $em): JsonResponse
+    {
+        $file  = $request->files->get('cvFile');
+        $title = $request->request->get('title', 'CV');
+
+        if (!$file) {
+            return $this->json(['error' => 'Fichier requis'], 400);
+        }
+
+        $cv = new CV();
+        $cv->setUser($security->getUser());
+        $cv->setTitle($title);
+        $cv->setCVFile($file);
+
+        $em->persist($cv);
+        $em->flush();
+
+        return $this->json([
+            'id'     => $cv->getId(),
+            'title'  => $cv->getTitle(),
+            'cvName' => $cv->getCVName(),
+            'cvSize' => $cv->getCVSize(),
+        ], 201);
+    }
+
+    #[Route('/cv/{id}', name: 'api_cv_delete', methods: ['DELETE'])]
+    public function deleteCv(int $id, CVRepository $cvRepository, Security $security, EntityManagerInterface $em): JsonResponse
+    {
+        $cv = $cvRepository->find($id);
+        if (!$cv || $cv->getUser() !== $security->getUser()) {
+            return $this->json(['error' => 'CV introuvable ou accès refusé'], 403);
+        }
+        $em->remove($cv);
+        $em->flush();
+        return $this->json(null, 204);
+    }
+
     #[Route('/job_alert', name: 'api_job_alert', methods: ['GET'])]
     public function jobAlert(Security $security, UserRepository $userRepository, CacheInterface $cache): JsonResponse
     {
