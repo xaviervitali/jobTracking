@@ -7,8 +7,8 @@ use App\Entity\Job;
 use App\Entity\JobTracking;
 use App\Entity\Note;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsDoctrineListener(event: Events::prePersist)]
@@ -16,7 +16,7 @@ final class SetUserAndDateListener
 {
     public function __construct(private Security $security) {}
 
-    public function prePersist(LifecycleEventArgs $args): void
+    public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
         $user   = $this->security->getUser();
